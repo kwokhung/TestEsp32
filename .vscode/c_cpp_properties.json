@@ -4,12 +4,30 @@
             "name": "Win32",
             "includePath": [
                 "C:\\Users\\brianchu\\Documents\\Arduino\\hardware\\espressif\\esp32\\cores\\esp32",
+                "C:\\Users\\chu_k_000\\Documents\\Arduino\\hardware\\espressif\\esp32\\cores\\esp32",
+                "C:\\Users\\brianchu\\Documents\\Arduino\\hardware\\espressif\\esp32\\libraries",
+                "C:\\Users\\chu_k_000\\Documents\\Arduino\\hardware\\espressif\\esp32\\libraries",
+                "C:\\Users\\brianchu\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\cores\\esp8266",
+                "C:\\Users\\chu_k_000\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\cores\\esp8266",
+                "C:\\Users\\brianchu\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\libraries",
+                "C:\\Users\\chu_k_000\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\libraries",
+                "C:\\Users\\brianchu\\Documents\\Arduino\\libraries",
+                "C:\\Users\\chu_k_000\\Documents\\Arduino\\libraries",
                 "${workspaceRoot}"
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": false,
                 "path": [
                     "C:\\Users\\brianchu\\Documents\\Arduino\\hardware\\espressif\\esp32\\cores\\esp32",
+                    "C:\\Users\\chu_k_000\\Documents\\Arduino\\hardware\\espressif\\esp32\\cores\\esp32",
+                    "C:\\Users\\brianchu\\Documents\\Arduino\\hardware\\espressif\\esp32\\libraries",
+                    "C:\\Users\\chu_k_000\\Documents\\Arduino\\hardware\\espressif\\esp32\\libraries",
+                    "C:\\Users\\brianchu\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\cores\\esp8266",
+                    "C:\\Users\\chu_k_000\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\cores\\esp8266",
+                    "C:\\Users\\brianchu\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\libraries",
+                    "C:\\Users\\chu_k_000\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\libraries",
+                    "C:\\Users\\brianchu\\Documents\\Arduino\\libraries",
+                    "C:\\Users\\chu_k_000\\Documents\\Arduino\\libraries",
                     "${workspaceRoot}"
                 ]
             },

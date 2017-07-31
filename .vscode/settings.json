@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "esp32-hal-gpio.c": "cpp"
+        "esp32-hal-gpio.c": "cpp",
+        "gdbstub.c": "cpp"
     }
 }
