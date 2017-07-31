@@ -1,5 +1,6 @@
 {
     "sketch": "app.ino",
     "board": "espressif:esp32:nodemcu-32s",
-    "configuration": "FlashFreq=80,UploadSpeed=921600"
+    "configuration": "FlashFreq=80,UploadSpeed=921600",
+    "port": "COM5"
 }
