@@ -2,6 +2,8 @@
     "files.associations": {
         "esp32-hal-gpio.c": "cpp",
         "gdbstub.c": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "esp32-hal-touch.c": "cpp",
+        "esp32-hal-ledc.c": "cpp"
     }
 }
