@@ -10,6 +10,10 @@ void setup()
 
 void loop()
 {
+  Serial.println(T0);
+  Serial.println(T1);
+  Serial.println(T2);
+  Serial.println(T3);
   Serial.println(touchRead(T0));  // get value using T0
   Serial.println(touchRead(T1));  // get value using T1
   Serial.println(touchRead(T2));  // get value using T2
