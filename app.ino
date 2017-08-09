@@ -1,22 +1,38 @@
-// ESP32 Touch Test
-// Just test touch pin - Touch0 is T0 which is on GPIO 4.
+/* create a hardware timer */
+hw_timer_t * timer = NULL;
 
-void setup()
-{
-  Serial.begin(115200);
-  delay(1000); // give me time to bring up serial monitor
-  Serial.println("ESP32 Touch Test");
+/* LED pin */
+int led = 14;
+/* LED state */
+volatile byte state = LOW;
+
+void IRAM_ATTR onTimer(){
+  state = !state;
+  digitalWrite(led, state);
 }
 
-void loop()
-{
-  Serial.println(T0);
-  Serial.println(T1);
-  Serial.println(T2);
-  Serial.println(T3);
-  Serial.println(touchRead(T0));  // get value using T0
-  Serial.println(touchRead(T1));  // get value using T1
-  Serial.println(touchRead(T2));  // get value using T2
-  Serial.println(touchRead(T3));  // get value using T3
-  delay(1000);
+void setup() {
+  Serial.begin(115200);
+
+  pinMode(led, OUTPUT);
+
+  /* Use 1st timer of 4 */
+  /* 1 tick take 1/(80MHZ/80) = 1us so we set divider 80 and count up */
+  timer = timerBegin(0, 80, true);
+
+  /* Attach onTimer function to our timer */
+  timerAttachInterrupt(timer, &onTimer, true);
+
+  /* Set alarm to call onTimer function every second 1 tick is 1us
+  => 1 second is 1000000us */
+  /* Repeat the alarm (third parameter) */
+  timerAlarmWrite(timer, 1000000, true);
+
+  /* Start an alarm */
+  timerAlarmEnable(timer);
+  Serial.println("start timer");
+}
+
+void loop() {
+
 }

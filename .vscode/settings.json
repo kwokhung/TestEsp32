@@ -4,6 +4,7 @@
         "gdbstub.c": "cpp",
         "xstring": "cpp",
         "esp32-hal-touch.c": "cpp",
-        "esp32-hal-ledc.c": "cpp"
+        "esp32-hal-ledc.c": "cpp",
+        "utility": "cpp"
     }
 }
