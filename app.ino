@@ -26,7 +26,8 @@ void setup() {
   /* Set alarm to call onTimer function every second 1 tick is 1us
   => 1 second is 1000000us */
   /* Repeat the alarm (third parameter) */
-  timerAlarmWrite(timer, 1000000, true);
+  //timerAlarmWrite(timer, 1000000, true);
+  timerAlarmWrite(timer, 1000, true);
 
   /* Start an alarm */
   timerAlarmEnable(timer);
