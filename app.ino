@@ -2,7 +2,7 @@
 hw_timer_t * timer = NULL;
 
 /* LED pin */
-int led = 14;
+int led = LED_BUILTIN;
 /* LED state */
 volatile byte state = LOW;
 
