@@ -21,6 +21,8 @@
 
 #define MQTT_URL "mbltest01.mqtt.iot.gz.baidubce.com"
 
+#include "Led.h"
+
 class App
 {
 public:
@@ -29,6 +31,7 @@ public:
   void setup();
 
 private:
+  Led *led;
 };
 
 #endif
