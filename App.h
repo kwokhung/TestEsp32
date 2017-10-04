@@ -21,26 +21,14 @@
 
 #define MQTT_URL "mbltest01.mqtt.iot.gz.baidubce.com"
 
-#include "Led.h"
-#include "OLed.h"
-#include "Wifi.h"
-#include "Gprs.h"
-#include "Mqtt.h"
-
 class App
 {
 public:
   App();
 
   void setup();
-  Mqtt *getMqtt();
 
 private:
-  Led *led;
-  OLed *oLed;
-  Wifi *wifi;
-  Gprs *gprs;
-  Mqtt *mqtt;
 };
 
 #endif
