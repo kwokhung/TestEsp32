@@ -15,9 +15,9 @@ void Led::setup()
     ledcSetup(1, 5000, 13);
     ledcSetup(2, 5000, 13);
 
-    lightR(50);
-    lightG(50);
-    lightB(50);
+    lightR(0);
+    lightG(0);
+    lightB(0);
 }
 
 void Led::analogWrite(uint8_t pin, int val)
