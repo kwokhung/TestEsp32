@@ -2,7 +2,7 @@
 //#include <SoftwareSerial.h>
 //SoftwareSerial SerialAT(13, 15); // RX, TX
 #include <HardwareSerial.h>
-HardwareSerial SerialAT(1);
+HardwareSerial SerialAT(2);
 #define TINY_GSM_MODEM_A6
 
 #include "Gprs.h"
