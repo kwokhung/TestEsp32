@@ -17,4 +17,5 @@ void App::setup()
 
     led->setup();
     oLed->setup();
+    oLed->hello();
 }

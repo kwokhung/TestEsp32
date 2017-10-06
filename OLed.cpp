@@ -11,12 +11,27 @@ OLed::OLed(int address, int sdaPin, int sclPin)
 
 void OLed::setup()
 {
+    Serial.println("before init");
     display->init();
+    Serial.println("before clear");
     display->clear();
+    Serial.println("before display");
     display->display();
 
     //qrcode.debug();
+    Serial.println("before qrcode");
     qrcode->init();
+    Serial.println("after qrcode");
+}
+
+void OLed::hello()
+{
+    Serial.println("hello");
+    /*display->clear();
+    display->setTextAlignment(TEXT_ALIGN_CENTER);
+    display->drawString(64, 28, "hello");
+    display->display();*/
+    qrcode->create("hello");
 }
 
 void OLed::connecting(String ssid, String password, int percentage)

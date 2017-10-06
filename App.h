@@ -14,8 +14,10 @@
 #define LED_B_Pin 25 // GPIO0 / E3 / D8
 
 #define OLed_ADDRESS 0x3c
-#define OLed_SDA_PIN 12 // GPIO12 / E6 / D6
-#define OLed_SCL_PIN 14 // GPIO14 / E5 / D5
+//#define OLed_SDA_PIN 12 // GPIO12 / E6 / D6
+//#define OLed_SCL_PIN 14 // GPIO14 / E5 / D5
+#define OLed_SDA_PIN 0 // GPIO12 / E6 / D6
+#define OLed_SCL_PIN 4 // GPIO14 / E5 / D5
 
 #define APN "mobile.lte.three.com.hk"
 
