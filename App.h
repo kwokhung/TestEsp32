@@ -9,9 +9,9 @@
 
 #define LED_ONBOARD_PIN 2 // GPIO2 / E4 / D9
 
-#define LED_R_PIN 34 // GPIO5 / E1 / D3
-#define LED_G_PIN 39 // GPIO4 / E2 / D4
-#define LED_B_Pin 36 // GPIO0 / E3 / D8
+#define LED_R_PIN 16 // GPIO5 / E1 / D3
+#define LED_G_PIN 4 // GPIO4 / E2 / D4
+#define LED_B_Pin 0 // GPIO0 / E3 / D8
 
 #define OLed_ADDRESS 0x3c
 #define OLed_SDA_PIN 12 // GPIO12 / E6 / D6

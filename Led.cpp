@@ -16,13 +16,13 @@ void Led::setup()
 
     ledcSetup(1, 5000, 13);
     ledcAttachPin(gPin, 1);
-    
+
     ledcSetup(2, 5000, 13);
     ledcAttachPin(bPin, 2);
 
-    analogWrite(rPin, 500);    
-    analogWrite(gPin, 500);    
-    analogWrite(bPin, 500);    
+    lightR(0);
+    lightG(500);
+    lightB(1023);
 }
 
 void Led::analogWrite(uint8_t pin, int val)
