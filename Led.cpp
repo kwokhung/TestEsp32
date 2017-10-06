@@ -12,17 +12,12 @@ Led::Led(int rPin, int gPin, int bPin)
 void Led::setup()
 {
     ledcSetup(0, 5000, 13);
-    ledcAttachPin(rPin, 0);
-
     ledcSetup(1, 5000, 13);
-    ledcAttachPin(gPin, 1);
-
     ledcSetup(2, 5000, 13);
-    ledcAttachPin(bPin, 2);
 
-    lightR(0);
-    lightG(500);
-    lightB(1023);
+    lightR(50);
+    lightG(50);
+    lightB(50);
 }
 
 void Led::analogWrite(uint8_t pin, int val)
@@ -32,15 +27,45 @@ void Led::analogWrite(uint8_t pin, int val)
 
     if (pin == rPin)
     {
-        ledcWrite(0, duty);
+        if (val == 1023)
+        {
+            ledcDetachPin(rPin);
+            pinMode(rPin, OUTPUT);
+            digitalWrite(rPin, HIGH);
+        }
+        else
+        {
+            ledcAttachPin(rPin, 0);
+            ledcWrite(0, duty);
+        }
     }
     else if (pin == gPin)
     {
-        ledcWrite(1, duty);
+        if (val == 1023)
+        {
+            ledcDetachPin(gPin);
+            pinMode(gPin, OUTPUT);
+            digitalWrite(gPin, HIGH);
+        }
+        else
+        {
+            ledcAttachPin(gPin, 1);
+            ledcWrite(1, duty);
+        }
     }
     else if (pin == bPin)
     {
-        ledcWrite(2, duty);
+        if (val == 1023)
+        {
+            ledcDetachPin(bPin);
+            pinMode(bPin, OUTPUT);
+            digitalWrite(bPin, HIGH);
+        }
+        else
+        {
+            ledcAttachPin(bPin, 2);
+            ledcWrite(2, duty);
+        }
     }
 }
 
