@@ -6,6 +6,7 @@
         "esp32-hal-touch.c": "cpp",
         "esp32-hal-ledc.c": "cpp",
         "utility": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "functional": "cpp"
     }
 }

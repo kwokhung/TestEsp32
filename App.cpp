@@ -3,11 +3,14 @@
 
 #include "Led.h"
 #include "OLed.h"
+#include "Gprs.h"
 #include "App.h"
 
 App::App()
     : led(new Led(LED_R_PIN, LED_G_PIN, LED_B_Pin)),
-      oLed(new OLed(OLed_ADDRESS, OLed_SDA_PIN, OLed_SCL_PIN))
+      oLed(new OLed(OLed_ADDRESS, OLed_SDA_PIN, OLed_SCL_PIN)),
+      //wifi(new Wifi(*oLed)),
+      gprs(new Gprs(APN))
 {
 }
 
@@ -18,4 +21,6 @@ void App::setup()
     led->setup();
     oLed->setup();
     oLed->hello();
+    //wifi->setup();
+    gprs->setup();
 }

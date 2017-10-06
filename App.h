@@ -23,6 +23,7 @@
 
 #include "Led.h"
 #include "OLed.h"
+#include "Gprs.h"
 
 class App
 {
@@ -34,6 +35,7 @@ public:
 private:
   Led *led;
   OLed *oLed;
+  Gprs *gprs;
 };
 
 #endif
