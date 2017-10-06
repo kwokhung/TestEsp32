@@ -22,6 +22,7 @@
 #define MQTT_URL "mbltest01.mqtt.iot.gz.baidubce.com"
 
 #include "Led.h"
+#include "OLed.h"
 
 class App
 {
@@ -32,6 +33,7 @@ public:
 
 private:
   Led *led;
+  OLed *oLed;
 };
 
 #endif
