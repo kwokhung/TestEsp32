@@ -24,6 +24,7 @@
 #include "Led.h"
 #include "OLed.h"
 #include "Gprs.h"
+#include "Mqtt.h"
 
 class App
 {
@@ -31,11 +32,13 @@ public:
   App();
 
   void setup();
-
+  Mqtt *getMqtt();
+  
 private:
   Led *led;
   OLed *oLed;
   Gprs *gprs;
+  Mqtt *mqtt;
 };
 
 #endif
