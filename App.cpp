@@ -8,7 +8,8 @@
 #include "App.h"
 
 App::App()
-    : led(new Led(LED_R_PIN, LED_G_PIN, LED_B_Pin)),
+    : preferences(new Preferences()),
+      led(new Led(LED_R_PIN, LED_G_PIN, LED_B_Pin)),
       oLed(new OLed(OLed_ADDRESS, OLed_SDA_PIN, OLed_SCL_PIN)),
       //wifi(new Wifi(*oLed)),
       gprs(new Gprs(APN)),
@@ -18,6 +19,10 @@ App::App()
 
 void App::setup()
 {
+    preferences->begin("App", false);
+    preferences->putString("Name", "testESP32");
+    preferences->end();
+
     Serial.begin(SERIAL_RATE);
 
     led->setup();
