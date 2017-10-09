@@ -1,0 +1,37 @@
+#include <HardwareSerial.h>
+
+HardwareSerial *serialAT;
+
+void setup()
+{
+    Serial.begin(115200);
+
+    serialAT = new HardwareSerial(2);
+    serialAT->begin(115200);
+
+    delay(3000);
+
+    serialAT->write('A');
+    serialAT->write('T');
+    serialAT->write('E');
+    serialAT->write('0');
+    serialAT->write('\r');
+    serialAT->write('\n');
+}
+
+void loop()
+{
+    while (serialAT->available())
+    {
+        char c = serialAT->read();
+        Serial.write(c);
+    }
+
+    delay(3000);
+
+    serialAT->write('A');
+    serialAT->write('T');
+    serialAT->write('I');
+    serialAT->write('\r');
+    serialAT->write('\n');
+}
