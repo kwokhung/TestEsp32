@@ -2,13 +2,14 @@
 //#include <SoftwareSerial.h>
 //SoftwareSerial SerialAT(13, 15); // RX, TX
 #include <HardwareSerial.h>
-HardwareSerial SerialAT(2);
+//HardwareSerial SerialAT(2);
 #define TINY_GSM_MODEM_A6
 
 #include "Gprs.h"
 
 Gprs::Gprs(char *apn)
-    : modem(new TinyGsm(SerialAT)),
+    : serialAT(new HardwareSerial(2)),
+      modem(new TinyGsm(*serialAT)),
       gsmClient(new TinyGsmClient(*modem))
 {
 }
@@ -20,7 +21,7 @@ void Gprs::setup()
     const char pass[] = "";
 
     // Set GSM module baud rate
-    SerialAT.begin(115200);
+    serialAT->begin(115200);
     delay(3000);
 
     // Restart takes quite some time
