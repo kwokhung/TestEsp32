@@ -7,9 +7,9 @@
 
 #include "Gprs.h"
 
-Gprs::Gprs(char *apn)
-    : serialAT(new HardwareSerial(2)),
-      modem(new TinyGsm(*serialAT)),
+Gprs::Gprs(HardwareSerial &serialAT, char *apn)
+    : serialAT(&serialAT),
+      modem(new TinyGsm(*this->serialAT)),
       gsmClient(new TinyGsmClient(*modem))
 {
 }

@@ -9,10 +9,6 @@
                 "C:\\Users\\chu_k_000\\Documents\\Arduino\\hardware\\espressif\\esp32\\libraries",
                 "C:\\Users\\brianchu\\Documents\\Arduino\\hardware\\espressif\\esp32\\tools",
                 "C:\\Users\\chu_k_000\\Documents\\Arduino\\hardware\\espressif\\esp32\\tools",
-                "C:\\Users\\brianchu\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\cores\\esp8266",
-                "C:\\Users\\chu_k_000\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\cores\\esp8266",
-                "C:\\Users\\brianchu\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\libraries",
-                "C:\\Users\\chu_k_000\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\libraries",
                 "C:\\Users\\brianchu\\Documents\\Arduino\\libraries",
                 "C:\\Users\\chu_k_000\\Documents\\Arduino\\libraries",
                 "${workspaceRoot}"
@@ -26,10 +22,6 @@
                     "C:\\Users\\chu_k_000\\Documents\\Arduino\\hardware\\espressif\\esp32\\libraries",
                     "C:\\Users\\brianchu\\Documents\\Arduino\\hardware\\espressif\\esp32\\tools",
                     "C:\\Users\\chu_k_000\\Documents\\Arduino\\hardware\\espressif\\esp32\\tools",
-                    "C:\\Users\\brianchu\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\cores\\esp8266",
-                    "C:\\Users\\chu_k_000\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\cores\\esp8266",
-                    "C:\\Users\\brianchu\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\libraries",
-                    "C:\\Users\\chu_k_000\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.3.0\\libraries",
                     "C:\\Users\\brianchu\\Documents\\Arduino\\libraries",
                     "C:\\Users\\chu_k_000\\Documents\\Arduino\\libraries",
                     "${workspaceRoot}"

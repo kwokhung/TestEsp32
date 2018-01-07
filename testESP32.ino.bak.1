@@ -1,0 +1,41 @@
+#include <HardwareSerial.h>
+#define TINY_GSM_MODEM_A6
+#include "TinyGsmClient.h"
+#include "App.h"
+
+HardwareSerial *serialAT = new HardwareSerial(2);
+TinyGsm *modem = new TinyGsm(*serialAT);
+TinyGsmClient *gsmClient = new TinyGsmClient(*modem);
+App app = *new App(*serialAT);
+
+void setup()
+{
+    //app.setup();
+    Serial.begin(115200);
+    serialAT->begin(115200);
+
+    String command;
+
+    command = "ATI";
+    Serial.println(command);
+    serialAT->println(command);
+    Serial.println(serialAT->readString());
+
+    /*Serial.println("Initializing modem...");
+    modem->init();
+
+    String modemInfo = modem->getModemInfo();
+    Serial.print("Modem: ");
+    Serial.println(modemInfo);*/
+}
+
+void loop()
+{
+    /*while (serialAT->available())
+    {
+        char c = serialAT->read();
+        Serial.write(c);
+    }
+
+    delay(1000);*/
+}

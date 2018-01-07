@@ -1,22 +1,57 @@
 #include <HardwareSerial.h>
+#include "App.h"
 
-HardwareSerial *serialAT;
+HardwareSerial *serialAT = new HardwareSerial(2);
+App app = *new App(*serialAT);
 
 void setup()
 {
+    //app.setup();
     Serial.begin(115200);
-
-    serialAT = new HardwareSerial(2);
     serialAT->begin(115200);
 
-    delay(3000);
+    String command;
 
-    serialAT->write('A');
-    serialAT->write('T');
-    serialAT->write('E');
-    serialAT->write('0');
-    serialAT->write('\r');
-    serialAT->write('\n');
+    command = "ATI";
+    Serial.println(command);
+    serialAT->println(command);
+    Serial.println(serialAT->readString());
+
+    command = "AT+CGATT=1";
+    Serial.println(command);
+    serialAT->println(command);
+    Serial.println(serialAT->readString());
+
+    command = "AT+CGDCONT=1,\"IP\",\"mobile.lte.three.com.hk\"";
+    Serial.println(command);
+    serialAT->println(command);
+    Serial.println(serialAT->readString());
+
+    command = "AT+CSTT=\"mobile.lte.three.com.hk\",\"\",\"\"";
+    Serial.println(command);
+    serialAT->println(command);
+    Serial.println(serialAT->readString());
+
+    command = "AT+CGACT=1,1";
+    Serial.println(command);
+    serialAT->println(command);
+    Serial.println(serialAT->readString());
+
+    command = "AT+CIPSTART=\"TCP\",\"www.masonsec.com\",80";
+    Serial.println(command);
+    serialAT->println(command);
+    Serial.println(serialAT->readString());
+
+    command = "AT+CIPSEND";
+    Serial.println(command);
+    serialAT->println(command);
+    Serial.println(serialAT->readString());
+
+    command = "Hello";
+    Serial.println(command);
+    serialAT->println(command);
+    serialAT->write(0x1a);
+    Serial.println(serialAT->readString());
 }
 
 void loop()
@@ -27,11 +62,5 @@ void loop()
         Serial.write(c);
     }
 
-    delay(3000);
-
-    serialAT->write('A');
-    serialAT->write('T');
-    serialAT->write('I');
-    serialAT->write('\r');
-    serialAT->write('\n');
+    delay(1000);
 }

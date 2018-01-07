@@ -28,11 +28,12 @@
 class App
 {
 public:
-  App();
+  App(HardwareSerial &serialAT);
 
   void setup();
 
 private:
+  HardwareSerial *serialAT;
   Led *led;
   OLed *oLed;
   Gprs *gprs;

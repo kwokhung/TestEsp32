@@ -9,12 +9,13 @@
 #ifndef TinyGsmClient_h
 #define TinyGsmClient_h
 
-#if defined(TINY_GSM_MODEM_A6) || defined(TINY_GSM_MODEM_A7)
-#include "TinyGsmClientA6.h"
-typedef TinyGsm::GsmClient TinyGsmClient;
+#if defined(TINY_GSM_MODEM_A7)
+#define TINY_GSM_MODEM_HAS_GPS
+#endif
 
-#elif defined(TINY_GSM_MODEM_ESP8266)
-#include "TinyGsmClientESP8266.h"
+#if defined(TINY_GSM_MODEM_A6) || defined(TINY_GSM_MODEM_A7)
+#define TINY_GSM_MODEM_HAS_GPRS
+#include "TinyGsmClientA6.h"
 typedef TinyGsm::GsmClient TinyGsmClient;
 
 #else
