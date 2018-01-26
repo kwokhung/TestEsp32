@@ -34,7 +34,7 @@ void setup()
     pServer = BLEDevice::createServer();
     pServer->setCallbacks(new MyServerCallbacks());
     pService = pServer->createService(SERVICE_UUID);
-    pCharacteristic = pService->createCharacteristic(CHARACTERISTIC_UUID_TX, BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_NOTIFY);
+    pCharacteristic = pService->createCharacteristic(CHARACTERISTIC_UUID_TX, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY);
 
     pService->start();
     pServer->getAdvertising()->start();
