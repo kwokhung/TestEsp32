@@ -51,7 +51,7 @@ void setup()
     Serial.begin(115200);
 
     // Create the BLE Device
-    BLEDevice::init("MyESP32");
+    BLEDevice::init("Light Bulb");
 
     // Create the BLE Server
     BLEServer *pServer = BLEDevice::createServer();
