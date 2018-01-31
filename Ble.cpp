@@ -9,7 +9,6 @@ class Thermometer : public BLEServerCallbacks
   public:
     void onConnect(BLEServer *pServer);
     void onDisconnect(BLEServer *pServer);
-
     static bool isConnected;
 };
 
@@ -28,16 +27,17 @@ bool Thermometer::isConnected;
 class Temperature : public BLECharacteristicCallbacks
 {
   public:
-    void onWrite(BLECharacteristic *pCharacteristic)
-    {
-        value = *pCharacteristic->getValue().data();
-        Serial.println("*********");
-        Serial.printf("New value: %d\n", value);
-        Serial.println("*********");
-    }
-
+    void onWrite(BLECharacteristic *pCharacteristic);
     static uint8_t value;
 };
+
+void Temperature::onWrite(BLECharacteristic *pCharacteristic)
+{
+    value = *pCharacteristic->getValue().data();
+    Serial.println("*********");
+    Serial.printf("New value: %d\n", value);
+    Serial.println("*********");
+}
 
 uint8_t Temperature::value;
 
