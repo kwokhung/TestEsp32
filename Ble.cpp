@@ -7,18 +7,21 @@
 class Thermometer : public BLEServerCallbacks
 {
   public:
-    void onConnect(BLEServer *pServer)
-    {
-        isConnected = true;
-    };
-
-    void onDisconnect(BLEServer *pServer)
-    {
-        isConnected = false;
-    }
+    void onConnect(BLEServer *pServer);
+    void onDisconnect(BLEServer *pServer);
 
     static bool isConnected;
 };
+
+void Thermometer::onDisconnect(BLEServer *pServer)
+{
+    isConnected = false;
+}
+
+void Thermometer::onConnect(BLEServer *pServer)
+{
+    isConnected = true;
+}
 
 bool Thermometer::isConnected;
 
