@@ -9,5 +9,5 @@ void setup()
 
 void loop()
 {
-    //app.getMqtt()->loop();
+    ble.notify();
 }
