@@ -4,46 +4,47 @@
 
 #include "Ble.h"
 
-class MyServerCallbacks : public BLEServerCallbacks
+class Thermometer : public BLEServerCallbacks
 {
   public:
     void onConnect(BLEServer *pServer)
     {
-        deviceConnected = true;
+        isConnected = true;
     };
 
     void onDisconnect(BLEServer *pServer)
     {
-        deviceConnected = false;
+        isConnected = false;
     }
 
-    static bool deviceConnected;
+    static bool isConnected;
 };
 
-bool MyServerCallbacks::deviceConnected;
+bool Thermometer::isConnected;
 
-class MyCallbacks : public BLECharacteristicCallbacks
+class Temperature : public BLECharacteristicCallbacks
 {
   public:
     void onWrite(BLECharacteristic *pCharacteristic)
     {
-        //txValue = *((uint8_t *)pCharacteristic->getValue().data());
-        txValue = *pCharacteristic->getValue().data();
+        value = *pCharacteristic->getValue().data();
         Serial.println("*********");
-        Serial.printf("New value: %d\n", txValue);
+        Serial.printf("New value: %d\n", value);
         Serial.println("*********");
     }
 
-    static uint8_t txValue;
+    static uint8_t value;
 };
 
-uint8_t MyCallbacks::txValue;
+uint8_t Temperature::value;
 
-Ble::Ble(std::string name)
-    : name(name)
+Ble::Ble(std::string name, char *serviceUuid, char *characteristicUuid)
+    : name(name),
+      serviceUuid(serviceUuid),
+      characteristicUuid(characteristicUuid)
 {
-    MyServerCallbacks::deviceConnected = false;
-    MyCallbacks::txValue = 0;
+    Thermometer::isConnected = false;
+    Temperature::value = 0;
 }
 
 void Ble::setup()
@@ -53,15 +54,15 @@ void Ble::setup()
     BLEDevice::init(name);
 
     pServer = BLEDevice::createServer();
-    pServer->setCallbacks(new MyServerCallbacks());
-    pService = pServer->createService(SERVICE_UUID);
+    pServer->setCallbacks(new Thermometer());
+    pService = pServer->createService(serviceUuid);
     pCharacteristic = pService->createCharacteristic(
-        CHARACTERISTIC_UUID,
+        characteristicUuid,
         BLECharacteristic::PROPERTY_READ |
             BLECharacteristic::PROPERTY_WRITE |
             BLECharacteristic::PROPERTY_NOTIFY);
     pCharacteristic->addDescriptor(new BLE2902());
-    pCharacteristic->setCallbacks(new MyCallbacks());
+    pCharacteristic->setCallbacks(new Temperature());
 
     pService->start();
     pServer->getAdvertising()->start();
@@ -71,13 +72,13 @@ void Ble::setup()
 
 void Ble::notify()
 {
-    if (MyServerCallbacks::deviceConnected)
+    if (Thermometer::isConnected)
     {
-        Serial.printf("*** Sent Value: %d ***\n", MyCallbacks::txValue);
+        Serial.printf("*** Sent Value: %d ***\n", Temperature::value);
 
-        pCharacteristic->setValue(&MyCallbacks::txValue, 1);
+        pCharacteristic->setValue(&Temperature::value, 1);
         pCharacteristic->notify();
-        MyCallbacks::txValue++;
+        Temperature::value++;
     }
 
     delay(1000);
