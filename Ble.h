@@ -16,8 +16,6 @@ private:
   char *serviceUuid;
   char *characteristicUuid;
   BLEServer *pServer;
-  BLEService *pService;
-  BLECharacteristic *pCharacteristic;
 };
 
 #endif

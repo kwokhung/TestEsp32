@@ -4,6 +4,8 @@ Ble ble("Thermometer", "4fafc201-1fb5-459e-8fcc-c5c9c331914b", "beb5483e-36e1-46
 
 void setup()
 {
+    Serial.begin(115200);
+
     ble.setup();
 }
 
