@@ -1,5 +1,3 @@
-#include <BLE2902.h>
-
 #include "Thermometer.h"
 #include "Temperature.h"
 
@@ -10,7 +8,7 @@ Thermometer::Thermometer(BLEServer *pServer, char *serviceUuid, char *characteri
 
     pService = pServer->createService(serviceUuid);
 
-    new Temperature(pService, serviceUuid, characteristicUuid);
+    new Temperature(pService, characteristicUuid);
 
     pService->start();
 }
@@ -26,4 +24,3 @@ void Thermometer::onConnect(BLEServer *pServer)
 }
 
 bool Thermometer::isConnected;
-BLECharacteristic *Thermometer::pCharacteristic;

@@ -11,7 +11,6 @@ public:
   void onConnect(BLEServer *pServer);
   void onDisconnect(BLEServer *pServer);
   static bool isConnected;
-  static BLECharacteristic *pCharacteristic;
 
 private:
   char *serviceUuid;
