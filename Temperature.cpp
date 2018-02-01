@@ -17,10 +17,27 @@ Temperature::Temperature(BLEService *pService, char *characteristicUuid)
 
 void Temperature::onWrite(BLECharacteristic *pCharacteristic)
 {
+    Serial.println("*********");
+    Serial.printf("New value: %d\n", getValue());
+    Serial.println("*********");
+}
+
+uint8_t Temperature::getValue()
+{
     value = *pCharacteristic->getValue().data();
-    Serial.println("*********");
-    Serial.printf("New value: %d\n", value);
-    Serial.println("*********");
+
+    return value;
+}
+
+void Temperature::setValue(uint8_t newValue)
+{
+    value = newValue;
+    pCharacteristic->setValue(&value, 1);
+}
+
+void Temperature::notify()
+{
+    pCharacteristic->notify();
 }
 
 uint8_t Temperature::value;

@@ -20,6 +20,11 @@
         "iostream": "cpp",
         "map": "cpp",
         "typeindex": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "ratio": "cpp",
+        "system_error": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "bitset": "cpp"
     }
 }

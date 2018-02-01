@@ -31,12 +31,11 @@ void Ble::notify()
 {
     if (Thermometer::isConnected)
     {
-        Serial.printf("*** Sent Value: %d ***\n", Temperature::value);
+        Serial.printf("*** Sent Value: %d ***\n", Temperature::getValue());
 
-        Temperature::pCharacteristic->setValue(&Temperature::value, 1);
-        Temperature::pCharacteristic->notify();
+        Temperature::notify();
 
-        Temperature::value++;
+        Temperature::setValue(Temperature::getValue() + 1);
     }
 
     delay(1000);

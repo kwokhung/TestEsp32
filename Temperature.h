@@ -9,6 +9,9 @@ public:
   Temperature(BLEService *pService, char *characteristicUuid);
 
   void onWrite(BLECharacteristic *pCharacteristic);
+  static uint8_t getValue();
+  static void setValue(uint8_t newValue);
+  static void notify();
   static uint8_t value;
   static BLECharacteristic *pCharacteristic;
 
