@@ -3,19 +3,19 @@
 
 #include "Temperature.h"
 
-Temperature::Temperature(BLEService *pService, char *temperatureUuid)
-    : pService(pService)
+Temperature::Temperature(BLEService *thermometerService, char *temperatureCharacteristicUuid)
+    : thermometerService(thermometerService)
 {
-    pCharacteristic = pService->createCharacteristic(
-        temperatureUuid,
+    temperatureCharacteristic = thermometerService->createCharacteristic(
+        temperatureCharacteristicUuid,
         BLECharacteristic::PROPERTY_READ |
             BLECharacteristic::PROPERTY_WRITE |
             BLECharacteristic::PROPERTY_NOTIFY);
-    pCharacteristic->addDescriptor(new BLE2902());
-    pCharacteristic->setCallbacks(this);
+    temperatureCharacteristic->addDescriptor(new BLE2902());
+    temperatureCharacteristic->setCallbacks(this);
 }
 
-void Temperature::onWrite(BLECharacteristic *pCharacteristic)
+void Temperature::onWrite(BLECharacteristic *temperatureCharacteristic)
 {
     Serial.println("*********");
     Serial.printf("New value: %d\n", getValue());
@@ -24,7 +24,7 @@ void Temperature::onWrite(BLECharacteristic *pCharacteristic)
 
 uint8_t Temperature::getValue()
 {
-    value = *pCharacteristic->getValue().data();
+    value = *temperatureCharacteristic->getValue().data();
 
     return value;
 }
@@ -32,13 +32,13 @@ uint8_t Temperature::getValue()
 void Temperature::setValue(uint8_t newValue)
 {
     value = newValue;
-    pCharacteristic->setValue(&value, 1);
+    temperatureCharacteristic->setValue(&value, 1);
 }
 
 void Temperature::notify()
 {
-    pCharacteristic->notify();
+    temperatureCharacteristic->notify();
 }
 
 uint8_t Temperature::value;
-BLECharacteristic *Temperature::pCharacteristic;
+BLECharacteristic *Temperature::temperatureCharacteristic;

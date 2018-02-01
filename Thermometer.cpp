@@ -1,16 +1,16 @@
 #include "Thermometer.h"
 #include "Temperature.h"
 
-Thermometer::Thermometer(BLEServer *bleServer, char *thermometerUuid, char *temperatureUuid)
+Thermometer::Thermometer(BLEServer *bleServer, char *thermometerServiceUuid, char *temperatureCharacteristicUuid)
     : bleServer(bleServer)
 {
     bleServer->setCallbacks(this);
 
-    pService = bleServer->createService(thermometerUuid);
+    thermometerService = bleServer->createService(thermometerServiceUuid);
 
-    new Temperature(pService, temperatureUuid);
+    new Temperature(thermometerService, temperatureCharacteristicUuid);
 
-    pService->start();
+    thermometerService->start();
 }
 
 void Thermometer::onDisconnect(BLEServer *bleServer)
