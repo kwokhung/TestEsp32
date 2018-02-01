@@ -8,7 +8,6 @@ Thermometer::Thermometer(BLEServer *bleServer, char *thermometerServiceUuid, cha
 
     thermometerService = bleServer->createService(thermometerServiceUuid);
 
-    //new Temperature(thermometerService, temperatureCharacteristicUuid);
     Temperature::init(thermometerService, temperatureCharacteristicUuid);
 
     thermometerService->start();
@@ -24,10 +23,19 @@ void Thermometer::onConnect(BLEServer *bleServer)
     connected = true;
 }
 
+void Thermometer::init(BLEServer *bleServer, char *thermometerServiceUuid, char *temperatureCharacteristicUuid)
+{
+    if (!initted)
+    {
+        new Thermometer(bleServer, thermometerServiceUuid, temperatureCharacteristicUuid);
+    }
+}
+
 bool Thermometer::isConnected()
 {
     return connected;
 }
 
+bool Thermometer::initted = false;
 bool Thermometer::connected = false;
 BLEService *Thermometer::thermometerService;

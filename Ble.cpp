@@ -18,7 +18,7 @@ void Ble::setup()
 
     bleServer = BLEDevice::createServer();
 
-    new Thermometer(bleServer, thermometerServiceUuid, temperatureCharacteristicUuid);
+    Thermometer::init(bleServer, thermometerServiceUuid, temperatureCharacteristicUuid);
 
     bleServer->getAdvertising()->start();
 
