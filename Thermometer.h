@@ -16,7 +16,7 @@ private:
   char *thermometerServiceUuid;
   char *temperatureCharacteristicUuid;
   BLEServer *bleServer;
-  BLEService *thermometerService;
+  static BLEService *thermometerService;
 };
 
 #endif

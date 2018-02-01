@@ -24,3 +24,4 @@ void Thermometer::onConnect(BLEServer *bleServer)
 }
 
 bool Thermometer::isConnected;
+BLEService *Thermometer::thermometerService;
