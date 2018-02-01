@@ -2,9 +2,10 @@
 #include <BLEDevice.h>
 #include <BLE2902.h>
 
+#include "Thermometer.h"
 #include "Ble.h"
 
-class Thermometer : public BLEServerCallbacks
+/*class Thermometer : public BLEServerCallbacks
 {
   public:
     void onConnect(BLEServer *pServer);
@@ -22,7 +23,7 @@ void Thermometer::onConnect(BLEServer *pServer)
     isConnected = true;
 }
 
-bool Thermometer::isConnected;
+bool Thermometer::isConnected;*/
 
 class Temperature : public BLECharacteristicCallbacks
 {
