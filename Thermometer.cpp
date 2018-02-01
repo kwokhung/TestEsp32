@@ -8,7 +8,8 @@ Thermometer::Thermometer(BLEServer *bleServer, char *thermometerServiceUuid, cha
 
     thermometerService = bleServer->createService(thermometerServiceUuid);
 
-    new Temperature(thermometerService, temperatureCharacteristicUuid);
+    //new Temperature(thermometerService, temperatureCharacteristicUuid);
+    Temperature::init(thermometerService, temperatureCharacteristicUuid);
 
     thermometerService->start();
 }

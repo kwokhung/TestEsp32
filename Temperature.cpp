@@ -22,6 +22,14 @@ void Temperature::onWrite(BLECharacteristic *temperatureCharacteristic)
     Serial.println("*********");
 }
 
+void Temperature::init(BLEService *thermometerService, char *temperatureCharacteristicUuid)
+{
+    if (!initted)
+    {
+        new Temperature(thermometerService, temperatureCharacteristicUuid);
+    }
+}
+
 uint8_t Temperature::getValue()
 {
     value = *temperatureCharacteristic->getValue().data();
@@ -40,5 +48,6 @@ void Temperature::notify()
     temperatureCharacteristic->notify();
 }
 
-uint8_t Temperature::value;
-BLECharacteristic *Temperature::temperatureCharacteristic = 0;
+bool Temperature::initted = false;
+uint8_t Temperature::value = 0;
+BLECharacteristic *Temperature::temperatureCharacteristic;
