@@ -10,7 +10,6 @@ Ble::Ble(std::string name, char *thermometerServiceUuid, char *temperatureCharac
       thermometerServiceUuid(thermometerServiceUuid),
       temperatureCharacteristicUuid(temperatureCharacteristicUuid)
 {
-    Thermometer::isConnected = false;
 }
 
 void Ble::setup()
@@ -28,7 +27,7 @@ void Ble::setup()
 
 void Ble::notify()
 {
-    if (Thermometer::isConnected)
+    if (Thermometer::isConnected())
     {
         Serial.printf("*** Sent Value: %d ***\n", Temperature::getValue());
 

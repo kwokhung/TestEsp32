@@ -10,13 +10,14 @@ public:
 
   void onConnect(BLEServer *bleServer);
   void onDisconnect(BLEServer *bleServer);
-  static bool isConnected;
+  static bool isConnected();
 
 private:
   char *thermometerServiceUuid;
   char *temperatureCharacteristicUuid;
   BLEServer *bleServer;
   static BLEService *thermometerService;
+  static bool connected;
 };
 
 #endif

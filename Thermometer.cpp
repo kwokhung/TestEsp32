@@ -15,13 +15,18 @@ Thermometer::Thermometer(BLEServer *bleServer, char *thermometerServiceUuid, cha
 
 void Thermometer::onDisconnect(BLEServer *bleServer)
 {
-    isConnected = false;
+    connected = false;
 }
 
 void Thermometer::onConnect(BLEServer *bleServer)
 {
-    isConnected = true;
+    connected = true;
 }
 
-bool Thermometer::isConnected;
+bool Thermometer::isConnected()
+{
+    return connected;
+}
+
+bool Thermometer::connected = false;
 BLEService *Thermometer::thermometerService;
