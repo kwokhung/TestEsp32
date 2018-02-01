@@ -5,10 +5,10 @@
 #include "Temperature.h"
 #include "Ble.h"
 
-Ble::Ble(std::string name, char *serviceUuid, char *characteristicUuid)
+Ble::Ble(std::string name, char *thermometerUuid, char *temperatureUuid)
     : name(name),
-      serviceUuid(serviceUuid),
-      characteristicUuid(characteristicUuid)
+      thermometerUuid(thermometerUuid),
+      temperatureUuid(temperatureUuid)
 {
     Thermometer::isConnected = false;
     Temperature::value = 0;
@@ -18,11 +18,11 @@ void Ble::setup()
 {
     BLEDevice::init(name);
 
-    pServer = BLEDevice::createServer();
+    bleServer = BLEDevice::createServer();
 
-    new Thermometer(pServer, serviceUuid, characteristicUuid);
+    new Thermometer(bleServer, thermometerUuid, temperatureUuid);
 
-    pServer->getAdvertising()->start();
+    bleServer->getAdvertising()->start();
 
     Serial.println("Waiting a client connection...");
 }

@@ -6,7 +6,7 @@
 class Temperature : public BLECharacteristicCallbacks
 {
 public:
-  Temperature(BLEService *pService, char *characteristicUuid);
+  Temperature(BLEService *pService, char *temperatureUuid);
 
   void onWrite(BLECharacteristic *pCharacteristic);
   static uint8_t getValue();
@@ -16,8 +16,8 @@ public:
   static BLECharacteristic *pCharacteristic;
 
 private:
-  char *serviceUuid;
-  char *characteristicUuid;
+  char *thermometerUuid;
+  char *temperatureUuid;
   BLEService *pService;
 };
 

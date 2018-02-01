@@ -6,16 +6,16 @@
 class Ble
 {
 public:
-  Ble(std::string name, char *serviceUuid, char *characteristicUuid);
+  Ble(std::string name, char *thermometerUuid, char *temperatureUuid);
 
   void setup();
   void notify();
 
 private:
   std::string name;
-  char *serviceUuid;
-  char *characteristicUuid;
-  BLEServer *pServer;
+  char *thermometerUuid;
+  char *temperatureUuid;
+  BLEServer *bleServer;
 };
 
 #endif

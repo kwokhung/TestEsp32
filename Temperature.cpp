@@ -3,11 +3,11 @@
 
 #include "Temperature.h"
 
-Temperature::Temperature(BLEService *pService, char *characteristicUuid)
+Temperature::Temperature(BLEService *pService, char *temperatureUuid)
     : pService(pService)
 {
     pCharacteristic = pService->createCharacteristic(
-        characteristicUuid,
+        temperatureUuid,
         BLECharacteristic::PROPERTY_READ |
             BLECharacteristic::PROPERTY_WRITE |
             BLECharacteristic::PROPERTY_NOTIFY);

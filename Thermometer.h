@@ -6,16 +6,16 @@
 class Thermometer : public BLEServerCallbacks
 {
 public:
-  Thermometer(BLEServer *pServer, char *serviceUuid, char *characteristicUuid);
+  Thermometer(BLEServer *bleServer, char *thermometerUuid, char *temperatureUuid);
 
-  void onConnect(BLEServer *pServer);
-  void onDisconnect(BLEServer *pServer);
+  void onConnect(BLEServer *bleServer);
+  void onDisconnect(BLEServer *bleServer);
   static bool isConnected;
 
 private:
-  char *serviceUuid;
-  char *characteristicUuid;
-  BLEServer *pServer;
+  char *thermometerUuid;
+  char *temperatureUuid;
+  BLEServer *bleServer;
   BLEService *pService;
 };
 
