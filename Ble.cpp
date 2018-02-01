@@ -33,8 +33,8 @@ void Ble::notify()
     {
         Serial.printf("*** Sent Value: %d ***\n", Temperature::value);
 
-        Thermometer::pCharacteristic->setValue(&Temperature::value, 1);
-        Thermometer::pCharacteristic->notify();
+        Temperature::pCharacteristic->setValue(&Temperature::value, 1);
+        Temperature::pCharacteristic->notify();
 
         Temperature::value++;
     }

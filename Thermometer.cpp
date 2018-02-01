@@ -10,13 +10,7 @@ Thermometer::Thermometer(BLEServer *pServer, char *serviceUuid, char *characteri
 
     pService = pServer->createService(serviceUuid);
 
-    pCharacteristic = pService->createCharacteristic(
-        characteristicUuid,
-        BLECharacteristic::PROPERTY_READ |
-            BLECharacteristic::PROPERTY_WRITE |
-            BLECharacteristic::PROPERTY_NOTIFY);
-    pCharacteristic->addDescriptor(new BLE2902());
-    pCharacteristic->setCallbacks(new Temperature());
+    new Temperature(pService, serviceUuid, characteristicUuid);
 
     pService->start();
 }

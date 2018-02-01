@@ -1,6 +1,19 @@
 #include <HardwareSerial.h>
+#include <BLE2902.h>
 
 #include "Temperature.h"
+
+Temperature::Temperature(BLEService *pService, char *serviceUuid, char *characteristicUuid)
+    : pService(pService)
+{
+    pCharacteristic = pService->createCharacteristic(
+        characteristicUuid,
+        BLECharacteristic::PROPERTY_READ |
+            BLECharacteristic::PROPERTY_WRITE |
+            BLECharacteristic::PROPERTY_NOTIFY);
+    pCharacteristic->addDescriptor(new BLE2902());
+    pCharacteristic->setCallbacks(this);
+}
 
 void Temperature::onWrite(BLECharacteristic *pCharacteristic)
 {
@@ -11,3 +24,4 @@ void Temperature::onWrite(BLECharacteristic *pCharacteristic)
 }
 
 uint8_t Temperature::value;
+BLECharacteristic *Temperature::pCharacteristic;
