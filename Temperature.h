@@ -12,13 +12,13 @@ public:
   static uint8_t getValue();
   static void setValue(uint8_t newValue);
   static void notify();
-  static uint8_t value;
 
 private:
   char *thermometerServiceUuid;
   char *temperatureCharacteristicUuid;
   BLEService *thermometerService;
   static BLECharacteristic *temperatureCharacteristic;
+  static uint8_t value;
 };
 
 #endif

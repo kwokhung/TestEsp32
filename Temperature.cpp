@@ -41,4 +41,4 @@ void Temperature::notify()
 }
 
 uint8_t Temperature::value;
-BLECharacteristic *Temperature::temperatureCharacteristic;
+BLECharacteristic *Temperature::temperatureCharacteristic = 0;

@@ -11,7 +11,6 @@ Ble::Ble(std::string name, char *thermometerServiceUuid, char *temperatureCharac
       temperatureCharacteristicUuid(temperatureCharacteristicUuid)
 {
     Thermometer::isConnected = false;
-    Temperature::value = 0;
 }
 
 void Ble::setup()
