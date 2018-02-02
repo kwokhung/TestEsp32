@@ -11,6 +11,7 @@ public:
   void setup();
   void notify();
   static void startUp(void *parameter);
+  TaskHandle_t task;
 
 private:
   std::string name;

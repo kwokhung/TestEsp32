@@ -10,6 +10,7 @@ Ble::Ble(std::string name, char *thermometerServiceUuid, char *temperatureCharac
       thermometerServiceUuid(thermometerServiceUuid),
       temperatureCharacteristicUuid(temperatureCharacteristicUuid)
 {
+    task = NULL;
 }
 
 void Ble::setup()
