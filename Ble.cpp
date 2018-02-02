@@ -38,3 +38,17 @@ void Ble::notify()
 
     delay(1000);
 }
+
+void Ble::startUp(void *parameter)
+{
+    Ble *ble = (Ble *)parameter;
+
+    ble->setup();
+
+    while (true)
+    {
+        ble->notify();
+    }
+
+    vTaskDelete(NULL);
+}

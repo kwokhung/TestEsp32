@@ -6,10 +6,28 @@ void setup()
 {
     Serial.begin(115200);
 
-    ble.setup();
+    uint32_t delayTime = 1000;
+
+    xTaskCreate(iAmHereTask, "I Am Here", 10000, &delayTime, 1, NULL);
+    xTaskCreate(Ble::startUp, "BLE", 10000, &ble, 1, NULL);
 }
 
 void loop()
 {
-    ble.notify();
+}
+
+void iAmHereTask(void *parameter)
+{
+    uint32_t delayTime = *(uint32_t *)parameter;
+
+    Serial.printf("Parameter: %d\n", delayTime);
+
+    for (;;)
+    {
+        Serial.println("I am here.");
+
+        delay(delayTime);
+    }
+
+    vTaskDelete(NULL);
 }

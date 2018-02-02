@@ -10,6 +10,7 @@ public:
 
   void setup();
   void notify();
+  static void startUp(void *parameter);
 
 private:
   std::string name;
