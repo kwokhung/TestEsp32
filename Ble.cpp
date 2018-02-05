@@ -37,7 +37,9 @@ void Ble::notify()
         Temperature::setValue(Temperature::getValue() + 1);
     }
 
-    delay(1000);
+    //delay(1000);
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    vTaskDelayUntil( &xLastWakeTime, pdMS_TO_TICKS( 1000 ) );
 }
 
 void Ble::startUp(void *parameter)
