@@ -7,6 +7,7 @@ SbrMotor *sbrMotor = new SbrMotor("Self balancing Robot - Motor");
 #define PRINT_PERIOD 100000 // print period in micros
 
 #define MAX_PID_OUTPUT 500
+#define MIN_CONTROL_ERR 1
 
 float BASE_Kp = 100.0, BASE_Ki = 5.0, BASE_Kd = 130.0;
 float Kp = BASE_Kp, Ki = BASE_Ki, Kd = BASE_Kd;
@@ -15,7 +16,6 @@ float pidOutput, pidError, pidLastError, integralErr, positionErr, serialControl
 
 float MAX_CONTROL_OR_POSITION_ERR = MAX_PID_OUTPUT / Kp;
 float MAX_CONTROL_ERR_INCREMENT = MAX_CONTROL_OR_POSITION_ERR / 400;
-#define MIN_CONTROL_ERR 1
 
 // populated in the SerialControl part
 uint8_t joystickX;
@@ -25,7 +25,6 @@ uint32_t loop_timer;
 uint32_t print_timer;
 
 float roll, pitch, rollAcc, pitchAcc;
-float speeed;
 
 void setup()
 {

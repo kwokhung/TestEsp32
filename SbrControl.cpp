@@ -1,22 +1,22 @@
 #include <HardwareSerial.h>
 #include <Wire.h>
 
-#include "SbrMotor.h"
+#include "SbrControl.h"
 
-SbrMotor::SbrMotor(std::string name)
+SbrControl::SbrControl(std::string name)
     : name(name)
 {
     task = NULL;
 }
 
-void SbrMotor::setup()
+void SbrControl::setup()
 {
-    Serial.println("SbrMotor::setup");
+    Serial.println("SbrControl::setup");
 
     setup_motor();
 }
 
-void SbrMotor::setup_motor()
+void SbrControl::setup_motor()
 {
     ledcAttachPin(MOT_L_STP, MOT_L_CHANNEL);
     ledcSetup(MOT_L_CHANNEL, 0, 10); // these will be updated later by the ledcWriteNote()
@@ -34,27 +34,27 @@ void SbrMotor::setup_motor()
     currentPos = 0;
 }
 
-void SbrMotor::disableL(bool orEnable)
+void SbrControl::disableL(bool orEnable)
 {
     digitalWrite(MOT_L_ENB, orEnable);
 }
 
-void SbrMotor::disableR(bool orEnable)
+void SbrControl::disableR(bool orEnable)
 {
     digitalWrite(MOT_R_ENB, orEnable);
 }
 
-void SbrMotor::forwardL(bool orBack)
+void SbrControl::forwardL(bool orBack)
 {
     digitalWrite(MOT_L_DIR, orBack);
 }
 
-void SbrMotor::forwardR(bool orBack)
+void SbrControl::forwardR(bool orBack)
 {
     digitalWrite(MOT_R_DIR, orBack);
 }
 
-void SbrMotor::setSpeed(int16_t s, int16_t rotation)
+void SbrControl::setSpeed(int16_t s, int16_t rotation)
 {
     int16_t sL = s - rotation;
     int16_t sR = s + rotation;
@@ -99,11 +99,11 @@ void SbrMotor::setSpeed(int16_t s, int16_t rotation)
     ledcWriteTone(MOT_R_CHANNEL, sR);
 }
 
-void SbrMotor::startUp(void *parameter)
+void SbrControl::startUp(void *parameter)
 {
-    SbrMotor *sbrMotor = (SbrMotor *)parameter;
+    SbrControl *sbrControl = (SbrControl *)parameter;
 
-    sbrMotor->setup();
+    sbrControl->setup();
 
     while (true)
     {
