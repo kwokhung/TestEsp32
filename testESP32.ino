@@ -1,6 +1,9 @@
+#include "Sbr.h"
+
+Sbr *sbr = new Sbr("Self balancing Robot");
+
 #include <Wire.h>
 
-#define PERIOD 4000         // loop period in micros
 #define PRINT_PERIOD 100000 // print period in micros
 
 #define MOT_R_ENB 32
@@ -99,141 +102,6 @@ void setSpeed(int16_t s, int16_t rotation)
   ledcWriteTone(MOT_R_CHANNEL, sR);
 }
 
-static int MPU_ADDR = 0x69; //AD0 is HIGH
-
-// MPU6050 specific
-#define MPU6050_FS_SEL0 3
-#define MPU6050_FS_SEL1 4
-#define MPU6050_AFS_SEL0 3
-#define MPU6050_AFS_SEL1 4
-
-// Combined definitions for the FS_SEL values.eg.  ±250 degrees/second
-#define MPU6050_FS_SEL_250 (0)
-#define MPU6050_FS_SEL_500 (bit(MPU6050_FS_SEL0))
-#define MPU6050_FS_SEL_1000 (bit(MPU6050_FS_SEL1))
-#define MPU6050_FS_SEL_2000 (bit(MPU6050_FS_SEL1) | bit(MPU6050_FS_SEL0))
-
-// Combined definitions for the AFS_SEL values
-#define MPU6050_AFS_SEL_2G (0)
-#define MPU6050_AFS_SEL_4G (bit(MPU6050_AFS_SEL0))
-#define MPU6050_AFS_SEL_8G (bit(MPU6050_AFS_SEL1))
-#define MPU6050_AFS_SEL_16G (bit(MPU6050_AFS_SEL1) | bit(MPU6050_AFS_SEL0))
-
-// See page 12 & 13 of MPU-6050 datasheet for sensitivities config and corresponding output
-#define GYRO_FULL_SCALE_RANGE MPU6050_FS_SEL_250
-#define GYRO_SCALE_FACTOR 131 // LSB / (degs per seconds)
-#define ACC_FULL_SCALE_RANGE MPU6050_AFS_SEL_4G
-#define ACC_SCALE_FACTOR 8192 // LSB / g
-
-static float GYRO_RAW_TO_DEGS = 1.0 / (1000000.0 / PERIOD) / GYRO_SCALE_FACTOR;
-
-int16_t accX, accY, accZ;
-int16_t gyroX, gyroY, gyroZ;
-int16_t gyroX_calibration, gyroY_calibration, gyroZ_calibration;
-
-void setup_mpu()
-{
-  Wire.begin();
-  Wire.setClock(400000L);
-
-  //By default the MPU-6050 sleeps. So we have to wake it up.
-  Wire.beginTransmission(MPU_ADDR);
-  Wire.write(0x6B); //We want to write to the PWR_MGMT_1 register (6B hex)
-  Wire.write(0x00); //Set the register bits as 00000000 to activate the gyro
-  Wire.endTransmission();
-
-  Wire.beginTransmission(MPU_ADDR);
-  Wire.write(0x1B); //We want to write to the GYRO_CONFIG register (1B hex)
-  Wire.write(GYRO_FULL_SCALE_RANGE);
-  Wire.endTransmission();
-
-  Wire.beginTransmission(MPU_ADDR);
-  Wire.write(0x1C); //We want to write to the ACCEL_CONFIG register (1A hex)
-  Wire.write(ACC_FULL_SCALE_RANGE);
-  Wire.endTransmission();
-  //Set some filtering to improve the raw data.
-  Wire.beginTransmission(MPU_ADDR);
-  Wire.write(0x1A); //We want to write to the CONFIG register (1A hex)
-  Wire.write(0x03); //Set the register bits as 00000011 (Set Digital Low Pass Filter to ~43Hz)
-  Wire.endTransmission();
-
-  calibrateGyro();
-}
-
-#define ACCEL_XOUT_H 0x3B
-#define ACCEL_XOUT_L 0x3C
-#define ACCEL_YOUT_H 0x3D
-#define ACCEL_YOUT_L 0x3E
-#define ACCEL_ZOUT_H 0x3F
-#define ACCEL_ZOUT_L 0x40
-
-void getAcceleration(int16_t *x, int16_t *y, int16_t *z)
-{
-  Wire.beginTransmission(MPU_ADDR);
-  Wire.write(ACCEL_XOUT_H);
-  Wire.endTransmission();
-  Wire.requestFrom(MPU_ADDR, 6);
-  *x = constr((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
-  *y = constr((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
-  *z = constr((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
-}
-
-#define GYRO_XOUT_H 0x43
-#define GYRO_XOUT_L 0x44
-#define GYRO_YOUT_H 0x45
-#define GYRO_YOUT_L 0x46
-#define GYRO_ZOUT_H 0x47
-#define GYRO_ZOUT_L 0x48
-
-void getRotation(int16_t *x, int16_t *y, int16_t *z)
-{
-  Wire.beginTransmission(MPU_ADDR);
-  Wire.write(GYRO_XOUT_H);
-  Wire.endTransmission();
-  Wire.requestFrom(MPU_ADDR, 6);
-  *x = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroX_calibration;
-  *y = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroY_calibration;
-  *z = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroZ_calibration;
-}
-
-void calibrateGyro()
-{
-  int32_t x, y, z;
-
-  for (int i = 0; i < 500; i++)
-  {
-    getRotation(&gyroX, &gyroY, &gyroZ);
-    x += gyroX;
-    y += gyroY;
-    z += gyroZ;
-
-    delayMicroseconds(PERIOD); // simulate the main program loop time ??
-  }
-
-  gyroX_calibration = x / 500;
-  gyroY_calibration = y / 500;
-  gyroZ_calibration = z / 500;
-}
-
-// on ESP32 Arduino constrain doesn't work
-int16_t constr(int16_t value, int16_t mini, int16_t maxi)
-{
-  if (value < mini)
-    return mini;
-  else if (value > maxi)
-    return maxi;
-  return value;
-}
-
-float constrf(float value, float mini, float maxi)
-{
-  if (value < mini)
-    return mini;
-  else if (value > maxi)
-    return maxi;
-  return value;
-}
-
 #define MAX_PID_OUTPUT 500
 
 float BASE_Kp = 100.0, BASE_Ki = 5.0, BASE_Kd = 130.0;
@@ -259,7 +127,8 @@ void setup()
 {
   Serial.begin(500000);
 
-  setup_mpu();
+  xTaskCreate(Sbr::startUp, "SBR", 10000, sbr, 1, &sbr->task);
+
   setup_motors();
   setup_serial_control();
   setup_wifi();
@@ -270,17 +139,17 @@ void setup()
 
 void loop()
 {
-  getAcceleration(&accX, &accY, &accZ);
-  rollAcc = asin((float)accX / ACC_SCALE_FACTOR) * RAD_TO_DEG;
-  pitchAcc = asin((float)accY / ACC_SCALE_FACTOR) * RAD_TO_DEG;
+  sbr->getAcceleration(&sbr->accX, &sbr->accY, &sbr->accZ);
+  rollAcc = asin((float)sbr->accX / ACC_SCALE_FACTOR) * RAD_TO_DEG;
+  pitchAcc = asin((float)sbr->accY / ACC_SCALE_FACTOR) * RAD_TO_DEG;
 
-  getRotation(&gyroX, &gyroY, &gyroZ);
+  sbr->getRotation(&sbr->gyroX, &sbr->gyroY, &sbr->gyroZ);
   // roll vs pitch depends on how the MPU is installed in the robot
-  roll -= gyroY * GYRO_RAW_TO_DEGS;
-  pitch += gyroX * GYRO_RAW_TO_DEGS;
+  roll -= sbr->gyroY * Sbr::GYRO_RAW_TO_DEGS;
+  pitch += sbr->gyroX * Sbr::GYRO_RAW_TO_DEGS;
   // sin() has to be applied on radians
-  //  roll += pitch * sin((float)gyroZ * GYRO_RAW_TO_DEGS * DEG_TO_RAD);
-  //  pitch -= roll * sin((float)gyroZ * GYRO_RAW_TO_DEGS * DEG_TO_RAD);
+  //  roll += pitch * sin((float)gyroZ * Sbr::GYRO_RAW_TO_DEGS * DEG_TO_RAD);
+  //  pitch -= roll * sin((float)gyroZ * Sbr::GYRO_RAW_TO_DEGS * DEG_TO_RAD);
 
   roll = roll * 0.999 + rollAcc * 0.001;
   pitch = pitch * 0.999 + pitchAcc * 0.001;
@@ -288,19 +157,19 @@ void loop()
   // apply PID algo
 
   // The selfBalanceAngleSetpoint variable is automatically changed to make sure that the robot stays balanced all the time.
-  positionErr = constrf(currentPos / (float)1000, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
+  positionErr = Sbr::constrf(currentPos / (float)1000, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
   serialControlErr = 0;
   if (isValidJoystickValue(joystickY))
   {
-    serialControlErr = constrf((joystickY - 130) / (float)15, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
+    serialControlErr = Sbr::constrf((joystickY - 130) / (float)15, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
     // this control has to change slowly/gradually to avoid shaking the robot
     if (serialControlErr < prevSerialControlErr)
     {
-      serialControlErr = max(serialControlErr, prevSerialControlErr - MAX_CONTROL_ERR_INCREMENT);
+      serialControlErr = _max(serialControlErr, prevSerialControlErr - MAX_CONTROL_ERR_INCREMENT);
     }
     else
     {
-      serialControlErr = min(serialControlErr, prevSerialControlErr + MAX_CONTROL_ERR_INCREMENT);
+      serialControlErr = _min(serialControlErr, prevSerialControlErr + MAX_CONTROL_ERR_INCREMENT);
     }
 
     prevSerialControlErr = serialControlErr;
@@ -319,7 +188,7 @@ void loop()
     pidError += positionErr;
   }
 
-  integralErr = constrf(integralErr + Ki * pidError, -MAX_PID_OUTPUT, MAX_PID_OUTPUT);
+  integralErr = Sbr::constrf(integralErr + Ki * pidError, -MAX_PID_OUTPUT, MAX_PID_OUTPUT);
   errorDerivative = pidError - pidLastError;
 
   pidOutput = Kp * pidError + integralErr + Kd * errorDerivative;
@@ -340,7 +209,7 @@ void loop()
   int16_t rotation = 0;
   if (isValidJoystickValue(joystickX))
   {
-    rotation = constrf((float)(joystickX - 130), -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT);
+    rotation = Sbr::constrf((float)(joystickX - 130), -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT);
   }
 
   if (micros() >= print_timer)
@@ -361,7 +230,7 @@ void loop()
   //    if(pidOutput > 0) selfBalanceAngleSetpoint += 0.0015;   //Decrease the self_balance_pid_setpoint if the robot is still moving backward
   //  }
 
-  setSpeed(constrf(pidOutput, -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT), rotation);
+  setSpeed(Sbr::constrf(pidOutput, -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT), rotation);
 
   // The angle calculations are tuned for a loop time of PERIOD milliseconds.
   // To make sure every loop is exactly that, a wait loop is created by setting the loop_timer
