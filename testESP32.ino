@@ -1,8 +1,6 @@
-#include "Sbr.h"
+#include "SbrMpu.h"
 
-Sbr *sbr = new Sbr("Self balancing Robot");
-
-#include <Wire.h>
+SbrMpu *sbrMpu = new SbrMpu("Self balancing Robot - MPU");
 
 #define PRINT_PERIOD 100000 // print period in micros
 
@@ -127,7 +125,7 @@ void setup()
 {
   Serial.begin(500000);
 
-  xTaskCreate(Sbr::startUp, "SBR", 10000, sbr, 1, &sbr->task);
+  xTaskCreate(SbrMpu::startUp, "SBR - MPU", 10000, sbrMpu, 1, &sbrMpu->task);
 
   setup_motors();
   setup_serial_control();
@@ -139,17 +137,17 @@ void setup()
 
 void loop()
 {
-  sbr->getAcceleration(&sbr->accX, &sbr->accY, &sbr->accZ);
-  rollAcc = asin((float)sbr->accX / ACC_SCALE_FACTOR) * RAD_TO_DEG;
-  pitchAcc = asin((float)sbr->accY / ACC_SCALE_FACTOR) * RAD_TO_DEG;
+  sbrMpu->getAcceleration(&sbrMpu->accX, &sbrMpu->accY, &sbrMpu->accZ);
+  rollAcc = asin((float)sbrMpu->accX / ACC_SCALE_FACTOR) * RAD_TO_DEG;
+  pitchAcc = asin((float)sbrMpu->accY / ACC_SCALE_FACTOR) * RAD_TO_DEG;
 
-  sbr->getRotation(&sbr->gyroX, &sbr->gyroY, &sbr->gyroZ);
+  sbrMpu->getRotation(&sbrMpu->gyroX, &sbrMpu->gyroY, &sbrMpu->gyroZ);
   // roll vs pitch depends on how the MPU is installed in the robot
-  roll -= sbr->gyroY * Sbr::GYRO_RAW_TO_DEGS;
-  pitch += sbr->gyroX * Sbr::GYRO_RAW_TO_DEGS;
+  roll -= sbrMpu->gyroY * SbrMpu::GYRO_RAW_TO_DEGS;
+  pitch += sbrMpu->gyroX * SbrMpu::GYRO_RAW_TO_DEGS;
   // sin() has to be applied on radians
-  //  roll += pitch * sin((float)gyroZ * Sbr::GYRO_RAW_TO_DEGS * DEG_TO_RAD);
-  //  pitch -= roll * sin((float)gyroZ * Sbr::GYRO_RAW_TO_DEGS * DEG_TO_RAD);
+  //  roll += pitch * sin((float)gyroZ * SbrMpu::GYRO_RAW_TO_DEGS * DEG_TO_RAD);
+  //  pitch -= roll * sin((float)gyroZ * SbrMpu::GYRO_RAW_TO_DEGS * DEG_TO_RAD);
 
   roll = roll * 0.999 + rollAcc * 0.001;
   pitch = pitch * 0.999 + pitchAcc * 0.001;
@@ -157,11 +155,11 @@ void loop()
   // apply PID algo
 
   // The selfBalanceAngleSetpoint variable is automatically changed to make sure that the robot stays balanced all the time.
-  positionErr = Sbr::constrf(currentPos / (float)1000, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
+  positionErr = SbrMpu::constrf(currentPos / (float)1000, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
   serialControlErr = 0;
   if (isValidJoystickValue(joystickY))
   {
-    serialControlErr = Sbr::constrf((joystickY - 130) / (float)15, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
+    serialControlErr = SbrMpu::constrf((joystickY - 130) / (float)15, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
     // this control has to change slowly/gradually to avoid shaking the robot
     if (serialControlErr < prevSerialControlErr)
     {
@@ -188,7 +186,7 @@ void loop()
     pidError += positionErr;
   }
 
-  integralErr = Sbr::constrf(integralErr + Ki * pidError, -MAX_PID_OUTPUT, MAX_PID_OUTPUT);
+  integralErr = SbrMpu::constrf(integralErr + Ki * pidError, -MAX_PID_OUTPUT, MAX_PID_OUTPUT);
   errorDerivative = pidError - pidLastError;
 
   pidOutput = Kp * pidError + integralErr + Kd * errorDerivative;
@@ -209,7 +207,7 @@ void loop()
   int16_t rotation = 0;
   if (isValidJoystickValue(joystickX))
   {
-    rotation = Sbr::constrf((float)(joystickX - 130), -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT);
+    rotation = SbrMpu::constrf((float)(joystickX - 130), -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT);
   }
 
   if (micros() >= print_timer)
@@ -230,7 +228,7 @@ void loop()
   //    if(pidOutput > 0) selfBalanceAngleSetpoint += 0.0015;   //Decrease the self_balance_pid_setpoint if the robot is still moving backward
   //  }
 
-  setSpeed(Sbr::constrf(pidOutput, -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT), rotation);
+  setSpeed(SbrMpu::constrf(pidOutput, -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT), rotation);
 
   // The angle calculations are tuned for a loop time of PERIOD milliseconds.
   // To make sure every loop is exactly that, a wait loop is created by setting the loop_timer

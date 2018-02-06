@@ -1,5 +1,5 @@
-#ifndef Sbr_h
-#define Sbr_h
+#ifndef SbrMotor_h
+#define SbrMotor_h
 
 #include <string>
 #include <string.h>
@@ -46,10 +46,10 @@
 #define GYRO_ZOUT_H 0x47
 #define GYRO_ZOUT_L 0x48
 
-class Sbr
+class SbrMotor
 {
 public:
-  Sbr(std::string name);
+  SbrMotor(std::string name);
 
   void setup();
   void setup_mpu();
