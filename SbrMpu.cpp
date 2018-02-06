@@ -53,6 +53,7 @@ void SbrMpu::calibrateGyro()
     for (int i = 0; i < 500; i++)
     {
         getRotation(&gyroX, &gyroY, &gyroZ);
+
         x += gyroX;
         y += gyroY;
         z += gyroZ;
@@ -67,13 +68,14 @@ void SbrMpu::calibrateGyro()
 
 void SbrMpu::getAcceleration(int16_t *x, int16_t *y, int16_t *z)
 {
-  Wire.beginTransmission(SbrMpu::MPU_ADDR);
-  Wire.write(ACCEL_XOUT_H);
-  Wire.endTransmission();
-  Wire.requestFrom(SbrMpu::MPU_ADDR, 6);
-  *x = SbrMpu::constr((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
-  *y = SbrMpu::constr((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
-  *z = SbrMpu::constr((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
+    Wire.beginTransmission(SbrMpu::MPU_ADDR);
+    Wire.write(ACCEL_XOUT_H);
+    Wire.endTransmission();
+    Wire.requestFrom(SbrMpu::MPU_ADDR, 6);
+
+    *x = SbrMpu::constr((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
+    *y = SbrMpu::constr((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
+    *z = SbrMpu::constr((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
 }
 
 void SbrMpu::getRotation(int16_t *x, int16_t *y, int16_t *z)
@@ -82,6 +84,7 @@ void SbrMpu::getRotation(int16_t *x, int16_t *y, int16_t *z)
     Wire.write(GYRO_XOUT_H);
     Wire.endTransmission();
     Wire.requestFrom(MPU_ADDR, 6);
+    
     *x = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroX_calibration;
     *y = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroY_calibration;
     *z = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroZ_calibration;
@@ -102,20 +105,30 @@ void SbrMpu::startUp(void *parameter)
 
 int16_t SbrMpu::constr(int16_t value, int16_t mini, int16_t maxi)
 {
-  if (value < mini)
-    return mini;
-  else if (value > maxi)
-    return maxi;
-  return value;
+    if (value < mini)
+    {
+        return mini;
+    }
+    else if (value > maxi)
+    {
+        return maxi;
+    }
+
+    return value;
 }
 
 float SbrMpu::constrf(float value, float mini, float maxi)
 {
-  if (value < mini)
-    return mini;
-  else if (value > maxi)
-    return maxi;
-  return value;
+    if (value < mini)
+    {
+        return mini;
+    }
+    else if (value > maxi)
+    {
+        return maxi;
+    }
+
+    return value;
 }
 
 int SbrMpu::MPU_ADDR = 0x69; //AD0 is HIGH

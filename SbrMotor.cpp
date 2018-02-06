@@ -13,78 +13,90 @@ void SbrMotor::setup()
 {
     Serial.println("SbrMotor::setup");
 
-    setup_mpu();
+    setup_motor();
 }
 
-void SbrMotor::setup_mpu()
+void SbrMotor::setup_motor()
 {
-    Wire.begin();
-    Wire.setClock(400000L);
+    ledcAttachPin(MOT_L_STP, MOT_L_CHANNEL);
+    ledcSetup(MOT_L_CHANNEL, 0, 10); // these will be updated later by the ledcWriteNote()
+    ledcAttachPin(MOT_R_STP, MOT_R_CHANNEL);
+    ledcSetup(MOT_R_CHANNEL, 0, 10); // these will be updated later by the ledcWriteNote()
 
-    //By default the MPU-6050 sleeps. So we have to wake it up.
-    Wire.beginTransmission(SbrMotor::MPU_ADDR);
-    Wire.write(0x6B); //We want to write to the PWR_MGMT_1 register (6B hex)
-    Wire.write(0x00); //Set the register bits as 00000000 to activate the gyro
-    Wire.endTransmission();
+    pinMode(MOT_L_ENB, OUTPUT);
+    pinMode(MOT_L_DIR, OUTPUT);
+    disableL(true);
 
-    Wire.beginTransmission(SbrMotor::MPU_ADDR);
-    Wire.write(0x1B); //We want to write to the GYRO_CONFIG register (1B hex)
-    Wire.write(GYRO_FULL_SCALE_RANGE);
-    Wire.endTransmission();
+    pinMode(MOT_R_ENB, OUTPUT);
+    pinMode(MOT_R_DIR, OUTPUT);
+    disableR(true);
 
-    Wire.beginTransmission(SbrMotor::MPU_ADDR);
-    Wire.write(0x1C); //We want to write to the ACCEL_CONFIG register (1A hex)
-    Wire.write(ACC_FULL_SCALE_RANGE);
-    Wire.endTransmission();
-
-    //Set some filtering to improve the raw data.
-    Wire.beginTransmission(SbrMotor::MPU_ADDR);
-    Wire.write(0x1A); //We want to write to the CONFIG register (1A hex)
-    Wire.write(0x03); //Set the register bits as 00000011 (Set Digital Low Pass Filter to ~43Hz)
-    Wire.endTransmission();
-
-    calibrateGyro();
+    currentPos = 0;
 }
 
-void SbrMotor::calibrateGyro()
+void SbrMotor::disableL(bool orEnable)
 {
-    int32_t x, y, z;
+    digitalWrite(MOT_L_ENB, orEnable);
+}
 
-    for (int i = 0; i < 500; i++)
+void SbrMotor::disableR(bool orEnable)
+{
+    digitalWrite(MOT_R_ENB, orEnable);
+}
+
+void SbrMotor::forwardL(bool orBack)
+{
+    digitalWrite(MOT_L_DIR, orBack);
+}
+
+void SbrMotor::forwardR(bool orBack)
+{
+    digitalWrite(MOT_R_DIR, orBack);
+}
+
+void SbrMotor::setSpeed(int16_t s, int16_t rotation)
+{
+    int16_t sL = s - rotation;
+    int16_t sR = s + rotation;
+    boolean backwardL = sL < 0;
+    boolean backwardR = sR < 0;
+
+    if (backwardL)
     {
-        getRotation(&gyroX, &gyroY, &gyroZ);
-        x += gyroX;
-        y += gyroY;
-        z += gyroZ;
-
-        delayMicroseconds(PERIOD); // simulate the main program loop time ??
+        forwardL(false);
+        sL = -sL;
+    }
+    else
+    {
+        forwardL(true);
     }
 
-    gyroX_calibration = x / 500;
-    gyroY_calibration = y / 500;
-    gyroZ_calibration = z / 500;
-}
+    if (backwardR)
+    {
+        forwardR(false);
+        sR = -sR;
+    }
+    else
+    {
+        forwardR(true);
+    }
 
-void SbrMotor::getAcceleration(int16_t *x, int16_t *y, int16_t *z)
-{
-  Wire.beginTransmission(SbrMotor::MPU_ADDR);
-  Wire.write(ACCEL_XOUT_H);
-  Wire.endTransmission();
-  Wire.requestFrom(SbrMotor::MPU_ADDR, 6);
-  *x = SbrMotor::constr((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
-  *y = SbrMotor::constr((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
-  *z = SbrMotor::constr((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
-}
+    disableL(sL < MAX_SPEED / 100);
+    disableR(sR < MAX_SPEED / 100);
 
-void SbrMotor::getRotation(int16_t *x, int16_t *y, int16_t *z)
-{
-    Wire.beginTransmission(MPU_ADDR);
-    Wire.write(GYRO_XOUT_H);
-    Wire.endTransmission();
-    Wire.requestFrom(MPU_ADDR, 6);
-    *x = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroX_calibration;
-    *y = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroY_calibration;
-    *z = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroZ_calibration;
+    if (sL > MAX_SPEED)
+        sL = MAX_SPEED;
+    if (sR > MAX_SPEED)
+        sR = MAX_SPEED;
+
+    // keep track of the position (in steps forward or backward)
+    currentPos += ((micros() - prevSpeedStart) / (float)1000000) * prevSpeed;
+    prevSpeed = s;
+    prevSpeedStart = micros();
+
+    // set the new speed
+    ledcWriteTone(MOT_L_CHANNEL, sL);
+    ledcWriteTone(MOT_R_CHANNEL, sR);
 }
 
 void SbrMotor::startUp(void *parameter)
@@ -99,24 +111,3 @@ void SbrMotor::startUp(void *parameter)
 
     vTaskDelete(NULL);
 }
-
-int16_t SbrMotor::constr(int16_t value, int16_t mini, int16_t maxi)
-{
-  if (value < mini)
-    return mini;
-  else if (value > maxi)
-    return maxi;
-  return value;
-}
-
-float SbrMotor::constrf(float value, float mini, float maxi)
-{
-  if (value < mini)
-    return mini;
-  else if (value > maxi)
-    return maxi;
-  return value;
-}
-
-int SbrMotor::MPU_ADDR = 0x69; //AD0 is HIGH
-float SbrMotor::GYRO_RAW_TO_DEGS = 1.0 / (1000000.0 / PERIOD) / GYRO_SCALE_FACTOR;

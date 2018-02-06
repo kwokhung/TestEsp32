@@ -1,104 +1,10 @@
 #include "SbrMpu.h"
+#include "SbrMotor.h"
 
 SbrMpu *sbrMpu = new SbrMpu("Self balancing Robot - MPU");
+SbrMotor *sbrMotor = new SbrMotor("Self balancing Robot - Motor");
 
 #define PRINT_PERIOD 100000 // print period in micros
-
-#define MOT_R_ENB 32
-#define MOT_R_STP 33
-#define MOT_R_DIR 25
-#define MOT_R_CHANNEL 1 // for the ledc library
-
-#define MOT_L_ENB 26
-#define MOT_L_STP 14
-#define MOT_L_DIR 27
-#define MOT_L_CHANNEL 2 // for the ledc library
-
-#define MAX_SPEED 20000
-
-uint32_t prevSpeedStart;
-int16_t prevSpeed;
-int32_t currentPos = 0;
-
-void setup_motors()
-{
-  ledcAttachPin(MOT_L_STP, MOT_L_CHANNEL);
-  ledcSetup(MOT_L_CHANNEL, 0, 10); // these will be updated later by the ledcWriteNote()
-  ledcAttachPin(MOT_R_STP, MOT_R_CHANNEL);
-  ledcSetup(MOT_R_CHANNEL, 0, 10); // these will be updated later by the ledcWriteNote()
-
-  pinMode(MOT_L_ENB, OUTPUT);
-  pinMode(MOT_L_DIR, OUTPUT);
-  disableL(true);
-
-  pinMode(MOT_R_ENB, OUTPUT);
-  pinMode(MOT_R_DIR, OUTPUT);
-  disableR(true);
-}
-
-void disableL(bool orEnable)
-{
-  digitalWrite(MOT_L_ENB, orEnable);
-}
-
-void disableR(bool orEnable)
-{
-  digitalWrite(MOT_R_ENB, orEnable);
-}
-
-void forwardL(bool orBack)
-{
-  digitalWrite(MOT_L_DIR, orBack);
-}
-void forwardR(bool orBack)
-{
-  digitalWrite(MOT_R_DIR, orBack);
-}
-
-void setSpeed(int16_t s, int16_t rotation)
-{
-  int16_t sL = s - rotation;
-  int16_t sR = s + rotation;
-  boolean backwardL = sL < 0;
-  boolean backwardR = sR < 0;
-
-  if (backwardL)
-  {
-    forwardL(false);
-    sL = -sL;
-  }
-  else
-  {
-    forwardL(true);
-  }
-
-  if (backwardR)
-  {
-    forwardR(false);
-    sR = -sR;
-  }
-  else
-  {
-    forwardR(true);
-  }
-
-  disableL(sL < MAX_SPEED / 100);
-  disableR(sR < MAX_SPEED / 100);
-
-  if (sL > MAX_SPEED)
-    sL = MAX_SPEED;
-  if (sR > MAX_SPEED)
-    sR = MAX_SPEED;
-
-  // keep track of the position (in steps forward or backward)
-  currentPos += ((micros() - prevSpeedStart) / (float)1000000) * prevSpeed;
-  prevSpeed = s;
-  prevSpeedStart = micros();
-
-  // set the new speed
-  ledcWriteTone(MOT_L_CHANNEL, sL);
-  ledcWriteTone(MOT_R_CHANNEL, sR);
-}
 
 #define MAX_PID_OUTPUT 500
 
@@ -126,8 +32,8 @@ void setup()
   Serial.begin(500000);
 
   xTaskCreate(SbrMpu::startUp, "SBR - MPU", 10000, sbrMpu, 1, &sbrMpu->task);
+  xTaskCreate(SbrMotor::startUp, "SBR - Motor", 10000, sbrMotor, 1, &sbrMotor->task);
 
-  setup_motors();
   setup_serial_control();
   setup_wifi();
 
@@ -155,11 +61,13 @@ void loop()
   // apply PID algo
 
   // The selfBalanceAngleSetpoint variable is automatically changed to make sure that the robot stays balanced all the time.
-  positionErr = SbrMpu::constrf(currentPos / (float)1000, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
+  positionErr = SbrMpu::constrf(sbrMotor->currentPos / (float)1000, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
   serialControlErr = 0;
+
   if (isValidJoystickValue(joystickY))
   {
     serialControlErr = SbrMpu::constrf((joystickY - 130) / (float)15, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
+
     // this control has to change slowly/gradually to avoid shaking the robot
     if (serialControlErr < prevSerialControlErr)
     {
@@ -174,12 +82,13 @@ void loop()
   }
 
   pidError = pitch - angleSetpoint - selfBalanceAngleSetpoint;
+
   // either no manual / serial control -> try to keep the position or follow manual control
   if (abs(serialControlErr) > MIN_CONTROL_ERR)
   {
     pidError += serialControlErr > 0 ? serialControlErr - MIN_CONTROL_ERR : serialControlErr + MIN_CONTROL_ERR;
     // re-init position so it doesn't try to go back when getting out of manual control mode
-    currentPos = 0;
+    sbrMotor->currentPos = 0;
   }
   else
   {
@@ -192,10 +101,13 @@ void loop()
   pidOutput = Kp * pidError + integralErr + Kd * errorDerivative;
 
   if (pidOutput < 5 && pidOutput > -5)
+  {
     pidOutput = 0; //Create a dead-band to stop the motors when the robot is balanced
+  }
 
   if (pitch > 30 || pitch < -30)
-  { //If the robot tips over
+  {
+    //If the robot tips over
     pidOutput = 0;
     integralErr = 0;
     selfBalanceAngleSetpoint = 0;
@@ -205,6 +117,7 @@ void loop()
   pidLastError = pidError;
 
   int16_t rotation = 0;
+
   if (isValidJoystickValue(joystickX))
   {
     rotation = SbrMpu::constrf((float)(joystickX - 130), -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT);
@@ -228,14 +141,19 @@ void loop()
   //    if(pidOutput > 0) selfBalanceAngleSetpoint += 0.0015;   //Decrease the self_balance_pid_setpoint if the robot is still moving backward
   //  }
 
-  setSpeed(SbrMpu::constrf(pidOutput, -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT), rotation);
+  sbrMotor->setSpeed(SbrMpu::constrf(pidOutput, -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT), rotation);
 
   // The angle calculations are tuned for a loop time of PERIOD milliseconds.
   // To make sure every loop is exactly that, a wait loop is created by setting the loop_timer
   if (loop_timer <= micros())
+  {
     Serial.println("ERROR loop too short !");
+  }
+
   while (loop_timer > micros())
-    ;
+  {
+  }
+
   loop_timer += PERIOD;
 }
 
@@ -332,7 +250,7 @@ void displayInfo()
 {
   Serial.println("Handle Display Info...");
   String message = "<h1>Self balancing robot\n</h1><h2> ";
-  message += "<p>Position=" + String(currentPos) + "  <a href=\"update?Pos=inc\"><button>Pos++</button></a><a href=\"update?Pos=dec\"><button>Pos--</button></a></p>";
+  message += "<p>Position=" + String(sbrMotor->currentPos) + "  <a href=\"update?Pos=inc\"><button>Pos++</button></a><a href=\"update?Pos=dec\"><button>Pos--</button></a></p>";
   message += "<p>Kp=" + String(Kp) + "  <a href=\"update?Kp=inc\"><button>Kp++</button></a><a href=\"update?Kp=dec\"><button>Kp--</button></a></p>";
   message += "<p>Ki=" + String(Ki) + "  <a href=\"update?Ki=inc\"><button>Ki++</button></a><a href=\"update?Ki=dec\"><button>Ki--</button></a></p>";
   message += "<p>Kd=" + String(Kd) + "  <a href=\"update?Kd=inc\"><button>Kd++</button></a><a href=\"update?Kd=dec\"><button>Kd--</button></a></p>";
@@ -363,7 +281,7 @@ void updateVars()
   Serial.println("Handle " + action + " to " + var);
 
   if (var == "Pos")
-    currentPos = currentPos + (action == "inc" ? 1000 : -1000);
+    sbrMotor->currentPos = sbrMotor->currentPos + (action == "inc" ? 1000 : -1000);
   else if (var == "Kp")
     Kp = Kp + (action == "inc" ? BASE_Kp * 0.1 : -BASE_Kp * 0.1);
   else if (var == "Ki")
