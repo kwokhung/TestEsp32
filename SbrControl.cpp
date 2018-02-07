@@ -13,90 +13,14 @@ void SbrControl::setup()
 {
     Serial.println("SbrControl::setup");
 
-    setup_motor();
+    setup_serial_control();
 }
 
-void SbrControl::setup_motor()
+void SbrControl::setup_serial_control()
 {
-    ledcAttachPin(MOT_L_STP, MOT_L_CHANNEL);
-    ledcSetup(MOT_L_CHANNEL, 0, 10); // these will be updated later by the ledcWriteNote()
-    ledcAttachPin(MOT_R_STP, MOT_R_CHANNEL);
-    ledcSetup(MOT_R_CHANNEL, 0, 10); // these will be updated later by the ledcWriteNote()
+    SerialControl.begin(9600, SERIAL_8N1, 17, 16);
 
-    pinMode(MOT_L_ENB, OUTPUT);
-    pinMode(MOT_L_DIR, OUTPUT);
-    disableL(true);
-
-    pinMode(MOT_R_ENB, OUTPUT);
-    pinMode(MOT_R_DIR, OUTPUT);
-    disableR(true);
-
-    currentPos = 0;
-}
-
-void SbrControl::disableL(bool orEnable)
-{
-    digitalWrite(MOT_L_ENB, orEnable);
-}
-
-void SbrControl::disableR(bool orEnable)
-{
-    digitalWrite(MOT_R_ENB, orEnable);
-}
-
-void SbrControl::forwardL(bool orBack)
-{
-    digitalWrite(MOT_L_DIR, orBack);
-}
-
-void SbrControl::forwardR(bool orBack)
-{
-    digitalWrite(MOT_R_DIR, orBack);
-}
-
-void SbrControl::setSpeed(int16_t s, int16_t rotation)
-{
-    int16_t sL = s - rotation;
-    int16_t sR = s + rotation;
-    boolean backwardL = sL < 0;
-    boolean backwardR = sR < 0;
-
-    if (backwardL)
-    {
-        forwardL(false);
-        sL = -sL;
-    }
-    else
-    {
-        forwardL(true);
-    }
-
-    if (backwardR)
-    {
-        forwardR(false);
-        sR = -sR;
-    }
-    else
-    {
-        forwardR(true);
-    }
-
-    disableL(sL < MAX_SPEED / 100);
-    disableR(sR < MAX_SPEED / 100);
-
-    if (sL > MAX_SPEED)
-        sL = MAX_SPEED;
-    if (sR > MAX_SPEED)
-        sR = MAX_SPEED;
-
-    // keep track of the position (in steps forward or backward)
-    currentPos += ((micros() - prevSpeedStart) / (float)1000000) * prevSpeed;
-    prevSpeed = s;
-    prevSpeedStart = micros();
-
-    // set the new speed
-    ledcWriteTone(MOT_L_CHANNEL, sL);
-    ledcWriteTone(MOT_R_CHANNEL, sR);
+    //xTaskCreatePinnedToCore(serialControlLoop, "serialControlLoop", 4096, NULL, 2, NULL, xPortGetCoreID());
 }
 
 void SbrControl::startUp(void *parameter)
@@ -105,9 +29,81 @@ void SbrControl::startUp(void *parameter)
 
     sbrControl->setup();
 
+    Serial.println("\nStarting thread dealing with Serial Control requests...");
+    uint8_t currChar;
+
     while (true)
     {
+        while (SerialControl.available())
+        {
+            currChar = SerialControl.read();
+
+            if (startNewMsg(currChar))
+            {
+                _readingMsg = true;
+                _msgPos = 0;
+            }
+            else if (_readingMsg)
+            {
+                if (_msgPos >= 6)
+                {
+                    // data finished, last byte is the CRC
+                    uint8_t crc = 0;
+
+                    for (uint8_t i = 0; i < 6; i++)
+                    {
+                        crc += _msg[i];
+                    }
+
+                    if (crc == currChar)
+                    {
+                        joystickX = _msg[0];
+                        joystickY = _msg[1];
+                        _validData = true;
+                    }
+                    else
+                    {
+                        _validData = false;
+                        Serial.print("Wrong CRC: ");
+                        Serial.print(currChar);
+                        Serial.print(" Expected: ");
+                        Serial.println(crc);
+                    }
+
+                    _readingMsg = false;
+                }
+                else
+                {
+                    // normal data, add it to the message
+                    _msg[_msgPos++] = currChar;
+                }
+            }
+        }
+
+        delay(1);
     }
 
     vTaskDelete(NULL);
 }
+
+boolean SbrControl::startNewMsg(uint8_t c)
+{
+    boolean res = (_prevChar == 0) && (c == 255);
+    _prevChar = c;
+
+    return res;
+}
+
+boolean SbrControl::isValidJoystickValue(uint8_t joystick)
+{
+    return joystick > 20 && joystick < 230;
+}
+
+HardwareSerial &SbrControl::SerialControl = *new HardwareSerial(1);
+uint8_t SbrControl::_prevChar;
+boolean SbrControl::_readingMsg = false;
+uint8_t SbrControl::_msgPos;
+boolean SbrControl::_validData = false;
+uint8_t SbrControl::_msg[6];
+uint8_t SbrControl::joystickX;
+uint8_t SbrControl::joystickY;

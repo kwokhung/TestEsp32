@@ -5,16 +5,7 @@
 #include <string.h>
 #include <FreeRTOS.h>
 #include <Arduino.h>
-
-#define MOT_R_ENB 32
-#define MOT_R_STP 33
-#define MOT_R_DIR 25
-#define MOT_R_CHANNEL 1 // for the ledc library
-
-#define MOT_L_ENB 26
-#define MOT_L_STP 14
-#define MOT_L_DIR 27
-#define MOT_L_CHANNEL 2 // for the ledc library
+#include <HardwareSerial.h>
 
 #define MAX_SPEED 20000
 
@@ -24,19 +15,22 @@ public:
   SbrControl(std::string name);
 
   void setup();
-  void setup_motor();
-  void disableL(bool orEnable);
-  void disableR(bool orEnable);
-  void forwardL(bool orBack);
-  void forwardR(bool orBack);
-  void setSpeed(int16_t s, int16_t rotation);
+  void setup_serial_control();
 
   static void startUp(void *parameter);
+  static boolean startNewMsg(uint8_t c);
+  static boolean isValidJoystickValue(uint8_t joystick);
 
   TaskHandle_t task;
-  uint32_t prevSpeedStart;
-  int16_t prevSpeed;
-  int32_t currentPos;
+
+  static HardwareSerial &SerialControl;
+  static uint8_t _prevChar;
+  static boolean _readingMsg;
+  static uint8_t _msgPos;
+  static boolean _validData;
+  static uint8_t _msg[6];
+  static uint8_t joystickX;
+  static uint8_t joystickY;
 
 private:
   std::string name;

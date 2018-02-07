@@ -1,8 +1,10 @@
 #include "SbrMpu.h"
 #include "SbrMotor.h"
+#include "SbrControl.h"
 
 SbrMpu *sbrMpu = new SbrMpu("Self balancing Robot - MPU");
 SbrMotor *sbrMotor = new SbrMotor("Self balancing Robot - Motor");
+SbrControl *sbrControl = new SbrControl("Self balancing Robot - Control");
 
 #define PRINT_PERIOD 100000 // print period in micros
 
@@ -17,10 +19,6 @@ float pidOutput, pidError, pidLastError, integralErr, positionErr, serialControl
 float MAX_CONTROL_OR_POSITION_ERR = MAX_PID_OUTPUT / Kp;
 float MAX_CONTROL_ERR_INCREMENT = MAX_CONTROL_OR_POSITION_ERR / 400;
 
-// populated in the SerialControl part
-uint8_t joystickX;
-uint8_t joystickY;
-
 uint32_t loop_timer;
 uint32_t print_timer;
 
@@ -32,8 +30,8 @@ void setup()
 
   xTaskCreate(SbrMpu::startUp, "SBR - MPU", 10000, sbrMpu, 1, &sbrMpu->task);
   xTaskCreate(SbrMotor::startUp, "SBR - Motor", 10000, sbrMotor, 1, &sbrMotor->task);
+  xTaskCreate(SbrControl::startUp, "SBR - Control", 10000, sbrControl, 2, &sbrControl->task);
 
-  setup_serial_control();
   setup_wifi();
 
   loop_timer = micros() + PERIOD;
@@ -63,9 +61,9 @@ void loop()
   positionErr = SbrMpu::constrf(sbrMotor->currentPos / (float)1000, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
   serialControlErr = 0;
 
-  if (isValidJoystickValue(joystickY))
+  if (SbrControl::isValidJoystickValue(SbrControl::joystickY))
   {
-    serialControlErr = SbrMpu::constrf((joystickY - 130) / (float)15, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
+    serialControlErr = SbrMpu::constrf((SbrControl::joystickY - 130) / (float)15, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
 
     // this control has to change slowly/gradually to avoid shaking the robot
     if (serialControlErr < prevSerialControlErr)
@@ -117,9 +115,9 @@ void loop()
 
   int16_t rotation = 0;
 
-  if (isValidJoystickValue(joystickX))
+  if (SbrControl::isValidJoystickValue(SbrControl::joystickX))
   {
-    rotation = SbrMpu::constrf((float)(joystickX - 130), -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT);
+    rotation = SbrMpu::constrf((float)(SbrControl::joystickX - 130), -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT);
   }
 
   if (micros() >= print_timer)
@@ -154,90 +152,6 @@ void loop()
   }
 
   loop_timer += PERIOD;
-}
-
-HardwareSerial SerialControl(1);
-
-uint8_t _prevChar;
-boolean _readingMsg = false;
-uint8_t _msg[6];
-uint8_t _msgPos;
-boolean _validData = false;
-
-boolean startNewMsg(uint8_t c)
-{
-  boolean res = (_prevChar == 0) && (c == 255);
-  _prevChar = c;
-  return res;
-}
-
-void serialControlLoop(void *params)
-{
-  Serial.println("\nStarting thread dealing with Serial Control requests...");
-  uint8_t currChar;
-
-  while (true)
-  {
-    while (SerialControl.available())
-    {
-      currChar = SerialControl.read();
-
-      if (startNewMsg(currChar))
-      {
-        _readingMsg = true;
-        _msgPos = 0;
-      }
-      else if (_readingMsg)
-      {
-        if (_msgPos >= 6)
-        {
-          // data finished, last byte is the CRC
-          uint8_t crc = 0;
-          for (uint8_t i = 0; i < 6; i++)
-            crc += _msg[i];
-
-          if (crc == currChar)
-          {
-            joystickX = _msg[0];
-            joystickY = _msg[1];
-            _validData = true;
-          }
-          else
-          {
-            _validData = false;
-            Serial.print("Wrong CRC: ");
-            Serial.print(currChar);
-            Serial.print(" Expected: ");
-            Serial.println(crc);
-          }
-
-          _readingMsg = false;
-        }
-        else
-        {
-          // normal data, add it to the message
-          _msg[_msgPos++] = currChar;
-        }
-      }
-    }
-
-    delay(1);
-  }
-}
-
-void setup_serial_control()
-{
-  SerialControl.begin(9600, SERIAL_8N1, 17, 16);
-
-  // deal with control requests in a separate thread, to avoid impacting the real time balancing
-  // lower number means lower priority. 1 is just above tskIDLE_PRIORITY == 0  which is the lowest priority
-  // use same core as rest of Arduino code as the other one is for system tasks
-  xTaskCreatePinnedToCore(serialControlLoop, "serialControlLoop", 4096, NULL, 2, NULL, xPortGetCoreID());
-}
-
-boolean isValidJoystickValue(uint8_t joystick)
-{
-  return joystick > 20 && joystick < 230;
 }
 
 #include <WiFi.h>
