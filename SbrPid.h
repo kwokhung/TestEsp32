@@ -18,7 +18,7 @@
 class SbrPid
 {
 public:
-  SbrPid(std::string name, SbrMpu *sbrMpu, SbrMotor *sbrMotor);
+  SbrPid(std::string name);
 
   void setup();
 

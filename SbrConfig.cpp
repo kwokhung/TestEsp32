@@ -1,10 +1,9 @@
 #include "SbrConfig.h"
 
-SbrConfig::SbrConfig(std::string name, SbrMotor *sbrMotor)
+SbrConfig::SbrConfig(std::string name)
     : name(name)
 {
     task = NULL;
-    SbrConfig::sbrMotor = sbrMotor;
 }
 
 void SbrConfig::setup()

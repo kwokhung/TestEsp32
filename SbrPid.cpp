@@ -1,11 +1,9 @@
 #include "SbrPid.h"
 
-SbrPid::SbrPid(std::string name, SbrMpu *sbrMpu, SbrMotor *sbrMotor)
+SbrPid::SbrPid(std::string name)
     : name(name)
 {
     task = NULL;
-    SbrPid::sbrMpu = sbrMpu;
-    SbrPid::sbrMotor = sbrMotor;
 }
 
 void SbrPid::setup()

@@ -13,7 +13,7 @@
 class SbrConfig
 {
 public:
-  SbrConfig(std::string name, SbrMotor *sbrMotor);
+  SbrConfig(std::string name);
 
   void setup();
   void setup_wifi();

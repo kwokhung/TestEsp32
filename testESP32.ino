@@ -7,12 +7,17 @@
 SbrMpu *sbrMpu = new SbrMpu("Self balancing Robot - MPU");
 SbrMotor *sbrMotor = new SbrMotor("Self balancing Robot - Motor");
 SbrControl *sbrControl = new SbrControl("Self balancing Robot - Control");
-SbrPid *sbrPid = new SbrPid("Self balancing Robot - PID", sbrMpu, sbrMotor);
-SbrConfig *sbrConfig = new SbrConfig("Self balancing Robot - Config", sbrMotor);
+SbrPid *sbrPid = new SbrPid("Self balancing Robot - PID");
+SbrConfig *sbrConfig = new SbrConfig("Self balancing Robot - Config");
 
 void setup()
 {
-  Serial.begin(500000);
+  Serial.begin(115200);
+
+  SbrPid::sbrMpu = sbrMpu;
+  SbrPid::sbrMotor = sbrMotor;
+
+  SbrConfig::sbrMotor = sbrMotor;
 
   xTaskCreate(SbrMpu::startUp, "SBR - MPU", 10000, sbrMpu, 1, &sbrMpu->task);
   xTaskCreate(SbrMotor::startUp, "SBR - Motor", 10000, sbrMotor, 1, &sbrMotor->task);
