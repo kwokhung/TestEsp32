@@ -1,12 +1,12 @@
 #include "SbrMpu.h"
 #include "SbrMotor.h"
 #include "SbrControl.h"
-#include "SbrDisplay.h"
+#include "SbrConfig.h"
 
 SbrMpu *sbrMpu = new SbrMpu("Self balancing Robot - MPU");
 SbrMotor *sbrMotor = new SbrMotor("Self balancing Robot - Motor");
 SbrControl *sbrControl = new SbrControl("Self balancing Robot - Control");
-SbrDisplay *sbrDisplay = new SbrDisplay("Self balancing Robot - Display");
+SbrConfig *sbrConfig = new SbrConfig("Self balancing Robot - Config", sbrMotor);
 
 #define PRINT_PERIOD 100000 // print period in micros
 
@@ -33,7 +33,7 @@ void setup()
   xTaskCreate(SbrMpu::startUp, "SBR - MPU", 10000, sbrMpu, 1, &sbrMpu->task);
   xTaskCreate(SbrMotor::startUp, "SBR - Motor", 10000, sbrMotor, 1, &sbrMotor->task);
   xTaskCreate(SbrControl::startUp, "SBR - Control", 10000, sbrControl, 2, &sbrControl->task);
-  xTaskCreate(SbrDisplay::startUp, "SBR - Display", 10000, sbrDisplay, 2, &sbrDisplay->task);
+  xTaskCreate(SbrConfig::startUp, "SBR - Config", 10000, sbrConfig, 1, &sbrConfig->task);
 
   loop_timer = micros() + PERIOD;
   print_timer = micros() + PRINT_PERIOD;

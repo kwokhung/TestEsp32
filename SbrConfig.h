@@ -1,5 +1,5 @@
-#ifndef SbrDisplay_h
-#define SbrDisplay_h
+#ifndef SbrConfig_h
+#define SbrConfig_h
 
 #include <string>
 #include <string.h>
@@ -8,12 +8,12 @@
 #include <WiFi.h>
 #include <ESP32WebServer.h>
 
-#define MAX_SPEED 20000
+#include "SbrMotor.h"
 
-class SbrDisplay
+class SbrConfig
 {
 public:
-  SbrDisplay(std::string name);
+  SbrConfig(std::string name, SbrMotor *sbrMotor);
 
   void setup();
   void setup_wifi();
@@ -25,8 +25,8 @@ public:
 
   TaskHandle_t task;
 
-  static HardwareSerial &SerialControl;
   static ESP32WebServer &server;
+  static SbrMotor *sbrMotor;
 
 private:
   std::string name;
