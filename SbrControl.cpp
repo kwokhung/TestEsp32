@@ -13,14 +13,7 @@ void SbrControl::setup()
 {
     Serial.println("SbrControl::setup");
 
-    setup_serial_control();
-}
-
-void SbrControl::setup_serial_control()
-{
     SerialControl.begin(9600, SERIAL_8N1, 17, 16);
-
-    //xTaskCreatePinnedToCore(serialControlLoop, "serialControlLoop", 4096, NULL, 2, NULL, xPortGetCoreID());
 }
 
 void SbrControl::startUp(void *parameter)

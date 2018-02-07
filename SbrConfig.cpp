@@ -10,11 +10,6 @@ void SbrConfig::setup()
 {
     Serial.println("SbrConfig::setup");
 
-    setup_wifi();
-}
-
-void SbrConfig::setup_wifi()
-{
     Serial.println("\nConnecting to Wifi");
     WiFi.begin("xxx", "yyy");
 
@@ -34,8 +29,6 @@ void SbrConfig::setup_wifi()
 
     server.begin();
     Serial.println("HTTP server started");
-
-    //xTaskCreatePinnedToCore(wifiLoop, "wifiLoop", 4096, NULL, 1, NULL, xPortGetCoreID());
 }
 
 void SbrConfig::startUp(void *parameter)

@@ -13,11 +13,6 @@ void SbrMpu::setup()
 {
     Serial.println("SbrMpu::setup");
 
-    setup_mpu();
-}
-
-void SbrMpu::setup_mpu()
-{
     Wire.begin();
     Wire.setClock(400000L);
 

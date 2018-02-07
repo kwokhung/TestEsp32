@@ -24,7 +24,6 @@ public:
   SbrMotor(std::string name);
 
   void setup();
-  void setup_motor();
   void disableL(bool orEnable);
   void disableR(bool orEnable);
   void forwardL(bool orBack);

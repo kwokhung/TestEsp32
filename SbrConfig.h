@@ -16,7 +16,6 @@ public:
   SbrConfig(std::string name);
 
   void setup();
-  void setup_wifi();
 
   static void startUp(void *parameter);
   static void displayInfo();

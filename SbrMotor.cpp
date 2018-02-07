@@ -13,11 +13,6 @@ void SbrMotor::setup()
 {
     Serial.println("SbrMotor::setup");
 
-    setup_motor();
-}
-
-void SbrMotor::setup_motor()
-{
     ledcAttachPin(MOT_L_STP, MOT_L_CHANNEL);
     ledcSetup(MOT_L_CHANNEL, 0, 10); // these will be updated later by the ledcWriteNote()
     ledcAttachPin(MOT_R_STP, MOT_R_CHANNEL);

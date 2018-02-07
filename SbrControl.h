@@ -15,7 +15,6 @@ public:
   SbrControl(std::string name);
 
   void setup();
-  void setup_serial_control();
 
   static void startUp(void *parameter);
   static boolean startNewMsg(uint8_t c);
