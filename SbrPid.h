@@ -18,11 +18,10 @@
 class SbrPid
 {
 public:
-  SbrPid(std::string name);
-
   void setup();
   void loop();
 
+  static SbrPid *getSingleTon(std::string name);
   static void startUp(void *parameter);
 
   std::string name;
@@ -41,6 +40,9 @@ public:
   static uint32_t print_timer;
 
 private:
+  SbrPid(std::string name);
+
+  static SbrPid *singleTon;
 };
 
 #endif

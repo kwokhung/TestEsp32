@@ -13,11 +13,10 @@
 class SbrConfig
 {
 public:
-  SbrConfig(std::string name);
-
   void setup();
   void loop();
 
+  static SbrConfig *getSingleTon(std::string name);
   static void startUp(void *parameter);
   static void displayInfo();
   static void handleNotFound();
@@ -30,6 +29,9 @@ public:
   static SbrMotor *sbrMotor;
 
 private:
+  SbrConfig(std::string name);
+
+  static SbrConfig *singleTon;
 };
 
 #endif

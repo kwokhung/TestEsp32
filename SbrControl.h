@@ -12,11 +12,10 @@
 class SbrControl
 {
 public:
-  SbrControl(std::string name);
-
   void setup();
   void loop();
 
+  static SbrControl *getSingleTon(std::string name);
   static void startUp(void *parameter);
   static boolean startNewMsg(uint8_t c);
   static boolean isValidJoystickValue(uint8_t joystick);
@@ -35,6 +34,9 @@ public:
   static uint8_t joystickY;
 
 private:
+  SbrControl(std::string name);
+
+  static SbrControl *singleTon;
 };
 
 #endif

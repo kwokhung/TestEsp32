@@ -147,6 +147,7 @@ float SbrMpu::constrf(float value, float mini, float maxi)
     return value;
 }
 
-SbrMpu *SbrMpu::singleTon = NULL;
 int SbrMpu::MPU_ADDR = 0x69; //AD0 is HIGH
 float SbrMpu::GYRO_RAW_TO_DEGS = 1.0 / (1000000.0 / PERIOD) / GYRO_SCALE_FACTOR;
+
+SbrMpu *SbrMpu::singleTon = NULL;

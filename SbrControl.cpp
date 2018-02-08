@@ -67,6 +67,16 @@ void SbrControl::loop()
     delay(1);
 }
 
+SbrControl *SbrControl::getSingleTon(std::string name)
+{
+    if (singleTon == NULL)
+    {
+        singleTon = new SbrControl(name);
+    }
+
+    return (singleTon);
+}
+
 void SbrControl::startUp(void *parameter)
 {
     SbrControl *sbrControl = (SbrControl *)parameter;
@@ -108,3 +118,5 @@ boolean SbrControl::_validData = false;
 uint8_t SbrControl::_msg[6];
 uint8_t SbrControl::joystickX;
 uint8_t SbrControl::joystickY;
+
+SbrControl *SbrControl::singleTon = NULL;

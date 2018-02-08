@@ -132,6 +132,16 @@ void SbrPid::loop()
     loop_timer += PERIOD;
 }
 
+SbrPid *SbrPid::getSingleTon(std::string name)
+{
+    if (singleTon == NULL)
+    {
+        singleTon = new SbrPid(name);
+    }
+
+    return (singleTon);
+}
+
 void SbrPid::startUp(void *parameter)
 {
     SbrPid *sbrPid = (SbrPid *)parameter;
@@ -162,3 +172,5 @@ float SbrPid::MAX_CONTROL_ERR_INCREMENT = SbrPid::MAX_CONTROL_OR_POSITION_ERR / 
 float SbrPid::roll, SbrPid::pitch, SbrPid::rollAcc, SbrPid::pitchAcc;
 uint32_t SbrPid::loop_timer;
 uint32_t SbrPid::print_timer;
+
+SbrPid *SbrPid::singleTon = NULL;

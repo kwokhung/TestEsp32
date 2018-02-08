@@ -8,10 +8,10 @@
 #include "SbrConfig.h"
 
 SbrMpu *sbrMpu = SbrMpu::getSingleTon("SBR - MPU");
-SbrMotor *sbrMotor = new SbrMotor("SBR - Motor");
-SbrControl *sbrControl = new SbrControl("SBR - Control");
-SbrPid *sbrPid = new SbrPid("SBR - PID");
-SbrConfig *sbrConfig = new SbrConfig("SBR - Config");
+SbrMotor *sbrMotor = SbrMotor::getSingleTon("SBR - Motor");
+SbrControl *sbrControl = SbrControl::getSingleTon("SBR - Control");
+SbrPid *sbrPid = SbrPid::getSingleTon("SBR - PID");
+SbrConfig *sbrConfig = SbrConfig::getSingleTon("SBR - Config");
 
 #ifdef __cplusplus
 extern "C" {

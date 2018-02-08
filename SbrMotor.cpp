@@ -98,6 +98,16 @@ void SbrMotor::setSpeed(int16_t s, int16_t rotation)
     ledcWriteTone(MOT_R_CHANNEL, sR);
 }
 
+SbrMotor *SbrMotor::getSingleTon(std::string name)
+{
+    if (singleTon == NULL)
+    {
+        singleTon = new SbrMotor(name);
+    }
+
+    return (singleTon);
+}
+
 void SbrMotor::startUp(void *parameter)
 {
     SbrMotor *sbrMotor = (SbrMotor *)parameter;
@@ -116,3 +126,5 @@ void SbrMotor::startUp(void *parameter)
 
     vTaskDelete(NULL);
 }
+
+SbrMotor *SbrMotor::singleTon = NULL;

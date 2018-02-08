@@ -41,6 +41,16 @@ void SbrConfig::loop()
     delay(1);
 }
 
+SbrConfig *SbrConfig::getSingleTon(std::string name)
+{
+    if (singleTon == NULL)
+    {
+        singleTon = new SbrConfig(name);
+    }
+
+    return (singleTon);
+}
+
 void SbrConfig::startUp(void *parameter)
 {
     SbrConfig *sbrConfig = (SbrConfig *)parameter;
@@ -130,3 +140,5 @@ void SbrConfig::updateVars()
 
 ESP32WebServer &SbrConfig::server = *new ESP32WebServer(80);
 SbrMotor *SbrConfig::sbrMotor;
+
+SbrConfig *SbrConfig::singleTon = NULL;
