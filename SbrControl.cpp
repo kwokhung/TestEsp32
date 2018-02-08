@@ -73,8 +73,6 @@ void SbrControl::startUp(void *parameter)
 
     sbrControl->setup();
 
-    Serial.println("\nStarting thread dealing with Serial Control requests...");
-
     while (true)
     {
         sbrControl->loop();

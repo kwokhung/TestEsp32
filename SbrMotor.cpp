@@ -102,10 +102,11 @@ void SbrMotor::startUp(void *parameter)
 {
     SbrMotor *sbrMotor = (SbrMotor *)parameter;
 
-    sbrMotor->setup();
+    //sbrMotor->setup();
 
     while (true)
     {
+        //sbrMotor->loop();
     }
 
     vTaskDelete(NULL);

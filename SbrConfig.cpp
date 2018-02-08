@@ -45,8 +45,6 @@ void SbrConfig::startUp(void *parameter)
 
     sbrConfig->setup();
 
-    Serial.println("Starting thread dealing with Wifi/HTTP client requests...");
-
     while (true)
     {
         sbrConfig->loop();

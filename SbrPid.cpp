@@ -136,8 +136,6 @@ void SbrPid::startUp(void *parameter)
 
     sbrPid->setup();
 
-    Serial.println("Starting thread dealing with Wifi/HTTP client requests...");
-
     while (true)
     {
         sbrPid->loop();
