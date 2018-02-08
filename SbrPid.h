@@ -25,6 +25,7 @@ public:
 
   static void startUp(void *parameter);
 
+  std::string name;
   TaskHandle_t task;
 
   static SbrMpu *sbrMpu;
@@ -40,7 +41,6 @@ public:
   static uint32_t print_timer;
 
 private:
-  std::string name;
 };
 
 #endif

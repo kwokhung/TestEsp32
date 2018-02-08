@@ -21,6 +21,7 @@ public:
   static boolean startNewMsg(uint8_t c);
   static boolean isValidJoystickValue(uint8_t joystick);
 
+  std::string name;
   TaskHandle_t task;
 
   static HardwareSerial &SerialControl;
@@ -34,7 +35,6 @@ public:
   static uint8_t joystickY;
 
 private:
-  std::string name;
 };
 
 #endif

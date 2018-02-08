@@ -1,5 +1,5 @@
 #include <HardwareSerial.h>
-#include <Wire.h>
+#include <esp_task_wdt.h>
 
 #include "SbrMotor.h"
 
@@ -104,9 +104,14 @@ void SbrMotor::startUp(void *parameter)
 
     //sbrMotor->setup();
 
+    esp_task_wdt_add(sbrMotor->task);
+
     while (true)
     {
         //sbrMotor->loop();
+
+        delay(1);
+        esp_task_wdt_reset();
     }
 
     vTaskDelete(NULL);

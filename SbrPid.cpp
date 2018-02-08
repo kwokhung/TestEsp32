@@ -1,3 +1,5 @@
+#include <esp_task_wdt.h>
+
 #include "SbrPid.h"
 
 SbrPid::SbrPid(std::string name)
@@ -136,9 +138,14 @@ void SbrPid::startUp(void *parameter)
 
     sbrPid->setup();
 
+    esp_task_wdt_add(sbrPid->task);
+
     while (true)
     {
-        sbrPid->loop();
+        //sbrPid->loop();
+
+        delay(1);
+        esp_task_wdt_reset();
     }
 
     vTaskDelete(NULL);

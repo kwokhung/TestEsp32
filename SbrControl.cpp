@@ -1,5 +1,5 @@
 #include <HardwareSerial.h>
-#include <Wire.h>
+#include <esp_task_wdt.h>
 
 #include "SbrControl.h"
 
@@ -73,9 +73,14 @@ void SbrControl::startUp(void *parameter)
 
     sbrControl->setup();
 
+    esp_task_wdt_add(sbrControl->task);
+
     while (true)
     {
-        sbrControl->loop();
+        //sbrControl->loop();
+
+        delay(1);
+        esp_task_wdt_reset();
     }
 
     vTaskDelete(NULL);

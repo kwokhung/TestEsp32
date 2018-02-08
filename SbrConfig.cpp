@@ -1,3 +1,5 @@
+#include <esp_task_wdt.h>
+
 #include "SbrConfig.h"
 
 SbrConfig::SbrConfig(std::string name)
@@ -45,9 +47,14 @@ void SbrConfig::startUp(void *parameter)
 
     sbrConfig->setup();
 
+    esp_task_wdt_add(sbrConfig->task);
+
     while (true)
     {
-        sbrConfig->loop();
+        //sbrConfig->loop();
+
+        delay(1);
+        esp_task_wdt_reset();
     }
 
     vTaskDelete(NULL);

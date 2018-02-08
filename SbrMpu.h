@@ -49,18 +49,18 @@
 class SbrMpu
 {
 public:
-  SbrMpu(std::string name);
-
   void setup();
   void loop();
   void calibrateGyro();
   void getAcceleration(int16_t *x, int16_t *y, int16_t *z);
   void getRotation(int16_t *x, int16_t *y, int16_t *z);
 
+  static SbrMpu *getSingleTon(std::string name);
   static void startUp(void *parameter);
   static int16_t constr(int16_t value, int16_t mini, int16_t maxi);
   static float constrf(float value, float mini, float maxi);
 
+  std::string name;
   TaskHandle_t task;
   int16_t accX, accY, accZ;
   int16_t gyroX, gyroY, gyroZ;
@@ -70,7 +70,9 @@ public:
   static float GYRO_RAW_TO_DEGS;
 
 private:
-  std::string name;
+  SbrMpu(std::string name);
+
+  static SbrMpu *singleTon;
 };
 
 #endif

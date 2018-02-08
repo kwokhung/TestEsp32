@@ -33,13 +33,13 @@ public:
 
   static void startUp(void *parameter);
 
+  std::string name;
   TaskHandle_t task;
   uint32_t prevSpeedStart;
   int16_t prevSpeed;
   int32_t currentPos;
 
 private:
-  std::string name;
 };
 
 #endif

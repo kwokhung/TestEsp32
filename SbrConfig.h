@@ -23,13 +23,13 @@ public:
   static void handleNotFound();
   static void updateVars();
 
+  std::string name;
   TaskHandle_t task;
 
   static ESP32WebServer &server;
   static SbrMotor *sbrMotor;
 
 private:
-  std::string name;
 };
 
 #endif
