@@ -29,6 +29,10 @@ void SbrMotor::setup()
     currentPos = 0;
 }
 
+void SbrMotor::loop()
+{
+}
+
 void SbrMotor::disableL(bool orEnable)
 {
     digitalWrite(MOT_L_ENB, orEnable);

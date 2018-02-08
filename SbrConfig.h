@@ -16,6 +16,7 @@ public:
   SbrConfig(std::string name);
 
   void setup();
+  void loop();
 
   static void startUp(void *parameter);
   static void displayInfo();

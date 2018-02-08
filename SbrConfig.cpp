@@ -31,6 +31,14 @@ void SbrConfig::setup()
     Serial.println("HTTP server started");
 }
 
+void SbrConfig::loop()
+{
+    // deals with the Wifi clients and responds, calls the callbacks, etc. ...
+    server.handleClient();
+
+    delay(1);
+}
+
 void SbrConfig::startUp(void *parameter)
 {
     SbrConfig *sbrConfig = (SbrConfig *)parameter;
@@ -41,10 +49,7 @@ void SbrConfig::startUp(void *parameter)
 
     while (true)
     {
-        // deals with the Wifi clients and responds, calls the callbacks, etc. ...
-        server.handleClient();
-
-        delay(1);
+        sbrConfig->loop();
     }
 
     vTaskDelete(NULL);

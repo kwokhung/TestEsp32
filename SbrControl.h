@@ -15,6 +15,7 @@ public:
   SbrControl(std::string name);
 
   void setup();
+  void loop();
 
   static void startUp(void *parameter);
   static boolean startNewMsg(uint8_t c);
@@ -23,6 +24,7 @@ public:
   TaskHandle_t task;
 
   static HardwareSerial &SerialControl;
+  static uint8_t currChar;
   static uint8_t _prevChar;
   static boolean _readingMsg;
   static uint8_t _msgPos;

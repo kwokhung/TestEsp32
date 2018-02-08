@@ -41,6 +41,10 @@ void SbrMpu::setup()
     calibrateGyro();
 }
 
+void SbrMpu::loop()
+{
+}
+
 void SbrMpu::calibrateGyro()
 {
     int32_t x, y, z;
@@ -79,7 +83,7 @@ void SbrMpu::getRotation(int16_t *x, int16_t *y, int16_t *z)
     Wire.write(GYRO_XOUT_H);
     Wire.endTransmission();
     Wire.requestFrom(MPU_ADDR, 6);
-    
+
     *x = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroX_calibration;
     *y = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroY_calibration;
     *z = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroZ_calibration;
@@ -93,6 +97,7 @@ void SbrMpu::startUp(void *parameter)
 
     while (true)
     {
+        sbrMpu->loop();
     }
 
     vTaskDelete(NULL);

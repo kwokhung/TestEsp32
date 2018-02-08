@@ -52,6 +52,7 @@ public:
   SbrMpu(std::string name);
 
   void setup();
+  void loop();
   void calibrateGyro();
   void getAcceleration(int16_t *x, int16_t *y, int16_t *z);
   void getRotation(int16_t *x, int16_t *y, int16_t *z);
