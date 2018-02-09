@@ -9,6 +9,7 @@
 #include <ESP32WebServer.h>
 
 #include "SbrMotor.h"
+#include "SbrPid.h"
 
 class SbrConfig
 {
@@ -19,14 +20,13 @@ public:
   static SbrConfig *getSingleTon(std::string name);
   static void startUp(void *parameter);
   static void displayInfo();
-  static void handleNotFound();
-  static void updateVars();
 
   std::string name;
   TaskHandle_t task;
 
   static ESP32WebServer &server;
   static SbrMotor *sbrMotor;
+  static SbrPid *sbrPid;
 
 private:
   SbrConfig(std::string name);

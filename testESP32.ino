@@ -37,6 +37,7 @@ void setup()
   SbrPid::sbrMotor = sbrMotor;
 
   SbrConfig::sbrMotor = sbrMotor;
+  SbrConfig::sbrPid = sbrPid;
 
   xTaskCreate(SbrMpu::startUp, sbrMpu->name.c_str(), 10000, sbrMpu, 1, &sbrMpu->task);
   xTaskCreate(SbrMotor::startUp, sbrMotor->name.c_str(), 10000, sbrMotor, 1, &sbrMotor->task);
