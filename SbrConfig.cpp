@@ -1,13 +1,13 @@
 #include <esp_task_wdt.h>
 
 #include "SbrConfig.h"
-
+/*
 SbrConfig::SbrConfig(std::string name)
     : name(name)
 {
     task = NULL;
 }
-
+*/
 void SbrConfig::setup()
 {
     Serial.println("SbrConfig::setup");
@@ -85,7 +85,7 @@ void SbrConfig::loop()
 
     delay(1);
 }
-
+/*
 SbrConfig *SbrConfig::getSingleTon(std::string name)
 {
     if (singleTon == NULL)
@@ -113,7 +113,7 @@ void SbrConfig::startUp(void *parameter)
 
     vTaskDelete(NULL);
 }
-
+*/
 void SbrConfig::displayInfo()
 {
     Serial.println("Handle Display Info...");
@@ -133,4 +133,4 @@ ESP32WebServer &SbrConfig::server = *new ESP32WebServer(80);
 SbrMotor *SbrConfig::sbrMotor;
 SbrPid *SbrConfig::sbrPid;
 
-SbrConfig *SbrConfig::singleTon = NULL;
+//SbrConfig *SbrConfig::singleTon = NULL;

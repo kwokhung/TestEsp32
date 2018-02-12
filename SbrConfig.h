@@ -8,30 +8,36 @@
 #include <WiFi.h>
 #include <ESP32WebServer.h>
 
+#include "SbrBase.h"
 #include "SbrMotor.h"
 #include "SbrPid.h"
 
-class SbrConfig
+class SbrConfig : public SbrBase<SbrConfig>
 {
 public:
-  void setup();
-  void loop();
+  SbrConfig(std::string name)
+      : SbrBase(name)
+  {
+  }
 
-  static SbrConfig *getSingleTon(std::string name);
-  static void startUp(void *parameter);
+  void setup() override;
+  void loop() override;
+
+  //static SbrConfig *getSingleTon(std::string name);
+  //static void startUp(void *parameter);
   static void displayInfo();
 
-  std::string name;
-  TaskHandle_t task;
+  //std::string name;
+  //TaskHandle_t task;
 
   static ESP32WebServer &server;
   static SbrMotor *sbrMotor;
   static SbrPid *sbrPid;
 
 private:
-  SbrConfig(std::string name);
+  //SbrConfig(std::string name);
 
-  static SbrConfig *singleTon;
+  //static SbrConfig *singleTon;
 };
 
 #endif

@@ -1,3 +1,6 @@
+#ifndef SbrBase_h
+#define SbrBase_h
+
 #include <string>
 #include <esp_task_wdt.h>
 
@@ -30,13 +33,11 @@ SbrBase<T>::SbrBase(std::string name)
 template <typename T>
 void SbrBase<T>::setup()
 {
-    Serial.println("SbrBase<T>::setup");
 }
 
 template <typename T>
 void SbrBase<T>::loop()
 {
-    Serial.println("SbrBase<T>::setup");
 }
 
 template <typename T>
@@ -71,3 +72,5 @@ void SbrBase<T>::startUp(void *parameter)
 
 template <typename T>
 T *SbrBase<T>::singleTon = NULL;
+
+#endif
