@@ -28,10 +28,16 @@ SbrBase<T>::SbrBase(std::string name)
 }
 
 template <typename T>
-void SbrBase<T>::setup(){};
+void SbrBase<T>::setup()
+{
+    Serial.println("SbrBase<T>::setup");
+}
 
 template <typename T>
-void SbrBase<T>::loop(){};
+void SbrBase<T>::loop()
+{
+    Serial.println("SbrBase<T>::setup");
+}
 
 template <typename T>
 T *SbrBase<T>::getSingleTon(std::string name)
