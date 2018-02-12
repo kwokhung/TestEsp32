@@ -3,13 +3,7 @@
 #include <esp_task_wdt.h>
 
 #include "SbrMpu.h"
-/*
-SbrMpu::SbrMpu(std::string name)
-    : name(name)
-{
-    task = NULL;
-}
-*/
+
 void SbrMpu::setup()
 {
     Serial.println("SbrMpu::setup");
@@ -89,36 +83,7 @@ void SbrMpu::getRotation(int16_t *x, int16_t *y, int16_t *z)
     *y = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroY_calibration;
     *z = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroZ_calibration;
 }
-/*
-SbrMpu *SbrMpu::getSingleTon(std::string name)
-{
-    if (singleTon == NULL)
-    {
-        singleTon = new SbrMpu(name);
-    }
 
-    return (singleTon);
-}
-
-void SbrMpu::startUp(void *parameter)
-{
-    SbrMpu *sbrMpu = (SbrMpu *)parameter;
-
-    sbrMpu->setup();
-
-    esp_task_wdt_add(sbrMpu->task);
-
-    while (true)
-    {
-        //sbrMpu->loop();
-
-        delay(1);
-        esp_task_wdt_reset();
-    }
-
-    vTaskDelete(NULL);
-}
-*/
 int16_t SbrMpu::constr(int16_t value, int16_t mini, int16_t maxi)
 {
     if (value < mini)
@@ -149,5 +114,3 @@ float SbrMpu::constrf(float value, float mini, float maxi)
 
 int SbrMpu::MPU_ADDR = 0x69; //AD0 is HIGH
 float SbrMpu::GYRO_RAW_TO_DEGS = 1.0 / (1000000.0 / PERIOD) / GYRO_SCALE_FACTOR;
-
-//SbrMpu *SbrMpu::singleTon = NULL;

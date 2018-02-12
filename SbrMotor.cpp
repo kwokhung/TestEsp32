@@ -2,13 +2,7 @@
 #include <esp_task_wdt.h>
 
 #include "SbrMotor.h"
-/*
-SbrMotor::SbrMotor(std::string name)
-    : name(name)
-{
-    task = NULL;
-}
-*/
+
 void SbrMotor::setup()
 {
     Serial.println("SbrMotor::setup");
@@ -97,34 +91,3 @@ void SbrMotor::setSpeed(int16_t s, int16_t rotation)
     ledcWriteTone(MOT_L_CHANNEL, sL);
     ledcWriteTone(MOT_R_CHANNEL, sR);
 }
-/*
-SbrMotor *SbrMotor::getSingleTon(std::string name)
-{
-    if (singleTon == NULL)
-    {
-        singleTon = new SbrMotor(name);
-    }
-
-    return (singleTon);
-}
-
-void SbrMotor::startUp(void *parameter)
-{
-    SbrMotor *sbrMotor = (SbrMotor *)parameter;
-
-    //sbrMotor->setup();
-
-    esp_task_wdt_add(sbrMotor->task);
-
-    while (true)
-    {
-        //sbrMotor->loop();
-
-        delay(1);
-        esp_task_wdt_reset();
-    }
-
-    vTaskDelete(NULL);
-}
-*/
-//SbrMotor *SbrMotor::singleTon = NULL;

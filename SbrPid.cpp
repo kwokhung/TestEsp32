@@ -1,13 +1,7 @@
 #include <esp_task_wdt.h>
 
 #include "SbrPid.h"
-/*
-SbrPid::SbrPid(std::string name)
-    : name(name)
-{
-    task = NULL;
-}
-*/
+
 void SbrPid::setup()
 {
     Serial.println("SbrPid::setup");
@@ -131,36 +125,7 @@ void SbrPid::loop()
 
     loop_timer += PERIOD;
 }
-/*
-SbrPid *SbrPid::getSingleTon(std::string name)
-{
-    if (singleTon == NULL)
-    {
-        singleTon = new SbrPid(name);
-    }
 
-    return (singleTon);
-}
-
-void SbrPid::startUp(void *parameter)
-{
-    SbrPid *sbrPid = (SbrPid *)parameter;
-
-    sbrPid->setup();
-
-    esp_task_wdt_add(sbrPid->task);
-
-    while (true)
-    {
-        //sbrPid->loop();
-
-        delay(1);
-        esp_task_wdt_reset();
-    }
-
-    vTaskDelete(NULL);
-}
-*/
 SbrMpu *SbrPid::sbrMpu;
 SbrMotor *SbrPid::sbrMotor;
 float SbrPid::BASE_Kp = 100.0, SbrPid::BASE_Ki = 5.0, SbrPid::BASE_Kd = 130.0;
@@ -172,5 +137,3 @@ float SbrPid::MAX_CONTROL_ERR_INCREMENT = SbrPid::MAX_CONTROL_OR_POSITION_ERR / 
 float SbrPid::roll, SbrPid::pitch, SbrPid::rollAcc, SbrPid::pitchAcc;
 uint32_t SbrPid::loop_timer;
 uint32_t SbrPid::print_timer;
-
-//SbrPid *SbrPid::singleTon = NULL;

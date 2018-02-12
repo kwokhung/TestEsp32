@@ -22,13 +22,8 @@ public:
   void setup() override;
   void loop() override;
 
-  //static SbrControl *getSingleTon(std::string name);
-  //static void startUp(void *parameter);
   static boolean startNewMsg(uint8_t c);
   static boolean isValidJoystickValue(uint8_t joystick);
-
-  //std::string name;
-  //TaskHandle_t task;
 
   static HardwareSerial &SerialControl;
   static uint8_t currChar;
@@ -41,9 +36,6 @@ public:
   static uint8_t joystickY;
 
 private:
-  //SbrControl(std::string name);
-
-  //static SbrControl *singleTon;
 };
 
 #endif

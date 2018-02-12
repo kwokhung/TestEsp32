@@ -23,21 +23,13 @@ public:
   void setup() override;
   void loop() override;
 
-  //static SbrConfig *getSingleTon(std::string name);
-  //static void startUp(void *parameter);
   static void displayInfo();
-
-  //std::string name;
-  //TaskHandle_t task;
 
   static ESP32WebServer &server;
   static SbrMotor *sbrMotor;
   static SbrPid *sbrPid;
 
 private:
-  //SbrConfig(std::string name);
-
-  //static SbrConfig *singleTon;
 };
 
 #endif

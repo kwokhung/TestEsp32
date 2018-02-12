@@ -36,19 +36,11 @@ public:
   void forwardR(bool orBack);
   void setSpeed(int16_t s, int16_t rotation);
 
-  //static SbrMotor *getSingleTon(std::string name);
-  //static void startUp(void *parameter);
-
-  //std::string name;
-  //TaskHandle_t task;
   uint32_t prevSpeedStart;
   int16_t prevSpeed;
   int32_t currentPos;
 
 private:
-  //SbrMotor(std::string name);
-
-  //static SbrMotor *singleTon;
 };
 
 #endif

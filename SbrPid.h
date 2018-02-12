@@ -27,12 +27,6 @@ public:
   void setup() override;
   void loop() override;
 
-  //static SbrPid *getSingleTon(std::string name);
-  //static void startUp(void *parameter);
-
-  //std::string name;
-  //TaskHandle_t task;
-
   static SbrMpu *sbrMpu;
   static SbrMotor *sbrMotor;
   static float BASE_Kp, BASE_Ki, BASE_Kd;
@@ -46,9 +40,6 @@ public:
   static uint32_t print_timer;
 
 private:
-  //SbrPid(std::string name);
-
-  //static SbrPid *singleTon;
 };
 
 #endif
