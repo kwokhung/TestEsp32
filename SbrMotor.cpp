@@ -25,6 +25,9 @@ void SbrMotor::setup()
 
 void SbrMotor::loop()
 {
+    Serial.println("SbrMotor::loop");
+
+    sleepAWhile(1000);
 }
 
 void SbrMotor::disableL(bool orEnable)

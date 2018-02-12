@@ -15,11 +15,7 @@
 class SbrConfig : public SbrBase<SbrConfig>
 {
 public:
-  SbrConfig(std::string name)
-      : SbrBase(name)
-  {
-  }
-
+  friend class SbrBase;
   void setup() override;
   void loop() override;
 
@@ -30,6 +26,10 @@ public:
   static SbrPid *sbrPid;
 
 private:
+  SbrConfig(std::string name)
+      : SbrBase(name)
+  {
+  }
 };
 
 #endif

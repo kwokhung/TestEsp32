@@ -23,11 +23,7 @@
 class SbrMotor : public SbrBase<SbrMotor>
 {
 public:
-  SbrMotor(std::string name)
-      : SbrBase(name)
-  {
-  }
-
+  friend class SbrBase;
   void setup() override;
   void loop() override;
   void disableL(bool orEnable);
@@ -41,6 +37,10 @@ public:
   int32_t currentPos;
 
 private:
+  SbrMotor(std::string name)
+      : SbrBase(name)
+  {
+  }
 };
 
 #endif

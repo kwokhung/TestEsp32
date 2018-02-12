@@ -12,6 +12,8 @@ void SbrControl::setup()
 
 void SbrControl::loop()
 {
+    Serial.println("SbrControl::loop");
+
     while (SerialControl.available())
     {
         currChar = SerialControl.read();
@@ -58,7 +60,7 @@ void SbrControl::loop()
         }
     }
 
-    delay(1);
+    sleepAWhile(1);
 }
 
 boolean SbrControl::startNewMsg(uint8_t c)

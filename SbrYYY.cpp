@@ -37,11 +37,14 @@ void SbrYYY::loop()
 
     temp_farenheit = temprature_sens_read();
     temp_celsius = (temp_farenheit - 32) / 1.8;
+    
     Serial.print("Temp onBoard ");
     Serial.print(temp_farenheit);
     Serial.print("°F ");
     Serial.print(temp_celsius);
     Serial.println("°C");
-    delay(1000);
+
     now++;
+
+    sleepAWhile(1000);
 }

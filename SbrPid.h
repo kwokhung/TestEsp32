@@ -19,11 +19,7 @@
 class SbrPid : public SbrBase<SbrPid>
 {
 public:
-  SbrPid(std::string name)
-      : SbrBase(name)
-  {
-  }
-
+  friend class SbrBase;
   void setup() override;
   void loop() override;
 
@@ -40,6 +36,10 @@ public:
   static uint32_t print_timer;
 
 private:
+  SbrPid(std::string name)
+      : SbrBase(name)
+  {
+  }
 };
 
 #endif

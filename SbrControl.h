@@ -14,11 +14,7 @@
 class SbrControl : public SbrBase<SbrControl>
 {
 public:
-  SbrControl(std::string name)
-      : SbrBase(name)
-  {
-  }
-
+  friend class SbrBase;
   void setup() override;
   void loop() override;
 
@@ -36,6 +32,10 @@ public:
   static uint8_t joystickY;
 
 private:
+  SbrControl(std::string name)
+      : SbrBase(name)
+  {
+  }
 };
 
 #endif

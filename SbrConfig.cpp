@@ -75,9 +75,11 @@ void SbrConfig::setup()
 
 void SbrConfig::loop()
 {
+    Serial.println("SbrConfig::loop");
+
     server.handleClient();
 
-    delay(1);
+    sleepAWhile(1);
 }
 
 void SbrConfig::displayInfo()

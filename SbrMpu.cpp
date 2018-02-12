@@ -38,6 +38,9 @@ void SbrMpu::setup()
 
 void SbrMpu::loop()
 {
+    Serial.println("SbrMpu::loop");
+
+    sleepAWhile(1000);
 }
 
 void SbrMpu::calibrateGyro()

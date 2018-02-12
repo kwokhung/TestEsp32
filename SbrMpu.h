@@ -51,11 +51,7 @@
 class SbrMpu : public SbrBase<SbrMpu>
 {
 public:
-  SbrMpu(std::string name)
-      : SbrBase(name)
-  {
-  }
-
+  friend class SbrBase;
   void setup() override;
   void loop() override;
   void calibrateGyro();
@@ -73,6 +69,10 @@ public:
   static float GYRO_RAW_TO_DEGS;
 
 private:
+  SbrMpu(std::string name)
+      : SbrBase(name)
+  {
+  }
 };
 
 #endif

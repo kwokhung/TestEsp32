@@ -10,4 +10,6 @@ void SbrXXX::setup()
 void SbrXXX::loop()
 {
     Serial.println("SbrXXX::loop");
+
+    sleepAWhile(1000);
 }

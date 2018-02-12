@@ -6,15 +6,15 @@
 class SbrYYY : public SbrBase<SbrYYY>
 {
 public:
-  SbrYYY(std::string name)
-      : SbrBase(name)
-  {
-  }
-
+  friend class SbrBase;
   void setup() override;
   void loop() override;
 
 private:
+  SbrYYY(std::string name)
+      : SbrBase(name)
+  {
+  }
 };
 
 #endif

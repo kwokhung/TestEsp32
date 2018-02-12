@@ -13,6 +13,7 @@ class SbrBase
 
     static T *getSingleTon(std::string name);
     static void startUp(void *parameter);
+    static void sleepAWhile(uint32_t aWhile);
 
     std::string name;
     TaskHandle_t task;
@@ -68,6 +69,17 @@ void SbrBase<T>::startUp(void *parameter)
     }
 
     vTaskDelete(NULL);
+}
+
+template <typename T>
+void SbrBase<T>::sleepAWhile(uint32_t aWhile)
+{
+    for (int i = 0; i < aWhile; i++)
+    {
+        esp_task_wdt_reset();
+
+        delay(1);
+    }
 }
 
 template <typename T>
