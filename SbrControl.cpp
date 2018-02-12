@@ -2,13 +2,13 @@
 #include <esp_task_wdt.h>
 
 #include "SbrControl.h"
-
+/*
 SbrControl::SbrControl(std::string name)
     : name(name)
 {
     task = NULL;
 }
-
+*/
 void SbrControl::setup()
 {
     Serial.println("SbrControl::setup");
@@ -66,7 +66,7 @@ void SbrControl::loop()
 
     delay(1);
 }
-
+/*
 SbrControl *SbrControl::getSingleTon(std::string name)
 {
     if (singleTon == NULL)
@@ -95,7 +95,7 @@ void SbrControl::startUp(void *parameter)
 
     vTaskDelete(NULL);
 }
-
+*/
 boolean SbrControl::startNewMsg(uint8_t c)
 {
     boolean res = (_prevChar == 0) && (c == 255);
@@ -119,4 +119,4 @@ uint8_t SbrControl::_msg[6];
 uint8_t SbrControl::joystickX;
 uint8_t SbrControl::joystickY;
 
-SbrControl *SbrControl::singleTon = NULL;
+//SbrControl *SbrControl::singleTon = NULL;

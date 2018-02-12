@@ -6,6 +6,7 @@
 #include <FreeRTOS.h>
 #include <Arduino.h>
 
+#include "SbrBase.h"
 #include "SbrMpu.h"
 #include "SbrMotor.h"
 #include "SbrControl.h"
@@ -15,17 +16,22 @@
 #define MAX_PID_OUTPUT 500
 #define MIN_CONTROL_ERR 1
 
-class SbrPid
+class SbrPid : public SbrBase<SbrPid>
 {
 public:
-  void setup();
-  void loop();
+  SbrPid(std::string name)
+      : SbrBase(name)
+  {
+  }
 
-  static SbrPid *getSingleTon(std::string name);
-  static void startUp(void *parameter);
+  void setup() override;
+  void loop() override;
 
-  std::string name;
-  TaskHandle_t task;
+  //static SbrPid *getSingleTon(std::string name);
+  //static void startUp(void *parameter);
+
+  //std::string name;
+  //TaskHandle_t task;
 
   static SbrMpu *sbrMpu;
   static SbrMotor *sbrMotor;
@@ -40,9 +46,9 @@ public:
   static uint32_t print_timer;
 
 private:
-  SbrPid(std::string name);
+  //SbrPid(std::string name);
 
-  static SbrPid *singleTon;
+  //static SbrPid *singleTon;
 };
 
 #endif

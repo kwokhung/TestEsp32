@@ -1,13 +1,13 @@
 #include <esp_task_wdt.h>
 
 #include "SbrPid.h"
-
+/*
 SbrPid::SbrPid(std::string name)
     : name(name)
 {
     task = NULL;
 }
-
+*/
 void SbrPid::setup()
 {
     Serial.println("SbrPid::setup");
@@ -131,7 +131,7 @@ void SbrPid::loop()
 
     loop_timer += PERIOD;
 }
-
+/*
 SbrPid *SbrPid::getSingleTon(std::string name)
 {
     if (singleTon == NULL)
@@ -160,7 +160,7 @@ void SbrPid::startUp(void *parameter)
 
     vTaskDelete(NULL);
 }
-
+*/
 SbrMpu *SbrPid::sbrMpu;
 SbrMotor *SbrPid::sbrMotor;
 float SbrPid::BASE_Kp = 100.0, SbrPid::BASE_Ki = 5.0, SbrPid::BASE_Kd = 130.0;
@@ -173,4 +173,4 @@ float SbrPid::roll, SbrPid::pitch, SbrPid::rollAcc, SbrPid::pitchAcc;
 uint32_t SbrPid::loop_timer;
 uint32_t SbrPid::print_timer;
 
-SbrPid *SbrPid::singleTon = NULL;
+//SbrPid *SbrPid::singleTon = NULL;

@@ -7,21 +7,28 @@
 #include <Arduino.h>
 #include <HardwareSerial.h>
 
+#include "SbrBase.h"
+
 #define MAX_SPEED 20000
 
-class SbrControl
+class SbrControl : public SbrBase<SbrControl>
 {
 public:
-  void setup();
-  void loop();
+  SbrControl(std::string name)
+      : SbrBase(name)
+  {
+  }
 
-  static SbrControl *getSingleTon(std::string name);
-  static void startUp(void *parameter);
+  void setup() override;
+  void loop() override;
+
+  //static SbrControl *getSingleTon(std::string name);
+  //static void startUp(void *parameter);
   static boolean startNewMsg(uint8_t c);
   static boolean isValidJoystickValue(uint8_t joystick);
 
-  std::string name;
-  TaskHandle_t task;
+  //std::string name;
+  //TaskHandle_t task;
 
   static HardwareSerial &SerialControl;
   static uint8_t currChar;
@@ -34,9 +41,9 @@ public:
   static uint8_t joystickY;
 
 private:
-  SbrControl(std::string name);
+  //SbrControl(std::string name);
 
-  static SbrControl *singleTon;
+  //static SbrControl *singleTon;
 };
 
 #endif
