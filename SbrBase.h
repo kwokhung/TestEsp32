@@ -19,8 +19,8 @@ class SbrBase
 
   protected:
     SbrBase(std::string name);
-    virtual void setup();
-    virtual void loop();
+    virtual void setup() = 0;
+    virtual void loop() = 0;
 
     static T *singleTon;
 };
@@ -78,16 +78,6 @@ SbrBase<T>::SbrBase(std::string name)
     : name(name)
 {
     task = NULL;
-}
-
-template <typename T>
-void SbrBase<T>::setup()
-{
-}
-
-template <typename T>
-void SbrBase<T>::loop()
-{
 }
 
 template <typename T>
