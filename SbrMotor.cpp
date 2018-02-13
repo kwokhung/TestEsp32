@@ -6,7 +6,9 @@
 void SbrMotor::setup()
 {
     Serial.println("SbrMotor::setup");
-/*
+
+    return;
+
     ledcAttachPin(MOT_L_STP, MOT_L_CHANNEL);
     ledcSetup(MOT_L_CHANNEL, 0, 10); // these will be updated later by the ledcWriteNote()
     ledcAttachPin(MOT_R_STP, MOT_R_CHANNEL);
@@ -19,7 +21,7 @@ void SbrMotor::setup()
     pinMode(MOT_R_ENB, OUTPUT);
     pinMode(MOT_R_DIR, OUTPUT);
     disableR(true);
-*/
+
     currentPos = 0;
 }
 
@@ -52,6 +54,8 @@ void SbrMotor::forwardR(bool orBack)
 
 void SbrMotor::setSpeed(int16_t s, int16_t rotation)
 {
+    return;
+
     int16_t sL = s - rotation;
     int16_t sR = s + rotation;
     boolean backwardL = sL < 0;
