@@ -16,8 +16,6 @@ class SbrConfig : public SbrBase<SbrConfig>
 {
 public:
   friend class SbrBase;
-  void setup() override;
-  void loop() override;
 
   static void displayInfo();
 
@@ -30,6 +28,8 @@ private:
       : SbrBase(name)
   {
   }
+  void setup() override;
+  void loop() override;
 };
 
 #endif

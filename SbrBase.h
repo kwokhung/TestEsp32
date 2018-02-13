@@ -8,9 +8,6 @@ template <typename T>
 class SbrBase
 {
   public:
-    virtual void setup();
-    virtual void loop();
-
     static T *getSingleTon(std::string name);
     static void startUp(void *parameter);
     static void sleepAWhile(uint32_t aWhile);
@@ -22,26 +19,11 @@ class SbrBase
 
   protected:
     SbrBase(std::string name);
+    virtual void setup();
+    virtual void loop();
 
     static T *singleTon;
 };
-
-template <typename T>
-SbrBase<T>::SbrBase(std::string name)
-    : name(name)
-{
-    task = NULL;
-}
-
-template <typename T>
-void SbrBase<T>::setup()
-{
-}
-
-template <typename T>
-void SbrBase<T>::loop()
-{
-}
 
 template <typename T>
 T *SbrBase<T>::getSingleTon(std::string name)
@@ -89,6 +71,23 @@ template <typename T1>
 T1 SbrBase<T>::constraint(T1 value, T1 minValue, T1 maxValue)
 {
     return (value < minValue ? minValue : (value > maxValue ? maxValue : value));
+}
+
+template <typename T>
+SbrBase<T>::SbrBase(std::string name)
+    : name(name)
+{
+    task = NULL;
+}
+
+template <typename T>
+void SbrBase<T>::setup()
+{
+}
+
+template <typename T>
+void SbrBase<T>::loop()
+{
 }
 
 template <typename T>

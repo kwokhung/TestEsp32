@@ -7,14 +7,14 @@ class SbrYYY : public SbrBase<SbrYYY>
 {
 public:
   friend class SbrBase;
-  void setup() override;
-  void loop() override;
 
 private:
   SbrYYY(std::string name)
       : SbrBase(name)
   {
   }
+  void setup() override;
+  void loop() override;
 };
 
 #endif

@@ -52,8 +52,6 @@ class SbrMpu : public SbrBase<SbrMpu>
 {
 public:
   friend class SbrBase;
-  void setup() override;
-  void loop() override;
   void calibrateGyro();
   void getAcceleration(int16_t *x, int16_t *y, int16_t *z);
   void getRotation(int16_t *x, int16_t *y, int16_t *z);
@@ -70,6 +68,8 @@ private:
       : SbrBase(name)
   {
   }
+  void setup() override;
+  void loop() override;
 };
 
 #endif

@@ -24,8 +24,6 @@ class SbrMotor : public SbrBase<SbrMotor>
 {
 public:
   friend class SbrBase;
-  void setup() override;
-  void loop() override;
   void disableL(bool orEnable);
   void disableR(bool orEnable);
   void forwardL(bool orBack);
@@ -41,6 +39,8 @@ private:
       : SbrBase(name)
   {
   }
+  void setup() override;
+  void loop() override;
 };
 
 #endif

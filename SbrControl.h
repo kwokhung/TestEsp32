@@ -15,8 +15,6 @@ class SbrControl : public SbrBase<SbrControl>
 {
 public:
   friend class SbrBase;
-  void setup() override;
-  void loop() override;
 
   static boolean startNewMsg(uint8_t c);
   static boolean isValidJoystickValue(uint8_t joystick);
@@ -36,6 +34,8 @@ private:
       : SbrBase(name)
   {
   }
+  void setup() override;
+  void loop() override;
 };
 
 #endif

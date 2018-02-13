@@ -20,8 +20,6 @@ class SbrPid : public SbrBase<SbrPid>
 {
 public:
   friend class SbrBase;
-  void setup() override;
-  void loop() override;
 
   static SbrMpu *sbrMpu;
   static SbrMotor *sbrMotor;
@@ -40,6 +38,8 @@ private:
       : SbrBase(name)
   {
   }
+  void setup() override;
+  void loop() override;
 };
 
 #endif
