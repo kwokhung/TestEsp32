@@ -2,6 +2,21 @@
 
 #include "SbrConfig.h"
 
+void SbrConfig::displayInfo()
+{
+    Serial.println("Handle Display Info...");
+
+    String message = "<h1>Self balancing robot\n</h1><h2> ";
+
+    message += "<p>Position=" + String(sbrMotor->currentPos) + "  <a href=\"update?Pos=inc\"><button>Pos++</button></a><a href=\"update?Pos=dec\"><button>Pos--</button></a></p>";
+    message += "<p>Kp=" + String(sbrPid->Kp) + "  <a href=\"update?Kp=inc\"><button>Kp++</button></a><a href=\"update?Kp=dec\"><button>Kp--</button></a></p>";
+    message += "<p>Ki=" + String(sbrPid->Ki) + "  <a href=\"update?Ki=inc\"><button>Ki++</button></a><a href=\"update?Ki=dec\"><button>Ki--</button></a></p>";
+    message += "<p>Kd=" + String(sbrPid->Kd) + "  <a href=\"update?Kd=inc\"><button>Kd++</button></a><a href=\"update?Kd=dec\"><button>Kd--</button></a></p>";
+    message += "<p>SP=" + String(sbrPid->angleSetpoint) + "  <a href=\"update?Sp=inc\"><button>SP++</button></a><a href=\"update?Sp=dec\"><button>SP--</button></a></p></h2>";
+
+    server.send(200, "text/html", message);
+}
+
 void SbrConfig::setup()
 {
     Serial.println("SbrConfig::setup");
@@ -81,21 +96,6 @@ void SbrConfig::loop()
 
     //sleepAWhile(1);
     sleepAWhile(1000);
-}
-
-void SbrConfig::displayInfo()
-{
-    Serial.println("Handle Display Info...");
-
-    String message = "<h1>Self balancing robot\n</h1><h2> ";
-
-    message += "<p>Position=" + String(sbrMotor->currentPos) + "  <a href=\"update?Pos=inc\"><button>Pos++</button></a><a href=\"update?Pos=dec\"><button>Pos--</button></a></p>";
-    message += "<p>Kp=" + String(sbrPid->Kp) + "  <a href=\"update?Kp=inc\"><button>Kp++</button></a><a href=\"update?Kp=dec\"><button>Kp--</button></a></p>";
-    message += "<p>Ki=" + String(sbrPid->Ki) + "  <a href=\"update?Ki=inc\"><button>Ki++</button></a><a href=\"update?Ki=dec\"><button>Ki--</button></a></p>";
-    message += "<p>Kd=" + String(sbrPid->Kd) + "  <a href=\"update?Kd=inc\"><button>Kd++</button></a><a href=\"update?Kd=dec\"><button>Kd--</button></a></p>";
-    message += "<p>SP=" + String(sbrPid->angleSetpoint) + "  <a href=\"update?Sp=inc\"><button>SP++</button></a><a href=\"update?Sp=dec\"><button>SP--</button></a></p></h2>";
-
-    server.send(200, "text/html", message);
 }
 
 ESP32WebServer &SbrConfig::server = *new ESP32WebServer(80);

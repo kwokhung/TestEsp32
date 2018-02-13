@@ -3,6 +3,19 @@
 
 #include "SbrControl.h"
 
+boolean SbrControl::startNewMsg(uint8_t c)
+{
+    boolean res = (_prevChar == 0) && (c == 255);
+    _prevChar = c;
+
+    return res;
+}
+
+boolean SbrControl::isValidJoystickValue(uint8_t joystick)
+{
+    return joystick > 20 && joystick < 230;
+}
+
 void SbrControl::setup()
 {
     Serial.println("SbrControl::setup");
@@ -62,19 +75,6 @@ void SbrControl::loop()
 
     //sleepAWhile(1);
     sleepAWhile(1000);
-}
-
-boolean SbrControl::startNewMsg(uint8_t c)
-{
-    boolean res = (_prevChar == 0) && (c == 255);
-    _prevChar = c;
-
-    return res;
-}
-
-boolean SbrControl::isValidJoystickValue(uint8_t joystick)
-{
-    return joystick > 20 && joystick < 230;
 }
 
 HardwareSerial &SbrControl::SerialControl = *new HardwareSerial(1);
