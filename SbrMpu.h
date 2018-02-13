@@ -58,9 +58,6 @@ public:
   void getAcceleration(int16_t *x, int16_t *y, int16_t *z);
   void getRotation(int16_t *x, int16_t *y, int16_t *z);
 
-  static int16_t constr(int16_t value, int16_t mini, int16_t maxi);
-  static float constrf(float value, float mini, float maxi);
-
   int16_t accX, accY, accZ;
   int16_t gyroX, gyroY, gyroZ;
   int16_t gyroX_calibration, gyroY_calibration, gyroZ_calibration;

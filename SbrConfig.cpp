@@ -79,7 +79,8 @@ void SbrConfig::loop()
 
     server.handleClient();
 
-    sleepAWhile(1);
+    //sleepAWhile(1);
+    sleepAWhile(1000);
 }
 
 void SbrConfig::displayInfo()

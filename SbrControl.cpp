@@ -60,7 +60,8 @@ void SbrControl::loop()
         }
     }
 
-    sleepAWhile(1);
+    //sleepAWhile(1);
+    sleepAWhile(1000);
 }
 
 boolean SbrControl::startNewMsg(uint8_t c)

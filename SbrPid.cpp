@@ -12,6 +12,8 @@ void SbrPid::setup()
 
 void SbrPid::loop()
 {
+    Serial.println("SbrPid::loop");
+
     sbrMpu->getAcceleration(&sbrMpu->accX, &sbrMpu->accY, &sbrMpu->accZ);
     rollAcc = asin((float)sbrMpu->accX / ACC_SCALE_FACTOR) * RAD_TO_DEG;
     pitchAcc = asin((float)sbrMpu->accY / ACC_SCALE_FACTOR) * RAD_TO_DEG;
@@ -30,12 +32,12 @@ void SbrPid::loop()
     // apply PID algo
 
     // The selfBalanceAngleSetpoint variable is automatically changed to make sure that the robot stays balanced all the time.
-    positionErr = SbrMpu::constrf(sbrMotor->currentPos / (float)1000, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
+    positionErr = constraint<float>(sbrMotor->currentPos / (float)1000, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
     serialControlErr = 0;
 
     if (SbrControl::isValidJoystickValue(SbrControl::joystickY))
     {
-        serialControlErr = SbrMpu::constrf((SbrControl::joystickY - 130) / (float)15, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
+        serialControlErr = constraint<float>((SbrControl::joystickY - 130) / (float)15, -MAX_CONTROL_OR_POSITION_ERR, MAX_CONTROL_OR_POSITION_ERR);
 
         // this control has to change slowly/gradually to avoid shaking the robot
         if (serialControlErr < prevSerialControlErr)
@@ -64,7 +66,7 @@ void SbrPid::loop()
         pidError += positionErr;
     }
 
-    integralErr = SbrMpu::constrf(integralErr + Ki * pidError, -MAX_PID_OUTPUT, MAX_PID_OUTPUT);
+    integralErr = constraint<float>(integralErr + Ki * pidError, -MAX_PID_OUTPUT, MAX_PID_OUTPUT);
     errorDerivative = pidError - pidLastError;
 
     pidOutput = Kp * pidError + integralErr + Kd * errorDerivative;
@@ -89,7 +91,7 @@ void SbrPid::loop()
 
     if (SbrControl::isValidJoystickValue(SbrControl::joystickX))
     {
-        rotation = SbrMpu::constrf((float)(SbrControl::joystickX - 130), -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT);
+        rotation = constraint<float>((float)(SbrControl::joystickX - 130), -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT);
     }
 
     if (micros() >= print_timer)
@@ -110,7 +112,7 @@ void SbrPid::loop()
     //    if(pidOutput > 0) selfBalanceAngleSetpoint += 0.0015;   //Decrease the self_balance_pid_setpoint if the robot is still moving backward
     //  }
 
-    sbrMotor->setSpeed(SbrMpu::constrf(pidOutput, -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT), rotation);
+    sbrMotor->setSpeed(constraint<float>(pidOutput, -MAX_PID_OUTPUT, MAX_PID_OUTPUT) * (MAX_SPEED / MAX_PID_OUTPUT), rotation);
 
     // The angle calculations are tuned for a loop time of PERIOD milliseconds.
     // To make sure every loop is exactly that, a wait loop is created by setting the loop_timer
@@ -124,6 +126,8 @@ void SbrPid::loop()
     }
 
     loop_timer += PERIOD;
+
+    sleepAWhile(1000);
 }
 
 SbrMpu *SbrPid::sbrMpu;

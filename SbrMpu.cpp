@@ -70,9 +70,9 @@ void SbrMpu::getAcceleration(int16_t *x, int16_t *y, int16_t *z)
     Wire.endTransmission();
     Wire.requestFrom(SbrMpu::MPU_ADDR, 6);
 
-    *x = SbrMpu::constr((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
-    *y = SbrMpu::constr((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
-    *z = SbrMpu::constr((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
+    *x = constraint<int16_t>((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
+    *y = constraint<int16_t>((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
+    *z = constraint<int16_t>((((int16_t)Wire.read()) << 8) | Wire.read(), -ACC_SCALE_FACTOR, ACC_SCALE_FACTOR);
 }
 
 void SbrMpu::getRotation(int16_t *x, int16_t *y, int16_t *z)
@@ -85,34 +85,6 @@ void SbrMpu::getRotation(int16_t *x, int16_t *y, int16_t *z)
     *x = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroX_calibration;
     *y = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroY_calibration;
     *z = ((((int16_t)Wire.read()) << 8) | Wire.read()) - gyroZ_calibration;
-}
-
-int16_t SbrMpu::constr(int16_t value, int16_t mini, int16_t maxi)
-{
-    if (value < mini)
-    {
-        return mini;
-    }
-    else if (value > maxi)
-    {
-        return maxi;
-    }
-
-    return value;
-}
-
-float SbrMpu::constrf(float value, float mini, float maxi)
-{
-    if (value < mini)
-    {
-        return mini;
-    }
-    else if (value > maxi)
-    {
-        return maxi;
-    }
-
-    return value;
 }
 
 int SbrMpu::MPU_ADDR = 0x69; //AD0 is HIGH
