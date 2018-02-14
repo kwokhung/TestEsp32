@@ -20,13 +20,15 @@ void setup()
 {
   Serial.begin(115200);
 
+  SbrZZZ::sbrXXX = sbrXXX;
+
   SbrPid::sbrMpu = sbrMpu;
   SbrPid::sbrMotor = sbrMotor;
 
   SbrConfig::sbrMotor = sbrMotor;
   SbrConfig::sbrPid = sbrPid;
 
-  //xTaskCreate(SbrXXX::startUp, sbrXXX->name.c_str(), 10000, sbrXXX, 1, &sbrXXX->task);
+  xTaskCreate(SbrXXX::startUp, sbrXXX->name.c_str(), 10000, sbrXXX, 1, &sbrXXX->task);
   //xTaskCreate(SbrYYY::startUp, sbrYYY->name.c_str(), 10000, sbrYYY, 1, &sbrYYY->task);
   xTaskCreate(SbrZZZ::startUp, sbrZZZ->name.c_str(), 10000, sbrZZZ, 1, &sbrZZZ->task);
   //xTaskCreate(SbrMpu::startUp, sbrMpu->name.c_str(), 10000, sbrMpu, 1, &sbrMpu->task);

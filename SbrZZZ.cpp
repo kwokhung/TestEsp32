@@ -1,13 +1,10 @@
 #include <HardwareSerial.h>
 
-#include "Led.h"
 #include "SbrZZZ.h"
 
 void SbrZZZ::setup()
 {
     Serial.println("SbrZZZ::setup");
-
-    myLED = new Led(27, 26, 25);
 
     Setpoint = 50;
     Kp = 2;
@@ -29,9 +26,12 @@ void SbrZZZ::loop()
     Serial.printf("Input: %f\n", Input);
 
     myPID->Compute();
-    Serial.printf("Output: %f\n", Output);
+
     int brightness = (int)Output;
-    myLED->lightG(brightness);
+    Serial.printf("Output: %d\n", brightness);
+    sbrXXX->light(brightness);
 
     sleepAWhile(1000);
 }
+
+SbrXXX *SbrZZZ::sbrXXX;

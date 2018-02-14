@@ -3,13 +3,15 @@
 
 #include <PID_v1.h>
 
-#include "Led.h"
+#include "SbrXXX.h"
 #include "SbrBase.h"
 
 class SbrZZZ : public SbrBase<SbrZZZ>
 {
 public:
   friend class SbrBase;
+
+  static SbrXXX *sbrXXX;
 
 private:
   SbrZZZ(std::string name)
@@ -21,7 +23,6 @@ private:
 
   double Setpoint, Input, Output;
   double Kp, Ki, Kd;
-  Led *myLED;
   PID *myPID;
 };
 
