@@ -29,9 +29,10 @@ void SbrZZZ::loop()
 
     int brightness = (int)Output;
     Serial.printf("Output: %d\n", brightness);
-    sbrXXX->light(brightness);
 
-    sleepAWhile(1000);
+    xQueueSend(sbrXXX->queue, &brightness, portMAX_DELAY);
+
+    //sleepAWhile(1000);
 }
 
 SbrXXX *SbrZZZ::sbrXXX;

@@ -2,6 +2,7 @@
 #define SbrBase_h
 
 #include <string>
+#include <FreeRTOS.h>
 #include <esp_task_wdt.h>
 
 template <typename T>

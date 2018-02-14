@@ -8,7 +8,7 @@ class SbrXXX : public SbrBase<SbrXXX>
 {
 public:
   friend class SbrBase;
-  void light(int brightness);
+  QueueHandle_t queue;
 
 private:
   SbrXXX(std::string name)
@@ -18,6 +18,8 @@ private:
   void setup() override;
   void loop() override;
 
+  int queueSize;
+  int brightness;
   Led *myLED;
 };
 
