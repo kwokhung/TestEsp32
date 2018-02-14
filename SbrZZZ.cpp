@@ -16,6 +16,7 @@ void SbrZZZ::setup()
     myPID->SetSampleTime(1000);
     myPID->SetOutputLimits(0, 1023);
     myPID->SetMode(AUTOMATIC);
+    myPID->SetTunings(10, 5, 1);
 }
 
 void SbrZZZ::loop()
