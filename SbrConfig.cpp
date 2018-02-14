@@ -22,7 +22,8 @@ void SbrConfig::setup()
     Serial.println("SbrConfig::setup");
 
     Serial.println("\nConnecting to Wifi");
-    WiFi.begin("MASON-IT", "22182830");
+    //WiFi.begin("MASON-IT", "22182830");
+    WiFi.begin("Mason-Guest02", "22182981");
 
     while (WiFi.status() != WL_CONNECTED)
     {
