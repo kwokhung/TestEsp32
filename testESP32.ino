@@ -1,4 +1,5 @@
 #include "SbrXXX.h"
+#include "SbrXXX01.h"
 #include "SbrYYY.h"
 #include "SbrZZZ.h"
 #include "SbrMpu.h"
@@ -12,6 +13,7 @@ void setup()
   Serial.begin(115200);
 
   SbrXXX *sbrXXX = SbrXXX::getSingleTon("SBR - XXX");
+  SbrXXX01 *sbrXXX01 = SbrXXX01::getSingleTon("SBR - XXX01");
   SbrYYY *sbrYYY = SbrYYY::getSingleTon("SBR - YYY");
   SbrZZZ *sbrZZZ = SbrZZZ::getSingleTon("SBR - ZZZ");
   SbrMpu *sbrMpu = SbrMpu::getSingleTon("SBR - MPU");
@@ -28,9 +30,10 @@ void setup()
   SbrConfig::sbrMotor = sbrMotor;
   SbrConfig::sbrPid = sbrPid;
 
-  xTaskCreate(SbrXXX::startUp, sbrXXX->name.c_str(), 10000, sbrXXX, 1, &sbrXXX->task);
+  //xTaskCreate(SbrXXX::startUp, sbrXXX->name.c_str(), 10000, sbrXXX, 1, &sbrXXX->task);
+  xTaskCreate(SbrXXX01::startUp, sbrXXX01->name.c_str(), 10000, sbrXXX01, 1, &sbrXXX01->task);
   //xTaskCreate(SbrYYY::startUp, sbrYYY->name.c_str(), 10000, sbrYYY, 1, &sbrYYY->task);
-  xTaskCreate(SbrZZZ::startUp, sbrZZZ->name.c_str(), 10000, sbrZZZ, 1, &sbrZZZ->task);
+  //xTaskCreate(SbrZZZ::startUp, sbrZZZ->name.c_str(), 10000, sbrZZZ, 1, &sbrZZZ->task);
   //xTaskCreate(SbrMpu::startUp, sbrMpu->name.c_str(), 10000, sbrMpu, 1, &sbrMpu->task);
   //xTaskCreate(SbrMotor::startUp, sbrMotor->name.c_str(), 10000, sbrMotor, 1, &sbrMotor->task);
   //xTaskCreate(SbrControl::startUp, sbrControl->name.c_str(), 10000, sbrControl, 2, &sbrControl->task);
