@@ -7,18 +7,18 @@
 #include "SbrPid.h"
 #include "SbrConfig.h"
 
-SbrXXX *sbrXXX = SbrXXX::getSingleTon("SBR - XXX");
-SbrYYY *sbrYYY = SbrYYY::getSingleTon("SBR - YYY");
-SbrZZZ *sbrZZZ = SbrZZZ::getSingleTon("SBR - ZZZ");
-SbrMpu *sbrMpu = SbrMpu::getSingleTon("SBR - MPU");
-SbrMotor *sbrMotor = SbrMotor::getSingleTon("SBR - Motor");
-SbrControl *sbrControl = SbrControl::getSingleTon("SBR - Control");
-SbrPid *sbrPid = SbrPid::getSingleTon("SBR - PID");
-SbrConfig *sbrConfig = SbrConfig::getSingleTon("SBR - Config");
-
 void setup()
 {
   Serial.begin(115200);
+
+  SbrXXX *sbrXXX = SbrXXX::getSingleTon("SBR - XXX");
+  SbrYYY *sbrYYY = SbrYYY::getSingleTon("SBR - YYY");
+  SbrZZZ *sbrZZZ = SbrZZZ::getSingleTon("SBR - ZZZ");
+  SbrMpu *sbrMpu = SbrMpu::getSingleTon("SBR - MPU");
+  SbrMotor *sbrMotor = SbrMotor::getSingleTon("SBR - Motor");
+  SbrControl *sbrControl = SbrControl::getSingleTon("SBR - Control");
+  SbrPid *sbrPid = SbrPid::getSingleTon("SBR - PID");
+  SbrConfig *sbrConfig = SbrConfig::getSingleTon("SBR - Config");
 
   SbrZZZ::sbrXXX = sbrXXX;
 
