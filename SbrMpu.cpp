@@ -87,5 +87,5 @@ void SbrMpu::loop()
     sleepAWhile(1000);
 }
 
-int SbrMpu::MPU_ADDR = 0x69; //AD0 is HIGH
+int SbrMpu::MPU_ADDR = 0x68;
 float SbrMpu::GYRO_RAW_TO_DEGS = 1.0 / (1000000.0 / PERIOD) / GYRO_SCALE_FACTOR;

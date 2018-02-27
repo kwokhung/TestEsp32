@@ -15,6 +15,10 @@ void SbrPid::loop()
     Serial.println("SbrPid::loop");
 
     sbrMpu->getAcceleration(&sbrMpu->accX, &sbrMpu->accY, &sbrMpu->accZ);
+    Serial.printf("accX: %d\n", sbrMpu->accX);
+    Serial.printf("accY: %d\n", sbrMpu->accY);
+    Serial.printf("accZ: %d\n", sbrMpu->accZ);
+
     rollAcc = asin((float)sbrMpu->accX / ACC_SCALE_FACTOR) * RAD_TO_DEG;
     pitchAcc = asin((float)sbrMpu->accY / ACC_SCALE_FACTOR) * RAD_TO_DEG;
 
