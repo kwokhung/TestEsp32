@@ -10,6 +10,7 @@ class SbrBase
 {
   public:
     static T *getSingleTon(std::string name);
+
     static void startUp(void *parameter);
     static void sleepAWhile(uint32_t aWhile);
     template <typename T1>
@@ -17,6 +18,7 @@ class SbrBase
 
     std::string name;
     TaskHandle_t task;
+    QueueHandle_t queue;
 
   protected:
     SbrBase(std::string name);
@@ -24,6 +26,8 @@ class SbrBase
     virtual void loop() = 0;
 
     static T *singleTon;
+
+    int queueSize;
 };
 
 template <typename T>
