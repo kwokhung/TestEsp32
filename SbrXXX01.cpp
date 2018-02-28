@@ -95,16 +95,11 @@ void SbrXXX01::setup()
 
     writeMPU6050(MPU6050_PWR_MGMT_1, 0x00);
 
-    sleepAWhile(1000);
-
-    if (readMPU6050(MPU6050_WHO_AM_I) != MPU6050_ADDR)
+    while (readMPU6050(MPU6050_WHO_AM_I) != MPU6050_ADDR)
     {
         Serial.println("\nWHO_AM_I error.");
 
-        while (true)
-        {
-            sleepAWhile(1000);
-        }
+        sleepAWhile(100);
     }
 
     writeMPU6050(MPU6050_SMPLRT_DIV, 0x00);   // sample rate: 8kHz/(7+1) = 1kHz
@@ -132,7 +127,7 @@ void SbrXXX01::setup()
         raw_gyro_y = Wire.read() << 8 | Wire.read();
         raw_gyro_z = Wire.read() << 8 | Wire.read();
 
-        Serial.print("AcX = ");
+        /*Serial.print("AcX = ");
         Serial.print(raw_acc_x);
         Serial.print(" | AcY = ");
         Serial.print(raw_acc_y);
@@ -145,7 +140,7 @@ void SbrXXX01::setup()
         Serial.print(" | GyY = ");
         Serial.print(raw_gyro_y);
         Serial.print(" | GyZ = ");
-        Serial.println(raw_gyro_z);
+        Serial.println(raw_gyro_z);*/
 
         dpsX = ((float)raw_gyro_x) / 65.5;
         dpsY = ((float)raw_gyro_y) / 65.5;
