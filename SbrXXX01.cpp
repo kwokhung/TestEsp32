@@ -34,6 +34,10 @@ void SbrXXX01::calcRotation()
     Wire.endTransmission(false);
     Wire.requestFrom(MPU6050_ADDR, 14, true);
 
+    while (Wire.available() < 14)
+    {
+    }
+
     //出力されたデータを読み込み、ビットシフト演算
     raw_acc_x = Wire.read() << 8 | Wire.read();
     raw_acc_y = Wire.read() << 8 | Wire.read();
@@ -118,6 +122,10 @@ void SbrXXX01::setup()
         Wire.write(0x3B);
         Wire.endTransmission(false);
         Wire.requestFrom(MPU6050_ADDR, 14, true);
+
+        while (Wire.available() < 14)
+        {
+        }
 
         raw_acc_x = Wire.read() << 8 | Wire.read();
         raw_acc_y = Wire.read() << 8 | Wire.read();
