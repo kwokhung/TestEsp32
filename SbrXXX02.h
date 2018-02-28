@@ -22,6 +22,7 @@ public:
   friend class SbrBase;
   uint8_t readMPU6050(uint8_t reg);
   void writeMPU6050(uint8_t reg, uint8_t data);
+  void readRawData();
   void calcRotation();
 
 private:
@@ -32,14 +33,16 @@ private:
   void setup() override;
   void loop() override;
 
-  float dpsX, dpsY, dpsZ;
-  double offsetX, offsetY, offsetZ;
-  float acc_x, acc_y, acc_z, acc_angle_x, acc_angle_y;
-  float interval, preInterval;
-  double gyro_angle_x, gyro_angle_y, gyro_angle_z;
-  float angleX, angleY, angleZ;
-
-  int16_t AcX, AcY, AcZ, Tmp, GyX, GyY, GyZ;
+  long acc_x, acc_y, acc_z;
+  int temperature;
+  int gyro_x, gyro_y, gyro_z;
+  long gyro_x_cal, gyro_y_cal, gyro_z_cal;
+  long loop_timer;
+  float angle_pitch, angle_roll;
+  long acc_total_vector;
+  float angle_roll_acc, angle_pitch_acc;
+  boolean set_gyro_angles;
+  float angle_pitch_output, angle_roll_output;
 };
 
 #endif

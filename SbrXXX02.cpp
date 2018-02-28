@@ -9,7 +9,7 @@ uint8_t SbrXXX02::readMPU6050(uint8_t reg)
 {
     Wire.beginTransmission(MPU6050_ADDR);
     Wire.write(reg);
-    Wire.endTransmission(true);
+    Wire.endTransmission();
 
     Wire.requestFrom(MPU6050_ADDR, 1 /*length*/);
 
@@ -24,59 +24,28 @@ void SbrXXX02::writeMPU6050(uint8_t reg, uint8_t data)
     Wire.endTransmission();
 }
 
-void SbrXXX02::calcRotation()
-{
-    int16_t raw_acc_x, raw_acc_y, raw_acc_z, raw_t, raw_gyro_x, raw_gyro_y, raw_gyro_z;
-
-    //レジスタアドレス0x3Bから、計14バイト分のデータを出力するようMPU6050へ指示
-    Wire.beginTransmission(MPU6050_ADDR);
-    Wire.write(0x3B);
-    Wire.endTransmission(false);
-    Wire.requestFrom(MPU6050_ADDR, 14, true);
+void SbrXXX02::readRawData()
+{                                         //Subroutine for reading the raw gyro and accelerometer data
+    Wire.beginTransmission(MPU6050_ADDR); //Start communicating with the MPU-6050
+    Wire.write(0x3B);                     //Send the requested starting register
+    Wire.endTransmission();               //End the transmission
+    Wire.requestFrom(MPU6050_ADDR, 14);   //Request 14 bytes from the MPU-6050
 
     while (Wire.available() < 14)
     {
     }
 
-    //出力されたデータを読み込み、ビットシフト演算
-    raw_acc_x = Wire.read() << 8 | Wire.read();
-    raw_acc_y = Wire.read() << 8 | Wire.read();
-    raw_acc_z = Wire.read() << 8 | Wire.read();
-    raw_t = Wire.read() << 8 | Wire.read();
-    raw_gyro_x = Wire.read() << 8 | Wire.read();
-    raw_gyro_y = Wire.read() << 8 | Wire.read();
-    raw_gyro_z = Wire.read() << 8 | Wire.read();
+    acc_x = Wire.read() << 8 | Wire.read();       //Add the low and high byte to the acc_x variable
+    acc_y = Wire.read() << 8 | Wire.read();       //Add the low and high byte to the acc_y variable
+    acc_z = Wire.read() << 8 | Wire.read();       //Add the low and high byte to the acc_z variable
+    temperature = Wire.read() << 8 | Wire.read(); //Add the low and high byte to the temperature variable
+    gyro_x = Wire.read() << 8 | Wire.read();      //Add the low and high byte to the gyro_x variable
+    gyro_y = Wire.read() << 8 | Wire.read();      //Add the low and high byte to the gyro_y variable
+    gyro_z = Wire.read() << 8 | Wire.read();      //Add the low and high byte to the gyro_z variable
+}
 
-    //単位Gへ変換
-    acc_x = ((float)raw_acc_x) / 16384.0;
-    acc_y = ((float)raw_acc_y) / 16384.0;
-    acc_z = ((float)raw_acc_z) / 16384.0;
-
-    //加速度センサーから角度を算出
-    acc_angle_y = atan2(acc_x, acc_z + abs(acc_y)) * 360 / -2.0 / PI;
-    acc_angle_x = atan2(acc_y, acc_z + abs(acc_x)) * 360 / 2.0 / PI;
-
-    dpsX = ((float)raw_gyro_x) / 65.5; // LSB sensitivity: 65.5 LSB/dps @ ±500dps
-    dpsY = ((float)raw_gyro_y) / 65.5;
-    dpsZ = ((float)raw_gyro_z) / 65.5;
-
-    //前回計算した時から今までの経過時間を算出
-    interval = millis() - preInterval;
-    preInterval = millis();
-
-    //数値積分
-    gyro_angle_x += (dpsX - offsetX) * (interval * 0.001);
-    gyro_angle_y += (dpsY - offsetY) * (interval * 0.001);
-    gyro_angle_z += (dpsZ - offsetZ) * (interval * 0.001);
-
-    //相補フィルター
-    angleX = (0.996 * gyro_angle_x) + (0.004 * acc_angle_x);
-    angleY = (0.996 * gyro_angle_y) + (0.004 * acc_angle_y);
-    angleZ = gyro_angle_z;
-
-    gyro_angle_x = angleX;
-    gyro_angle_y = angleY;
-    gyro_angle_z = angleZ;
+void SbrXXX02::calcRotation()
+{
 }
 
 void SbrXXX02::setup()
@@ -86,15 +55,6 @@ void SbrXXX02::setup()
     queueSize = 10;
     queue = xQueueCreate(queueSize, sizeof(int));
 
-    offsetX = 0;
-    offsetY = 0;
-    offsetZ = 0;
-
-    gyro_angle_x = 0;
-    gyro_angle_y = 0;
-    gyro_angle_z = 0;
-
-    //Wire.begin();
     Wire.begin(SDAPIN, SCLPIN);
 
     writeMPU6050(MPU6050_PWR_MGMT_1, 0x00);
@@ -106,90 +66,86 @@ void SbrXXX02::setup()
         sleepAWhile(100);
     }
 
-    writeMPU6050(MPU6050_SMPLRT_DIV, 0x00);   // sample rate: 8kHz/(7+1) = 1kHz
-    writeMPU6050(MPU6050_CONFIG, 0x00);       // disable DLPF, gyro output rate = 8kHz
-    writeMPU6050(MPU6050_GYRO_CONFIG, 0x08);  // gyro range: ±500dps
-    writeMPU6050(MPU6050_ACCEL_CONFIG, 0x00); // accel range: ±2g
-    writeMPU6050(MPU6050_PWR_MGMT_1, 0x01);   // disable sleep mode, PLL with X gyro
+    writeMPU6050(MPU6050_GYRO_CONFIG, 0x08);
+    writeMPU6050(MPU6050_ACCEL_CONFIG, 0x10);
 
     Serial.println("Calibration");
 
-    for (int i = 0; i < 3000; i++)
+    for (int i = 0; i < 2000; i++)
     {
-        int16_t raw_acc_x, raw_acc_y, raw_acc_z, raw_t, raw_gyro_x, raw_gyro_y, raw_gyro_z;
-
-        Wire.beginTransmission(MPU6050_ADDR);
-        Wire.write(0x3B);
-        Wire.endTransmission(false);
-        Wire.requestFrom(MPU6050_ADDR, 14, true);
-
-        while (Wire.available() < 14)
-        {
-        }
-
-        raw_acc_x = Wire.read() << 8 | Wire.read();
-        raw_acc_y = Wire.read() << 8 | Wire.read();
-        raw_acc_z = Wire.read() << 8 | Wire.read();
-        raw_t = Wire.read() << 8 | Wire.read();
-        raw_gyro_x = Wire.read() << 8 | Wire.read();
-        raw_gyro_y = Wire.read() << 8 | Wire.read();
-        raw_gyro_z = Wire.read() << 8 | Wire.read();
-
-        /*Serial.print("AcX = ");
-        Serial.print(raw_acc_x);
-        Serial.print(" | AcY = ");
-        Serial.print(raw_acc_y);
-        Serial.print(" | AcZ = ");
-        Serial.print(raw_acc_z);
-        Serial.print(" | Tmp = ");
-        Serial.print(raw_t / 340.00 + 36.53); //equation for temperature in degrees C from datasheet
-        Serial.print(" | GyX = ");
-        Serial.print(raw_gyro_x);
-        Serial.print(" | GyY = ");
-        Serial.print(raw_gyro_y);
-        Serial.print(" | GyZ = ");
-        Serial.println(raw_gyro_z);*/
-
-        dpsX = ((float)raw_gyro_x) / 65.5;
-        dpsY = ((float)raw_gyro_y) / 65.5;
-        dpsZ = ((float)raw_gyro_z) / 65.5;
-
-        offsetX += dpsX;
-        offsetY += dpsY;
-        offsetZ += dpsZ;
-
-        if (i % 1000 == 0)
+        if (i % 125 == 0)
         {
             Serial.print(".");
         }
+
+        readRawData();
+
+        delayMicroseconds(3); //Delay 3us to simulate the 250Hz program loop
     }
 
-    Serial.println();
+    gyro_x_cal /= 2000; //Divide the gyro_x_cal variable by 2000 to get the avarage offset
+    gyro_y_cal /= 2000; //Divide the gyro_y_cal variable by 2000 to get the avarage offset
+    gyro_z_cal /= 2000; //Divide the gyro_z_cal variable by 2000 to get the avarage offset
 
-    offsetX /= 3000;
-    offsetY /= 3000;
-    offsetZ /= 3000;
-
-    Serial.print("offsetX : ");
-    Serial.println(offsetX);
-    Serial.print("offsetY : ");
-    Serial.println(offsetY);
-    Serial.print("offsetZ : ");
-    Serial.println(offsetZ);
+    loop_timer = micros();
 }
 
 void SbrXXX02::loop()
 {
     Serial.println("SbrXXX02::loop");
 
-    calcRotation();
+    readRawData();
 
-    Serial.print("angleX : ");
-    Serial.print(angleX);
-    Serial.print("    angleY : ");
-    Serial.print(angleY);
-    Serial.print("    angleZ : ");
-    Serial.println(angleZ);
+    gyro_x -= gyro_x_cal; //Subtract the offset calibration value from the raw gyro_x value
+    gyro_y -= gyro_y_cal; //Subtract the offset calibration value from the raw gyro_y value
+    gyro_z -= gyro_z_cal; //Subtract the offset calibration value from the raw gyro_z value
 
-    sleepAWhile(1000);
+    //Gyro angle calculations
+    //0.0000611 = 1 / (250Hz / 65.5)
+    angle_pitch += gyro_x * 0.0000611; //Calculate the traveled pitch angle and add this to the angle_pitch variable
+    angle_roll += gyro_y * 0.0000611;  //Calculate the traveled roll angle and add this to the angle_roll variable
+
+    //0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
+    angle_pitch += angle_roll * sin(gyro_z * 0.000001066); //If the IMU has yawed transfer the roll angle to the pitch angel
+    angle_roll -= angle_pitch * sin(gyro_z * 0.000001066); //If the IMU has yawed transfer the pitch angle to the roll angel
+
+    //Accelerometer angle calculations
+    acc_total_vector = sqrt((acc_x * acc_x) + (acc_y * acc_y) + (acc_z * acc_z)); //Calculate the total accelerometer vector
+    //57.296 = 1 / (3.142 / 180) The Arduino asin function is in radians
+    angle_pitch_acc = asin((float)acc_y / acc_total_vector) * 57.296; //Calculate the pitch angle
+    angle_roll_acc = asin((float)acc_x / acc_total_vector) * -57.296; //Calculate the roll angle
+
+    //Place the MPU-6050 spirit level and note the values in the following two lines for calibration
+    angle_pitch_acc -= 0.0; //Accelerometer calibration value for pitch
+    angle_roll_acc -= 0.0;  //Accelerometer calibration value for roll
+
+    if (set_gyro_angles)
+    {                                                                  //If the IMU is already started
+        angle_pitch = angle_pitch * 0.9996 + angle_pitch_acc * 0.0004; //Correct the drift of the gyro pitch angle with the accelerometer pitch angle
+        angle_roll = angle_roll * 0.9996 + angle_roll_acc * 0.0004;    //Correct the drift of the gyro roll angle with the accelerometer roll angle
+    }
+    else
+    {                                  //At first start
+        angle_pitch = angle_pitch_acc; //Set the gyro pitch angle equal to the accelerometer pitch angle
+        angle_roll = angle_roll_acc;   //Set the gyro roll angle equal to the accelerometer roll angle
+        set_gyro_angles = true;        //Set the IMU started flag
+    }
+
+    //To dampen the pitch and roll angles a complementary filter is used
+    angle_pitch_output = angle_pitch_output * 0.9 + angle_pitch * 0.1; //Take 90% of the output pitch value and add 10% of the raw pitch value
+    angle_roll_output = angle_roll_output * 0.9 + angle_roll * 0.1;    //Take 90% of the output roll value and add 10% of the raw roll value
+
+    //write_LCD(); //Write the roll and pitch values to the LCD display
+    Serial.print("angle_pitch : ");
+    Serial.println(angle_pitch_output);
+    Serial.print("angle_roll : ");
+    Serial.println(angle_roll_output);
+
+    while (micros() - loop_timer < 4000)
+    {
+        esp_task_wdt_reset(); //Wait until the loop_timer reaches 4000us (250Hz) before starting the next loop
+    }
+
+    loop_timer = micros();
+    //sleepAWhile(1000);
 }
