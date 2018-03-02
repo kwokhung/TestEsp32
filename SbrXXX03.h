@@ -6,7 +6,7 @@
 #include "SbrBase.h"
 
 #define OUTPUT_READABLE_ACCELGYRO
-#define OUTPUT_BINARY_ACCELGYRO
+//#define OUTPUT_BINARY_ACCELGYRO
 
 class SbrXXX03 : public SbrBase<SbrXXX03>
 {

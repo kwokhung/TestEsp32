@@ -34,8 +34,8 @@ void SbrXXX03::setup()
     Serial.print("\t");
     Serial.print("\n");
 
-    accelgyro->setXAccelOffset(0);
-    accelgyro->setYAccelOffset(0);
+    /*accelgyro->setXAccelOffset(0);
+    accelgyro->setYAccelOffset(90);
     accelgyro->setZAccelOffset(0);
 
     Serial.print(accelgyro->getXAccelOffset());
@@ -50,7 +50,7 @@ void SbrXXX03::setup()
     Serial.print("\t");
     Serial.print(accelgyro->getZGyroOffset());
     Serial.print("\t");
-    Serial.print("\n");
+    Serial.print("\n");*/
 }
 
 void SbrXXX03::loop()
