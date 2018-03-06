@@ -88,7 +88,7 @@ void SbrXXX04::loop()
 //保存在指定的数组中
 void SbrXXX04::ReadAccGyr(int16_t *pVals)
 {
-    accelgyro->getMotion6((int16_t *)&pVals[0], (int16_t *)&pVals[1], (int16_t *)&pVals[2], (int16_t *)&pVals[4], (int16_t *)&pVals[5], (int16_t *)&pVals[6]);
+    accelgyro->getMotion6(&pVals[0], &pVals[1], &pVals[2], &pVals[4], &pVals[5], &pVals[6]);
     pVals[3] = accelgyro->getTemperature();
 
     Serial.print("a/g:\t");
@@ -126,7 +126,7 @@ void SbrXXX04::Calibration()
     {
         calibData[i] = int16_t(valSums[i] / nCalibTimes);
     }
-    calibData[2] += 16384; //设芯片Z轴竖直向下，设定静态工作点。
+    //calibData[2] += 16384; //设芯片Z轴竖直向下，设定静态工作点。
 }
 
 //算得Roll角。算法见文档。
@@ -157,4 +157,19 @@ void SbrXXX04::Rectify(int16_t *pReadout, float *pRealVals)
     {
         pRealVals[i] = (float)(pReadout[i] - calibData[i]) / 131.0f;
     }
+
+    Serial.print("Rectified a/g:\t");
+    Serial.print(pRealVals[0]);
+    Serial.print("\t");
+    Serial.print(pRealVals[1]);
+    Serial.print("\t");
+    Serial.print(pRealVals[2]);
+    Serial.print("\t");
+    Serial.print(pRealVals[3]);
+    Serial.print("\t");
+    Serial.print(pRealVals[4]);
+    Serial.print("\t");
+    Serial.print(pRealVals[5]);
+    Serial.print("\t");
+    Serial.println(pRealVals[6]);
 }
