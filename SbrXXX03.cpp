@@ -59,7 +59,6 @@ void SbrXXX03::loop()
 
     accelgyro->getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
 
-#ifdef OUTPUT_READABLE_ACCELGYRO
     Serial.print("a/g:\t");
     Serial.print(ax);
     Serial.print("\t");
@@ -72,22 +71,17 @@ void SbrXXX03::loop()
     Serial.print(gy);
     Serial.print("\t");
     Serial.println(gz);
-#endif
 
-#ifdef OUTPUT_BINARY_ACCELGYRO
-    Serial.write((uint8_t)(ax >> 8));
-    Serial.write((uint8_t)(ax & 0xFF));
-    Serial.write((uint8_t)(ay >> 8));
-    Serial.write((uint8_t)(ay & 0xFF));
-    Serial.write((uint8_t)(az >> 8));
-    Serial.write((uint8_t)(az & 0xFF));
-    Serial.write((uint8_t)(gx >> 8));
-    Serial.write((uint8_t)(gx & 0xFF));
-    Serial.write((uint8_t)(gy >> 8));
-    Serial.write((uint8_t)(gy & 0xFF));
-    Serial.write((uint8_t)(gz >> 8));
-    Serial.write((uint8_t)(gz & 0xFF));
-#endif
+    axInG = ax * 2.0 / 32768;
+    ayInG = ay * 2.0 / 32768;
+    azInG = az * 2.0 / 32768;
+
+    Serial.print("a in g:\t");
+    Serial.print(axInG);
+    Serial.print("\t");
+    Serial.print(ayInG);
+    Serial.print("\t");
+    Serial.println(azInG);
 
     sleepAWhile(1000);
 }

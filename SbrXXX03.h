@@ -5,9 +5,6 @@
 
 #include "SbrBase.h"
 
-#define OUTPUT_READABLE_ACCELGYRO
-//#define OUTPUT_BINARY_ACCELGYRO
-
 class SbrXXX03 : public SbrBase<SbrXXX03>
 {
 public:
@@ -23,6 +20,7 @@ private:
 
   MPU6050 *accelgyro;
   int16_t ax, ay, az;
+  float axInG, ayInG, azInG;
   int16_t gx, gy, gz;
 };
 
