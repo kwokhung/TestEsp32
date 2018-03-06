@@ -76,12 +76,22 @@ void SbrXXX03::loop()
     ayInG = ay * 2.0 / 32768;
     azInG = az * 2.0 / 32768;
 
+    gxInD = gx * 250.0 / 32768;
+    gyInD = gy * 250.0 / 32768;
+    gzInD = gz * 250.0 / 32768;
+
     Serial.print("a in g:\t");
-    Serial.print(axInG);
+    Serial.print(axInG, 6);
     Serial.print("\t");
-    Serial.print(ayInG);
+    Serial.print(ayInG, 6);
     Serial.print("\t");
-    Serial.println(azInG);
+    Serial.print(azInG, 6);
+    Serial.print("\t");
+    Serial.print(gxInD, 6);
+    Serial.print("\t");
+    Serial.print(gyInD, 6);
+    Serial.print("\t");
+    Serial.println(gzInD, 6);
 
     sleepAWhile(1000);
 }

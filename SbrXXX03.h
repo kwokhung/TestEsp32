@@ -22,6 +22,7 @@ private:
   int16_t ax, ay, az;
   float axInG, ayInG, azInG;
   int16_t gx, gy, gz;
+  float gxInD, gyInD, gzInD;
 };
 
 #endif
