@@ -13,9 +13,9 @@ class SbrXXX05 : public SbrBase<SbrXXX05>
 {
 public:
   friend class SbrBase;
-  uint8_t i2cWrite(uint8_t registerAddress, uint8_t data, bool sendStop);
-  uint8_t i2cWrite(uint8_t registerAddress, uint8_t *data, uint8_t length, bool sendStop);
-  uint8_t i2cRead(uint8_t registerAddress, uint8_t *data, uint8_t nbytes);
+  uint8_t mpuWrite(uint8_t registerAddress, uint8_t data, bool sendStop);
+  uint8_t mpuWrite(uint8_t registerAddress, uint8_t *data, uint8_t length, bool sendStop);
+  uint8_t mpuRead(uint8_t registerAddress, uint8_t *data, uint8_t nbytes);
 
 private:
   SbrXXX05(std::string name)

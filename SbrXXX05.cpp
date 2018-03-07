@@ -17,25 +17,38 @@ void SbrXXX05::setup()
     i2cData[1] = 0x00; // Disable FSYNC and set 260 Hz Acc filtering, 256 Hz Gyro filtering, 8 KHz sampling
     i2cData[2] = 0x00; // Set Gyro Full Scale Range to ±250deg/s
     i2cData[3] = 0x00; // Set Accelerometer Full Scale Range to ±2g
-    while (i2cWrite(0x19, i2cData, 4, false))
-        ; // Write to all four registers at once
-    while (i2cWrite(0x6B, 0x01, true))
-        ; // PLL with X axis gyroscope reference and disable sleep mode
 
-    while (i2cRead(0x75, i2cData, 1))
-        ;
+    while (mpuWrite(0x19, i2cData, 4, false))
+    {
+        // Write to all four registers at once
+    }
+
+    while (mpuWrite(0x6B, 0x01, true))
+    {
+        // PLL with X axis gyroscope reference and disable sleep mode
+    }
+
+    while (mpuRead(0x75, i2cData, 1))
+    {
+    }
+
     if (i2cData[0] != 0x68)
-    { // Read "WHO_AM_I" register
+    {
+        // Read "WHO_AM_I" register
         Serial.print(F("Error reading sensor"));
-        while (1)
-            ;
+
+        while (true)
+        {
+        }
     }
 
     delayMicroseconds(100); // Wait for sensor to stabilize
 
     /* Set kalman and gyro starting angle */
-    while (i2cRead(0x3B, i2cData, 6))
-        ;
+    while (mpuRead(0x3B, i2cData, 6))
+    {
+    }
+
     accX = (int16_t)((i2cData[0] << 8) | i2cData[1]);
     accY = (int16_t)((i2cData[2] << 8) | i2cData[3]);
     accZ = (int16_t)((i2cData[4] << 8) | i2cData[5]);
@@ -66,8 +79,10 @@ void SbrXXX05::loop()
     Serial.println("SbrXXX05::loop");
 
     /* Update all the values */
-    while (i2cRead(0x3B, i2cData, 14))
-        ;
+    while (mpuRead(0x3B, i2cData, 14))
+    {
+    }
+
     accX = (int16_t)((i2cData[0] << 8) | i2cData[1]);
     accY = (int16_t)((i2cData[2] << 8) | i2cData[3]);
     accZ = (int16_t)((i2cData[4] << 8) | i2cData[5]);
@@ -75,7 +90,6 @@ void SbrXXX05::loop()
     gyroX = (int16_t)((i2cData[8] << 8) | i2cData[9]);
     gyroY = (int16_t)((i2cData[10] << 8) | i2cData[11]);
     gyroZ = (int16_t)((i2cData[12] << 8) | i2cData[13]);
-    ;
 
     double dt = (double)(micros() - timer) / 1000000; // Calculate delta time
     timer = micros();
@@ -104,10 +118,15 @@ void SbrXXX05::loop()
         gyroXangle = roll;
     }
     else
+    {
         kalAngleX = kalmanX.getAngle(roll, gyroXrate, dt); // Calculate the angle using a Kalman filter
+    }
 
     if (abs(kalAngleX) > 90)
+    {
         gyroYrate = -gyroYrate; // Invert rate, so it fits the restriced accelerometer reading
+    }
+
     kalAngleY = kalmanY.getAngle(pitch, gyroYrate, dt);
 #else
     // This fixes the transition problem when the accelerometer angle jumps between -180 and 180 degrees
@@ -119,10 +138,15 @@ void SbrXXX05::loop()
         gyroYangle = pitch;
     }
     else
+    {
         kalAngleY = kalmanY.getAngle(pitch, gyroYrate, dt); // Calculate the angle using a Kalman filter
+    }
 
     if (abs(kalAngleY) > 90)
-        gyroXrate = -gyroXrate;                        // Invert rate, so it fits the restriced accelerometer reading
+    {
+        gyroXrate = -gyroXrate; // Invert rate, so it fits the restriced accelerometer reading
+    }
+
     kalAngleX = kalmanX.getAngle(roll, gyroXrate, dt); // Calculate the angle using a Kalman filter
 #endif
 
@@ -136,12 +160,15 @@ void SbrXXX05::loop()
 
     // Reset the gyro angle when it has drifted too much
     if (gyroXangle < -180 || gyroXangle > 180)
+    {
         gyroXangle = kalAngleX;
-    if (gyroYangle < -180 || gyroYangle > 180)
-        gyroYangle = kalAngleY;
+    }
 
-        /* Print Data */
-#if 0 // Set to 1 to activate
+    if (gyroYangle < -180 || gyroYangle > 180)
+    {
+        gyroYangle = kalAngleY;
+    }
+
     Serial.print(accX);
     Serial.print("\t");
     Serial.print(accY);
@@ -157,7 +184,6 @@ void SbrXXX05::loop()
     Serial.print("\t");
 
     Serial.print("\t");
-#endif
 
     Serial.print(roll);
     Serial.print("\t");
@@ -179,13 +205,11 @@ void SbrXXX05::loop()
     Serial.print(kalAngleY);
     Serial.print("\t");
 
-#if 0 // Set to 1 to print the temperature
     Serial.print("\t");
 
     double temperature = (double)tempRaw / 340.0 + 36.53;
     Serial.print(temperature);
     Serial.print("\t");
-#endif
 
     Serial.print("\r\n");
 
@@ -194,55 +218,73 @@ void SbrXXX05::loop()
     delayMicroseconds(2);
 }
 
-uint8_t SbrXXX05::i2cWrite(uint8_t registerAddress, uint8_t data, bool sendStop)
+uint8_t SbrXXX05::mpuWrite(uint8_t registerAddress, uint8_t data, bool sendStop)
 {
-    return i2cWrite(registerAddress, &data, 1, sendStop); // Returns 0 on success
+    return mpuWrite(registerAddress, &data, 1, sendStop); // Returns 0 on success
 }
 
-uint8_t SbrXXX05::i2cWrite(uint8_t registerAddress, uint8_t *data, uint8_t length, bool sendStop)
+uint8_t SbrXXX05::mpuWrite(uint8_t registerAddress, uint8_t *data, uint8_t length, bool sendStop)
 {
     Wire.beginTransmission(IMUAddress);
     Wire.write(registerAddress);
     Wire.write(data, length);
+
     uint8_t rcode = Wire.endTransmission(sendStop); // Returns 0 on success
+
     if (rcode)
     {
-        Serial.print(F("i2cWrite failed: "));
+        Serial.print(F("mpuWrite failed: "));
         Serial.println(rcode);
     }
+
     return rcode; // See: http://arduino.cc/en/Reference/WireEndTransmission
 }
 
-uint8_t SbrXXX05::i2cRead(uint8_t registerAddress, uint8_t *data, uint8_t nbytes)
+uint8_t SbrXXX05::mpuRead(uint8_t registerAddress, uint8_t *data, uint8_t nbytes)
 {
     uint32_t timeOutTimer;
+
     Wire.beginTransmission(IMUAddress);
     Wire.write(registerAddress);
+
     uint8_t rcode = Wire.endTransmission(false); // Don't release the bus
+
     if (rcode)
     {
-        Serial.print(F("i2cRead failed: "));
+        Serial.print(F("mpuRead failed: "));
         Serial.println(rcode);
-        return rcode; // See: http://arduino.cc/en/Reference/WireEndTransmission
+
+        return rcode;
     }
+
     Wire.requestFrom(IMUAddress, nbytes, (uint8_t) true); // Send a repeated start and then release the bus after reading
+
     for (uint8_t i = 0; i < nbytes; i++)
     {
         if (Wire.available())
+        {
             data[i] = Wire.read();
+        }
         else
         {
             timeOutTimer = micros();
+
             while (((micros() - timeOutTimer) < I2C_TIMEOUT) && !Wire.available())
-                ;
+            {
+            }
+
             if (Wire.available())
+            {
                 data[i] = Wire.read();
+            }
             else
             {
-                Serial.println(F("i2cRead timeout"));
+                Serial.println(F("mpuRead timeout"));
+
                 return 5; // This error value is not already taken by endTransmission
             }
         }
     }
+
     return 0; // Success
 }
