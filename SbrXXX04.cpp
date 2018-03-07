@@ -34,21 +34,19 @@ void SbrXXX04::loop()
 {
     Serial.println("SbrXXX04::loop");
 
-    int16_t mpuValues[7];
-    readMpu(mpuValues); //读出测量值
+    readMpu(); //读出测量值
 
-    float calculatedValues[7];
-    rectify(mpuValues, calculatedValues); //根据校准的偏移量进行纠正
+    rectify(); //根据校准的偏移量进行纠正
 
     //计算加速度向量的模长，均以g为单位
-    float roll = getRoll(calculatedValues); //计算Roll角
+    float roll = getRoll(); //计算Roll角
 
     if (calculatedValues[1] > 0)
     {
         roll = -roll;
     }
 
-    float pitch = getPitch(calculatedValues); //计算Pitch角
+    float pitch = getPitch(); //计算Pitch角
 
     if (calculatedValues[0] < 0)
     {
@@ -92,7 +90,7 @@ void SbrXXX04::loop()
 
 //从MPU6050读出加速度计三个分量、温度和三个角速度计
 //保存在指定的数组中
-void SbrXXX04::readMpu(int16_t *mpuValues)
+void SbrXXX04::readMpu()
 {
     mpu->getMotion6(&mpuValues[0], &mpuValues[1], &mpuValues[2], &mpuValues[4], &mpuValues[5], &mpuValues[6]);
     mpuValues[3] = mpu->getTemperature();
@@ -121,9 +119,7 @@ void SbrXXX04::calibrate()
     //先求和
     for (int i = 0; i < 1000; ++i)
     {
-        int16_t mpuValues[7];
-
-        readMpu(mpuValues);
+        readMpu();
 
         for (int j = 0; j < 7; ++j)
         {
@@ -141,7 +137,7 @@ void SbrXXX04::calibrate()
 }
 
 //对读数进行纠正，消除偏移，并转换为物理量。公式见文档。
-void SbrXXX04::rectify(int16_t *mpuValues, float *calculatedValues)
+void SbrXXX04::rectify()
 {
     for (int i = 0; i < 3; ++i)
     {
@@ -172,7 +168,7 @@ void SbrXXX04::rectify(int16_t *mpuValues, float *calculatedValues)
 }
 
 //算得Roll角。算法见文档。
-float SbrXXX04::getRoll(float *calculatedValues)
+float SbrXXX04::getRoll()
 {
     float normalInXZ = sqrt(calculatedValues[0] * calculatedValues[0] + calculatedValues[2] * calculatedValues[2]);
     float normal = sqrt(calculatedValues[0] * calculatedValues[0] + calculatedValues[1] * calculatedValues[1] + calculatedValues[2] * calculatedValues[2]);
@@ -182,7 +178,7 @@ float SbrXXX04::getRoll(float *calculatedValues)
 }
 
 //算得Pitch角。算法见文档。
-float SbrXXX04::getPitch(float *calculatedValues)
+float SbrXXX04::getPitch()
 {
     float normalInYZ = sqrt(calculatedValues[1] * calculatedValues[1] + calculatedValues[2] * calculatedValues[2]);
     float normal = sqrt(calculatedValues[0] * calculatedValues[0] + calculatedValues[1] * calculatedValues[1] + calculatedValues[2] * calculatedValues[2]);
