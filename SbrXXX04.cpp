@@ -74,13 +74,13 @@ void SbrXXX04::loop()
 
     //向串口打印输出Roll角和Pitch角，运行时在Arduino的串口监视器中查看
     Serial.print("Roll:");
-    Serial.print(curRoll);
+    Serial.print(curRoll, 6);
     Serial.print('(');
-    Serial.print(rollRate);
+    Serial.print(rollRate, 6);
     Serial.print("),\tPitch:");
-    Serial.print(curPitch);
+    Serial.print(curPitch, 6);
     Serial.print('(');
-    Serial.print(pitchRate);
+    Serial.print(pitchRate, 6);
     Serial.print(")\n");
 
     //sleepAWhile(1000);
@@ -96,19 +96,19 @@ void SbrXXX04::readMpu()
     mpuValues[3] = mpu->getTemperature();
 
     Serial.print("a/g:\t");
-    Serial.print(mpuValues[0] * 2.0 / 32768);
+    Serial.print(mpuValues[0] * 2.0 / 32768, 6);
     Serial.print("\t");
-    Serial.print(mpuValues[1] * 2.0 / 32768);
+    Serial.print(mpuValues[1] * 2.0 / 32768, 6);
     Serial.print("\t");
-    Serial.print(mpuValues[2] * 2.0 / 32768);
+    Serial.print(mpuValues[2] * 2.0 / 32768, 6);
     Serial.print("\t");
-    Serial.print(mpuValues[3] / 340.00 + 36.53);
+    Serial.print(mpuValues[3] / 340.00 + 36.53, 6);
     Serial.print("\t");
-    Serial.print(mpuValues[4] * 250.0 / 32768);
+    Serial.print(mpuValues[4] * 250.0 / 32768, 6);
     Serial.print("\t");
-    Serial.print(mpuValues[5] * 250.0 / 32768);
+    Serial.print(mpuValues[5] * 250.0 / 32768, 6);
     Serial.print("\t");
-    Serial.println(mpuValues[6] * 250.0 / 32768);
+    Serial.println(mpuValues[6] * 250.0 / 32768, 6);
 }
 
 //对大量读数进行统计，校准平均偏移量
@@ -152,19 +152,19 @@ void SbrXXX04::rectify()
     }
 
     Serial.print("Rectified a/g:\t");
-    Serial.print(calculatedValues[0]);
+    Serial.print(calculatedValues[0], 6);
     Serial.print("\t");
-    Serial.print(calculatedValues[1]);
+    Serial.print(calculatedValues[1], 6);
     Serial.print("\t");
-    Serial.print(calculatedValues[2]);
+    Serial.print(calculatedValues[2], 6);
     Serial.print("\t");
-    Serial.print(calculatedValues[3]);
+    Serial.print(calculatedValues[3], 6);
     Serial.print("\t");
-    Serial.print(calculatedValues[4]);
+    Serial.print(calculatedValues[4], 6);
     Serial.print("\t");
-    Serial.print(calculatedValues[5]);
+    Serial.print(calculatedValues[5], 6);
     Serial.print("\t");
-    Serial.println(calculatedValues[6]);
+    Serial.println(calculatedValues[6], 6);
 }
 
 //算得Roll角。算法见文档。
