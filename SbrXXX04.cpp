@@ -43,14 +43,14 @@ void SbrXXX04::loop()
 
     if (calculatedValues[1] > 0)
     {
-        roll = -roll;
+        //roll = -roll;
     }
 
     float pitch = getPitch(); //计算Pitch角
 
     if (calculatedValues[0] < 0)
     {
-        pitch = -pitch;
+        //pitch = -pitch;
     }
 
     //计算两次测量的时间间隔deltaTime，以秒为单位
@@ -83,9 +83,15 @@ void SbrXXX04::loop()
     Serial.print(pitchRate, 6);
     Serial.print(")\n");
 
-    //sleepAWhile(1000);
-    esp_task_wdt_reset();
-    delayMicroseconds(10);
+    Serial.print("Roll:");
+    Serial.print(roll, 6);
+    Serial.print("\tPitch:");
+    Serial.print(pitch, 6);
+    Serial.print("\n");
+
+    sleepAWhile(1000);
+    //esp_task_wdt_reset();
+    //delayMicroseconds(10);
 }
 
 //从MPU6050读出加速度计三个分量、温度和三个角速度计
@@ -123,7 +129,7 @@ void SbrXXX04::calibrate()
 
         for (int j = 0; j < 7; ++j)
         {
-            sumOfMpuValues[j] += mpuValues[j];
+            //sumOfMpuValues[j] += mpuValues[j];
         }
     }
 
@@ -172,7 +178,8 @@ float SbrXXX04::getRoll()
 {
     float normalInXZ = sqrt(calculatedValues[0] * calculatedValues[0] + calculatedValues[2] * calculatedValues[2]);
     float normal = sqrt(calculatedValues[0] * calculatedValues[0] + calculatedValues[1] * calculatedValues[1] + calculatedValues[2] * calculatedValues[2]);
-    float cosine = normalInXZ / normal;
+    //float cosine = normalInXZ / normal;
+    float cosine = calculatedValues[1] / normal;
 
     return acos(cosine) * Rad2Deg;
 }
@@ -182,7 +189,8 @@ float SbrXXX04::getPitch()
 {
     float normalInYZ = sqrt(calculatedValues[1] * calculatedValues[1] + calculatedValues[2] * calculatedValues[2]);
     float normal = sqrt(calculatedValues[0] * calculatedValues[0] + calculatedValues[1] * calculatedValues[1] + calculatedValues[2] * calculatedValues[2]);
-    float cosine = normalInYZ / normal;
+    //float cosine = normalInYZ / normal;
+    float cosine = calculatedValues[0] / normal;
 
     return acos(cosine) * Rad2Deg;
 }
