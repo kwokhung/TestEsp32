@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <HardwareSerial.h>
-#include <SBUS.h>
+#include "Sbus.h"
 //#include <hackflight.hpp>
 //#include <boards/sim/sim.hpp>
 //#include <receivers/real/serial/arduino_sbus.hpp>
@@ -14,13 +14,7 @@ void SbrXXX06::setup()
     queueSize = 10;
     queue = xQueueCreate(queueSize, sizeof(int));
 
-    HardwareSerial *Serial1 = new HardwareSerial(2);
-    SBUS rx = *new SBUS(*Serial1);
-
-    //HardwareSerial Serial1 = *new HardwareSerial(2);
-    //SBUS *a = new SBUS(Serial);
-    //SBUS b = *new SBUS(Serial);
-    //SBUS c(Serial);
+    Sbus &rx = *new Sbus(*new HardwareSerial(2));
 }
 
 void SbrXXX06::loop()
