@@ -1,7 +1,11 @@
 #ifndef SbrXXX06_h
 #define SbrXXX06_h
 
+#include <Arduino.h>
+#include <HardwareSerial.h>
 #include <hackflight.hpp>
+#include <stabilizer.hpp>
+#include <boards/sim/sim.hpp>
 #include <receivers/real/serial/arduino_sbus.hpp>
 
 #include "SbrBase.h"
@@ -20,7 +24,8 @@ private:
   void loop() override;
 
   hf::Hackflight h;
-  const hf::SBUS_Receiver rc = hf::SBUS_Receiver(.005f, -.08f, 0.f);
+  hf::SBUS_Receiver rc;
+  hf::Stabilizer stabilizer;
 };
 
 #endif
