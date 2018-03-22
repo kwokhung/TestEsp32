@@ -13,6 +13,7 @@ class SbrBase
 
     static void startUp(void *parameter);
     static void sleepAWhile(uint32_t aWhile);
+    static void sleepAShortWhile(uint32_t aWhile);
     template <typename T1>
     static T1 constraint(T1 value, T1 minValue, T1 maxValue);
 
