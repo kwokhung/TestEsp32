@@ -18,6 +18,8 @@ void SbrXXX06::loop()
 {
     Serial.println("SbrXXX06::loop");
 
+    h.update();
+    
     sleepAWhile(1000);
 }
 

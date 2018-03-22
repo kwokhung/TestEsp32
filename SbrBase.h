@@ -72,6 +72,17 @@ void SbrBase<T>::sleepAWhile(uint32_t aWhile)
 }
 
 template <typename T>
+void SbrBase<T>::sleepAShortWhile(uint32_t aWhile)
+{
+    for (int i = 0; i < aWhile; i++)
+    {
+        esp_task_wdt_reset();
+
+        delayMicroseconds(1);
+    }
+}
+
+template <typename T>
 template <typename T1>
 T1 SbrBase<T>::constraint(T1 value, T1 minValue, T1 maxValue)
 {
