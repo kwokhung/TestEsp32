@@ -15,6 +15,10 @@ class SbrXXX06 : public SbrBase<SbrXXX06>
 public:
   friend class SbrBase;
 
+  static hf::Hackflight &h;
+  static hf::SBUS_Receiver &rc;
+  static hf::Stabilizer &stabilizer;
+
 private:
   SbrXXX06(std::string name)
       : SbrBase(name)
@@ -22,10 +26,6 @@ private:
   }
   void setup() override;
   void loop() override;
-
-  hf::Hackflight h;
-  hf::SBUS_Receiver rc;
-  hf::Stabilizer stabilizer;
 };
 
 #endif
