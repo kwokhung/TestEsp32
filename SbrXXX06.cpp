@@ -1,5 +1,10 @@
 #include "SbrXXX06.h"
 
+void hf::Board::outbuf(char * buf)
+{
+    Serial.print(buf); 
+}
+
 void hf::SimBoard::cputime(struct timespec *tv)
 {
 }
