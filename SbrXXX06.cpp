@@ -1,13 +1,12 @@
 #include "SbrXXX06.h"
 
-void hf::Board::outbuf(char * buf)
-{
-    Serial.print(buf); 
-}
+#include "Esp32Board.hpp"
 
+/*
 void hf::SimBoard::cputime(struct timespec *tv)
 {
 }
+*/
 
 void SbrXXX06::setup()
 {
@@ -16,7 +15,7 @@ void SbrXXX06::setup()
     queueSize = 10;
     queue = xQueueCreate(queueSize, sizeof(int));
 
-    h.init(new hf::SimBoard(), &rc, &stabilizer);
+    h.init(new Esp32Board(), &rc, &stabilizer);
 }
 
 void SbrXXX06::loop()
