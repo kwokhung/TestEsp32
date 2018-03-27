@@ -2,12 +2,6 @@
 
 #include "Esp32Board.hpp"
 
-/*
-void hf::SimBoard::cputime(struct timespec *tv)
-{
-}
-*/
-
 void SbrXXX06::setup()
 {
     Serial.println("SbrXXX06::setup");
@@ -23,7 +17,7 @@ void SbrXXX06::loop()
     Serial.println("SbrXXX06::loop");
 
     h.update();
-    
+
     sleepAWhile(1000);
 }
 

@@ -6,6 +6,9 @@
 #include <Wire.h>
 #include <MPU6050.h>
 
+#include "EtkVector.h"
+#include "EtkQuaternion.h"
+
 class Esp32Board : public hf::RealBoard
 {
 public:
