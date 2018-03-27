@@ -28,6 +28,28 @@ Esp32Board::Esp32Board()
     Serial.print(euler.y(), 6);
     Serial.print("\t");
     Serial.println(euler.z(), 6);
+
+    etk::Quaternion q;
+    euler =  *new etk::Vector<3>(285, 2.5, 1.54);
+    euler.to_radians();
+    q.from_euler(euler); //this is the orientation quaternion
+
+    //total acceleration is force felt by accelerometers in the aircraft
+    etk::Vector<3> total_acceleration(1.5, 0.2, 10.5);
+    //gravity makes things feel like they are accelerating up at 9.8m/s/s on the vertical (z) axis
+    etk::Vector<3> gravity(0.0, 0.0, 9.8);
+
+    //rotate gravity so it's in the pilots frame of reference
+    auto gravity_pilot_frame = q.rotate_vector(gravity);
+
+    //now we can subtract gravity from total acceleration
+    etk::Vector<3> acceleration = total_acceleration - gravity_pilot_frame;
+
+    Serial.print(acceleration.x(), 6);
+    Serial.print("\t");
+    Serial.print(acceleration.y(), 6);
+    Serial.print("\t");
+    Serial.println(acceleration.z(), 6);
 }
 
 void Esp32Board::init(void)
