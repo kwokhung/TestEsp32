@@ -5,11 +5,11 @@ Esp32Board::Esp32Board()
     etk::Quaternion A, B;
 
     //heading is 90, zero pitch or roll
-    etk::Vector<3> a(90, 0, 0);
+    etk::Vector<3> a(0, 0, 90);
     a.to_radians();
 
     //heading is 45
-    etk::Vector<3> b(45, 0, 0);
+    etk::Vector<3> b(0, 0, 45);
     b.to_radians();
 
     //make quaternions A and B from euler angle representations
@@ -30,7 +30,7 @@ Esp32Board::Esp32Board()
     Serial.println(euler.z(), 6);
 
     etk::Quaternion q;
-    euler =  *new etk::Vector<3>(285, 2.5, 1.54);
+    euler = *new etk::Vector<3>(285, 2.5, 1.54);
     euler.to_radians();
     q.from_euler(euler); //this is the orientation quaternion
 
@@ -50,6 +50,73 @@ Esp32Board::Esp32Board()
     Serial.print(acceleration.y(), 6);
     Serial.print("\t");
     Serial.println(acceleration.z(), 6);
+
+    //Vector<3> down = accelerometers.read();
+    //Vector<3> east = down.cross(magnetometers.read());
+    //Vector<3> north = east.cross(down);
+    etk::Vector<3> down = *new etk::Vector<3>(0, 0, 1);
+    etk::Vector<3> east = down.cross(*new etk::Vector<3>(0, 1, 0));
+    etk::Vector<3> north = east.cross(down);
+
+    down.normalize();
+    east.normalize();
+    north.normalize();
+
+    Serial.print(down.x(), 6);
+    Serial.print("\t");
+    Serial.print(down.y(), 6);
+    Serial.print("\t");
+    Serial.println(down.z(), 6);
+
+    Serial.print(east.x(), 6);
+    Serial.print("\t");
+    Serial.print(east.y(), 6);
+    Serial.print("\t");
+    Serial.println(east.z(), 6);
+
+    Serial.print(north.x(), 6);
+    Serial.print("\t");
+    Serial.print(north.y(), 6);
+    Serial.print("\t");
+    Serial.println(north.z(), 6);
+
+    etk::Matrix<3, 3> rotationMatrix;
+    rotationMatrix.vector_to_col(north, 0);
+    rotationMatrix.vector_to_col(east, 1);
+    rotationMatrix.vector_to_col(down, 2);
+
+    etk::Quaternion q_accel;
+    q_accel.from_matrix(rotationMatrix);
+
+    euler = q_accel.to_euler();
+    euler.to_degrees();
+
+    Serial.print(euler.x(), 6);
+    Serial.print("\t");
+    Serial.print(euler.y(), 6);
+    Serial.print("\t");
+    Serial.println(euler.z(), 6);
+
+    euler.x() = atan2f(1, 0);
+    euler.y() = atan2(-0, sqrt(0 * 0 + 1 * 1));
+    euler.z() = atan2(0, 1);
+
+    Serial.print(euler.x(), 6);
+    Serial.print("\t");
+    Serial.print(euler.y(), 6);
+    Serial.print("\t");
+    Serial.println(euler.z(), 6);
+
+    q_accel.from_euler(euler);
+
+    euler = q_accel.to_euler();
+    euler.to_degrees();
+
+    Serial.print(euler.x(), 6);
+    Serial.print("\t");
+    Serial.print(euler.y(), 6);
+    Serial.print("\t");
+    Serial.println(euler.z(), 6);
 }
 
 void Esp32Board::init(void)
