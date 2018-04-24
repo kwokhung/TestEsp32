@@ -132,7 +132,7 @@ void Esp32Board::init(void)
     Serial.println(mpu->testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
 }
 
-bool Esp32Board::getEulerAngles(float eulerAngles[3])
+bool Esp32Board::getQuaternion(float quat[4])
 {
     return true;
 }

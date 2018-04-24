@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 #include <HardwareSerial.h>
-#include <boards/real/realboard.hpp>
+#include <boards/realboard.hpp>
 #include <Wire.h>
 #include <MPU6050.h>
 
@@ -15,7 +15,7 @@ public:
   Esp32Board();
 
   void init(void) override;
-  bool getEulerAngles(float eulerAngles[3]) override;
+  bool getQuaternion(float quat[4]) override;
   bool getGyroRates(float gyroRates[3]) override;
   uint32_t getMicroseconds() override;
   void writeMotor(uint8_t index, float value) override;

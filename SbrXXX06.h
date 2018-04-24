@@ -5,8 +5,7 @@
 #include <HardwareSerial.h>
 #include <hackflight.hpp>
 #include <stabilizer.hpp>
-//#include <boards/sim/sim.hpp>
-#include <receivers/real/serial/arduino_sbus.hpp>
+#include <receivers/serial/arduino_sbus.hpp>
 
 #include "SbrBase.h"
 
