@@ -25,6 +25,7 @@ void setup()
   //SbrXXX04 *sbrXXX04 = SbrXXX04::getSingleTon("SBR - XXX04");
   //SbrXXX05 *sbrXXX05 = SbrXXX05::getSingleTon("SBR - XXX05");
   //SbrXXX06 *sbrXXX06 = SbrXXX06::getSingleTon("SBR - XXX06");
+  SbrXXX07 *sbrXXX07 = SbrXXX07::getSingleTon("SBR - XXX07");
   //SbrYYY *sbrYYY = SbrYYY::getSingleTon("SBR - YYY");
   //SbrZZZ *sbrZZZ = SbrZZZ::getSingleTon("SBR - ZZZ");
   //SbrMpu *sbrMpu = SbrMpu::getSingleTon("SBR - MPU");
@@ -48,6 +49,7 @@ void setup()
   //xTaskCreate(SbrXXX04::startUp, sbrXXX04->name.c_str(), 10000, sbrXXX04, 1, &sbrXXX04->task);
   //xTaskCreate(SbrXXX05::startUp, sbrXXX05->name.c_str(), 10000, sbrXXX05, 1, &sbrXXX05->task);
   //xTaskCreate(SbrXXX06::startUp, sbrXXX06->name.c_str(), 10000, sbrXXX06, 1, &sbrXXX06->task);
+  xTaskCreate(SbrXXX07::startUp, sbrXXX07->name.c_str(), 10000, sbrXXX07, 1, &sbrXXX07->task);
   //xTaskCreate(SbrYYY::startUp, sbrYYY->name.c_str(), 10000, sbrYYY, 1, &sbrYYY->task);
   //xTaskCreate(SbrZZZ::startUp, sbrZZZ->name.c_str(), 10000, sbrZZZ, 1, &sbrZZZ->task);
   //xTaskCreate(SbrMpu::startUp, sbrMpu->name.c_str(), 10000, sbrMpu, 1, &sbrMpu->task);

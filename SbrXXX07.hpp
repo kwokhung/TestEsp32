@@ -1,17 +1,20 @@
-#ifndef SbrXXX07_h
-#define SbrXXX07_h
+#pragma once
 
 #include <Arduino.h>
 #include <HardwareSerial.h>
+#include <BLEServer.h>
+#include <BLEDevice.h>
 
 #include "SbrBase.hpp"
+#include "Thermometer.hpp"
+#include "Temperature.hpp"
 
 class SbrXXX07 : public SbrBase<SbrXXX07>
 {
 public:
   friend class SbrBase;
 
-  static HardwareSerial &Serial1;
+  static BLEServer &bleServer;
 
 private:
   SbrXXX07(std::string name)
@@ -21,5 +24,3 @@ private:
   void setup() override;
   void loop() override;
 };
-
-#endif
