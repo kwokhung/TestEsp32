@@ -5,6 +5,7 @@
 //#include "SbrXXX04.h"
 //#include "SbrXXX05.h"
 //#include "SbrXXX06.h"
+#include "SbrXXX07.hpp"
 //#include "SbrYYY.h"
 //#include "SbrZZZ.h"
 //#include "SbrMpu.h"
