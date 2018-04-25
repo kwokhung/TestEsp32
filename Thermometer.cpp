@@ -26,12 +26,19 @@ void Thermometer::onConnect(BLEServer *bleServer)
     connected = true;
 }
 
+Thermometer *Thermometer::getSingleTon(BLEServer *bleServer, char *thermometerServiceUuid, char *temperatureCharacteristicUuid)
+{
+    if (singleTon == NULL)
+    {
+        singleTon = new Thermometer(bleServer, thermometerServiceUuid, temperatureCharacteristicUuid);
+    }
+
+    return (singleTon);
+}
+
 void Thermometer::init(BLEServer *bleServer, char *thermometerServiceUuid, char *temperatureCharacteristicUuid)
 {
-    if (!initted)
-    {
-        new Thermometer(bleServer, thermometerServiceUuid, temperatureCharacteristicUuid);
-    }
+    getSingleTon(bleServer, thermometerServiceUuid, temperatureCharacteristicUuid);
 }
 
 bool Thermometer::isConnected()
@@ -39,6 +46,6 @@ bool Thermometer::isConnected()
     return connected;
 }
 
-bool Thermometer::initted = false;
-bool Thermometer::connected = false;
+Thermometer *Thermometer::singleTon = NULL;
 BLEService *Thermometer::thermometerService;
+bool Thermometer::connected = false;

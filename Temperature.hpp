@@ -8,6 +8,7 @@ class Temperature : public BLECharacteristicCallbacks
 {
 public:
   void onWrite(BLECharacteristic *temperatureCharacteristic);
+  static Temperature *getSingleTon(BLEService *thermometerService, char *temperatureCharacteristicUuid);
   static void init(BLEService *thermometerService, char *temperatureCharacteristicUuid);
   static uint8_t getValue();
   static void setValue(uint8_t newValue);
@@ -19,7 +20,7 @@ private:
   char *thermometerServiceUuid;
   char *temperatureCharacteristicUuid;
   BLEService *thermometerService;
-  static bool initted;
+  static Temperature *singleTon;
   static BLECharacteristic *temperatureCharacteristic;
   static uint8_t value;
 };
