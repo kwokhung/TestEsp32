@@ -1,6 +1,3 @@
-#include <HardwareSerial.h>
-#include <BLE2902.h>
-
 #include "Temperature.hpp"
 
 Temperature::Temperature(BLEService *thermometerService, char *temperatureCharacteristicUuid)

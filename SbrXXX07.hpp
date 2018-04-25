@@ -2,7 +2,6 @@
 
 #include <Arduino.h>
 #include <HardwareSerial.h>
-#include <BLEServer.h>
 #include <BLEDevice.h>
 
 #include "SbrBase.hpp"
@@ -14,8 +13,6 @@ class SbrXXX07 : public SbrBase<SbrXXX07>
 public:
   friend class SbrBase;
 
-  static BLEServer &bleServer;
-
 private:
   SbrXXX07(std::string name)
       : SbrBase(name)
@@ -23,4 +20,7 @@ private:
   }
   void setup() override;
   void loop() override;
+
+  BLEServer *bleServer;
+  BLEServer &aleServer = *bleServer;
 };

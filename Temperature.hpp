@@ -1,7 +1,8 @@
-#ifndef Temperature_h
-#define Temperature_h
+#pragma once
 
+#include <HardwareSerial.h>
 #include <BLEServer.h>
+#include <BLE2902.h>
 
 class Temperature : public BLECharacteristicCallbacks
 {
@@ -22,5 +23,3 @@ private:
   static BLECharacteristic *temperatureCharacteristic;
   static uint8_t value;
 };
-
-#endif

@@ -1,7 +1,9 @@
-#ifndef Thermometer_h
-#define Thermometer_h
+#pragma once
 
+#include <HardwareSerial.h>
 #include <BLEServer.h>
+
+#include "Temperature.hpp"
 
 class Thermometer : public BLEServerCallbacks
 {
@@ -21,5 +23,3 @@ private:
   static BLEService *thermometerService;
   static bool connected;
 };
-
-#endif

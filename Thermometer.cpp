@@ -1,5 +1,4 @@
 #include "Thermometer.hpp"
-#include "Temperature.hpp"
 
 Thermometer::Thermometer(BLEServer *bleServer, char *thermometerServiceUuid, char *temperatureCharacteristicUuid)
     : bleServer(bleServer)
@@ -15,11 +14,15 @@ Thermometer::Thermometer(BLEServer *bleServer, char *thermometerServiceUuid, cha
 
 void Thermometer::onDisconnect(BLEServer *bleServer)
 {
+    Serial.println("onDisconnect...");
+
     connected = false;
 }
 
 void Thermometer::onConnect(BLEServer *bleServer)
 {
+    Serial.println("onConnect...");
+
     connected = true;
 }
 

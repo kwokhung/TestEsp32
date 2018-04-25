@@ -1,5 +1,4 @@
-#ifndef SbrBase_h
-#define SbrBase_h
+#pragma once
 
 #include <string>
 #include <FreeRTOS.h>
@@ -99,5 +98,3 @@ SbrBase<T>::SbrBase(std::string name)
 
 template <typename T>
 T *SbrBase<T>::singleTon = NULL;
-
-#endif
