@@ -22,5 +22,4 @@ private:
   void loop() override;
 
   BLEServer *bleServer;
-  BLEServer &aleServer = *bleServer;
 };
