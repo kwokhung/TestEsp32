@@ -1,28 +1,31 @@
 #include "Keyboard.hpp"
 
-Keyboard::Keyboard(BLEServer *bleServer, char *keyboardServiceUuid, char *hidCharacteristicUuid)
+Keyboard::Keyboard(BLEServer *bleServer)
     : bleServer(bleServer)
 {
-    keyboardService = bleServer->createService(keyboardServiceUuid);
+    keyboardService = bleServer->createService((uint16_t)0x180a);
+    keyboardService1 = bleServer->createService((uint16_t)0x1812, 30);
 
-    Hid::init(keyboardService, hidCharacteristicUuid);
+    Hid::init(keyboardService);
+    //setupCharacteristics();
 
     keyboardService->start();
+    keyboardService1->start();
 }
 
-Keyboard *Keyboard::getSingleTon(BLEServer *bleServer, char *keyboardServiceUuid, char *hidCharacteristicUuid)
+Keyboard *Keyboard::getSingleTon(BLEServer *bleServer)
 {
     if (singleTon == NULL)
     {
-        singleTon = new Keyboard(bleServer, keyboardServiceUuid, hidCharacteristicUuid);
+        singleTon = new Keyboard(bleServer);
     }
 
     return (singleTon);
 }
 
-void Keyboard::init(BLEServer *bleServer, char *keyboardServiceUuid, char *hidCharacteristicUuid)
+void Keyboard::init(BLEServer *bleServer)
 {
-    getSingleTon(bleServer, keyboardServiceUuid, hidCharacteristicUuid);
+    getSingleTon(bleServer);
 }
 
 Keyboard *Keyboard::singleTon = NULL;

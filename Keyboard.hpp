@@ -8,15 +8,14 @@
 class Keyboard
 {
 public:
-  static Keyboard *getSingleTon(BLEServer *bleServer, char *keyboardServiceUuid, char *hidCharacteristicUuid);
-  static void init(BLEServer *bleServer, char *keyboardServiceUuid, char *hidCharacteristicUuid);
+  static Keyboard *getSingleTon(BLEServer *bleServer);
+  static void init(BLEServer *bleServer);
 
 private:
-  Keyboard(BLEServer *bleServer, char *keyboardServiceUuid, char *hidCharacteristicUuid);
+  Keyboard(BLEServer *bleServer);
 
-  char *keyboardServiceUuid;
-  char *hidCharacteristicUuid;
   BLEServer *bleServer;
   static Keyboard *singleTon;
   static BLEService *keyboardService;
+  static BLEService *keyboardService1;
 };

@@ -1,10 +1,10 @@
 #include "Hid.hpp"
 
-Hid::Hid(BLEService *keyboardService, char *hidCharacteristicUuid)
+Hid::Hid(BLEService *keyboardService)
     : keyboardService(keyboardService)
 {
     hidCharacteristic = keyboardService->createCharacteristic(
-        hidCharacteristicUuid,
+        (uint16_t)0x2a29,
         BLECharacteristic::PROPERTY_READ |
             BLECharacteristic::PROPERTY_WRITE |
             BLECharacteristic::PROPERTY_NOTIFY);
@@ -19,19 +19,19 @@ void Hid::onWrite(BLECharacteristic *hidCharacteristic)
     Serial.println("*********");
 }
 
-Hid *Hid::getSingleTon(BLEService *keyboardService, char *hidCharacteristicUuid)
+Hid *Hid::getSingleTon(BLEService *keyboardService)
 {
     if (singleTon == NULL)
     {
-        singleTon = new Hid(keyboardService, hidCharacteristicUuid);
+        singleTon = new Hid(keyboardService);
     }
 
     return (singleTon);
 }
 
-void Hid::init(BLEService *keyboardService, char *hidCharacteristicUuid)
+void Hid::init(BLEService *keyboardService)
 {
-    getSingleTon(keyboardService, hidCharacteristicUuid);
+    getSingleTon(keyboardService);
 }
 
 uint8_t Hid::getValue()

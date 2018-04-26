@@ -5,10 +5,10 @@
 #include <BLEDevice.h>
 
 #include "SbrBase.hpp"
-#include "Thermometer.hpp"
-#include "Temperature.hpp"
+#include "Keyboard.hpp"
+#include "Hid.hpp"
 
-class SbrXXX07 : public SbrBase<SbrXXX07>, public BLEServerCallbacks
+class SbrXXX08 : public SbrBase<SbrXXX08>, public BLEServerCallbacks
 {
 public:
   friend class SbrBase;
@@ -16,9 +16,9 @@ public:
   void onConnect(BLEServer *bleServer);
   void onDisconnect(BLEServer *bleServer);
   static bool isConnected();
-
+  
 private:
-  SbrXXX07(std::string name)
+  SbrXXX08(std::string name)
       : SbrBase(name)
   {
   }
