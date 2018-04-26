@@ -47,11 +47,11 @@ void SbrXXX07::loop()
 
         Temperature::setValue(Temperature::getValue() + 1);
 
-        Serial.printf("Hid::Sent Value: %d\n", Hid::getValue());
+        //Serial.printf("Hid::Sent Value: %d\n", Hid::getValue());
 
-        Hid::notify();
+        //Hid::notify();
 
-        Hid::setValue(Hid::getValue() + 1);
+        //Hid::setValue(Hid::getValue() + 1);
     }
 
     sleepAWhile(1000);
