@@ -15,7 +15,7 @@ Hid::Hid(BLEService *keyboardService)
 void Hid::onWrite(BLECharacteristic *hidCharacteristic)
 {
     Serial.println("*********");
-    Serial.printf("New value: %d\n", getValue());
+    Serial.printf("Hid::onWrite\n");
     Serial.println("*********");
 }
 
@@ -34,19 +34,12 @@ void Hid::init(BLEService *keyboardService)
     getSingleTon(keyboardService);
 }
 
-uint8_t Hid::getValue()
-{
-    value = *hidCharacteristic->getValue().data();
-
-    return value;
-}
-
-void Hid::setValue(uint8_t newValue)
+void Hid::setValue(uint8_t *newValue, size_t length)
 {
     value = newValue;
-    hidCharacteristic->setValue(&value, 1);
+    hidCharacteristic->setValue(value, length);
 }
-
+ 
 void Hid::notify()
 {
     hidCharacteristic->notify();
@@ -54,4 +47,4 @@ void Hid::notify()
 
 Hid *Hid::singleTon = NULL;
 BLECharacteristic *Hid::hidCharacteristic;
-uint8_t Hid::value = 0;
+uint8_t *Hid::value = 0;

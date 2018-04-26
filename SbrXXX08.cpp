@@ -42,11 +42,16 @@ void SbrXXX08::loop()
 
     if (SbrXXX08::isConnected())
     {
-        Serial.printf("Hid::Sent Value: %d\n", Hid::getValue());
+        uint8_t v[] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+        uint8_t a[] = {0x0, 0x0, random(0x04, 0x26), 0x0, 0x0, 0x0, 0x0, 0x0};
+
+        Hid::setValue(a, sizeof(a));
 
         Hid::notify();
 
-        Hid::setValue(Hid::getValue() + 1);
+        Hid::setValue(v, sizeof(v));
+
+        Hid::notify();
     }
 
     sleepAWhile(1000);

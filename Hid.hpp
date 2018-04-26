@@ -10,8 +10,7 @@ public:
   void onWrite(BLECharacteristic *hidCharacteristic);
   static Hid *getSingleTon(BLEService *keyboardService);
   static void init(BLEService *keyboardService);
-  static uint8_t getValue();
-  static void setValue(uint8_t newValue);
+  static void setValue(uint8_t *newValue, size_t length);
   static void notify();
 
 private:
@@ -20,5 +19,5 @@ private:
   BLEService *keyboardService;
   static Hid *singleTon;
   static BLECharacteristic *hidCharacteristic;
-  static uint8_t value;
+  static uint8_t *value;
 };
