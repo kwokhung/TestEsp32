@@ -6,7 +6,7 @@ Keyboard::Keyboard(BLEServer *bleServer)
     keyboardService = bleServer->createService((uint16_t)0x180a);
     keyboardService1 = bleServer->createService((uint16_t)0x1812, 30);
 
-    Hid::init(keyboardService);
+    Hid::init(keyboardService, keyboardService1);
     //setupCharacteristics();
 
     keyboardService->start();
