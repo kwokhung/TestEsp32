@@ -30,3 +30,4 @@ void Keyboard::init(BLEServer *bleServer)
 
 Keyboard *Keyboard::singleTon = NULL;
 BLEService *Keyboard::keyboardService;
+BLEService *Keyboard::keyboardService1;
