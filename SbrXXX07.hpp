@@ -20,6 +20,4 @@ private:
   }
   void setup() override;
   void loop() override;
-
-  BLEServer *bleServer;
 };

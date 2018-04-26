@@ -14,14 +14,14 @@ Keyboard::Keyboard(BLEServer *bleServer, char *keyboardServiceUuid, char *hidCha
 
 void Keyboard::onDisconnect(BLEServer *bleServer)
 {
-    Serial.println("onDisconnect...");
+    Serial.println("Keyboard: onDisconnect...");
 
     connected = false;
 }
 
 void Keyboard::onConnect(BLEServer *bleServer)
 {
-    Serial.println("onConnect...");
+    Serial.println("Keyboard: onConnect...");
 
     connected = true;
 }
@@ -39,6 +39,10 @@ Keyboard *Keyboard::getSingleTon(BLEServer *bleServer, char *keyboardServiceUuid
 void Keyboard::init(BLEServer *bleServer, char *keyboardServiceUuid, char *hidCharacteristicUuid)
 {
     getSingleTon(bleServer, keyboardServiceUuid, hidCharacteristicUuid);
+
+    bleServer->getAdvertising()->start();
+
+    Serial.println("Keyboard: Waiting a client connection...");
 }
 
 bool Keyboard::isConnected()

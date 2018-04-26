@@ -9,13 +9,7 @@ void SbrXXX07::setup()
 
     BLEDevice::init(name);
 
-    bleServer = BLEDevice::createServer();
-
-    Thermometer::init(bleServer, "4fafc201-1fb5-459e-8fcc-c5c9c331914b", "beb5483e-36e1-4688-b7f5-ea07361b26a8");
-
-    bleServer->getAdvertising()->start();
-
-    Serial.println("Waiting a client connection...");
+    Thermometer::init(BLEDevice::createServer(), "4fafc201-1fb5-459e-8fcc-c5c9c331914b", "beb5483e-36e1-4688-b7f5-ea07361b26a8");
 }
 
 void SbrXXX07::loop()

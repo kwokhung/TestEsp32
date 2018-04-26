@@ -14,14 +14,14 @@ Thermometer::Thermometer(BLEServer *bleServer, char *thermometerServiceUuid, cha
 
 void Thermometer::onDisconnect(BLEServer *bleServer)
 {
-    Serial.println("onDisconnect...");
+    Serial.println("Thermometer: onDisconnect...");
 
     connected = false;
 }
 
 void Thermometer::onConnect(BLEServer *bleServer)
 {
-    Serial.println("onConnect...");
+    Serial.println("Thermometer: onConnect...");
 
     connected = true;
 }
@@ -39,6 +39,10 @@ Thermometer *Thermometer::getSingleTon(BLEServer *bleServer, char *thermometerSe
 void Thermometer::init(BLEServer *bleServer, char *thermometerServiceUuid, char *temperatureCharacteristicUuid)
 {
     getSingleTon(bleServer, thermometerServiceUuid, temperatureCharacteristicUuid);
+
+    bleServer->getAdvertising()->start();
+
+    Serial.println("Thermometer: Waiting a client connection...");
 }
 
 bool Thermometer::isConnected()
