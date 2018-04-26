@@ -7,12 +7,18 @@
 #include "SbrBase.hpp"
 #include "Thermometer.hpp"
 #include "Temperature.hpp"
+#include "Keyboard.hpp"
+#include "Hid.hpp"
 
-class SbrXXX07 : public SbrBase<SbrXXX07>
+class SbrXXX07 : public SbrBase<SbrXXX07>, public BLEServerCallbacks
 {
 public:
   friend class SbrBase;
 
+  void onConnect(BLEServer *bleServer);
+  void onDisconnect(BLEServer *bleServer);
+  static bool isConnected();
+  
 private:
   SbrXXX07(std::string name)
       : SbrBase(name)
@@ -20,4 +26,7 @@ private:
   }
   void setup() override;
   void loop() override;
+
+  BLEServer *bleServer;
+  static bool connected;
 };
