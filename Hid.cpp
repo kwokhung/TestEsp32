@@ -8,9 +8,9 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         (uint16_t)0x2a50,
         BLECharacteristic::PROPERTY_READ);
 
-    const uint8_t pnp[] = {0x01, 0xe5, 0x02, 0xcd, 0xab, 0x01, 0x00};
+    const uint8_t pnpIdValue[] = {0x01, 0xe5, 0x02, 0xcd, 0xab, 0x01, 0x00};
 
-    pnpId->setValue((uint8_t *)pnp, sizeof(pnp));
+    pnpId->setValue((uint8_t *)pnpIdValue, sizeof(pnpIdValue));
 
     manufacturerNameString = deviceInformationService->createCharacteristic(
         (uint16_t)0x2a29,
@@ -24,15 +24,15 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         (uint16_t)0x2a4a,
         BLECharacteristic::PROPERTY_READ);
 
-    const uint8_t val1[] = {0x00, 0x01, 0x00, 0x02};
+    const uint8_t hidInformationValue[] = {0x00, 0x01, 0x00, 0x02};
 
-    hidInformation->setValue((uint8_t *)val1, sizeof(val1));
+    hidInformation->setValue((uint8_t *)hidInformationValue, sizeof(hidInformationValue));
 
     reportMap = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4b,
         BLECharacteristic::PROPERTY_READ);
 
-    const uint8_t val2[] = {
+    const uint8_t reportMapValue[] = {
         0x05, 0x01, 0x09, 0x06, 0xA1, 0x01, 0x05, 0x07,
         0x19, 0xE0, 0x29, 0xE7, 0x15, 0x00, 0x25, 0x01,
         0x75, 0x01, 0x95, 0x08, 0x81, 0x02, 0x95, 0x01,
@@ -42,7 +42,7 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         0x75, 0x08, 0x15, 0x00, 0x25, 0x65, 0x05, 0x07,
         0x19, 0x00, 0x29, 0x65, 0x81, 0x00, 0xC0};
 
-    reportMap->setValue((uint8_t *)val2, sizeof(val2));
+    reportMap->setValue((uint8_t *)reportMapValue, sizeof(reportMapValue));
 
     hidControlPoint = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4c,
@@ -56,8 +56,8 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
     report1->addDescriptor(new BLE2902());
 
     BLEDescriptor *reportReference1 = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
-    const uint8_t reportReference1_val[] = {0x01};
-    reportReference1->setValue((uint8_t *)reportReference1_val, sizeof(reportReference1_val));
+    const uint8_t reportReferenceValue1[] = {0x01, 0};
+    reportReference1->setValue((uint8_t *)reportReferenceValue1, 1);
 
     report1->addDescriptor(reportReference1);
 
@@ -67,8 +67,8 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
             BLECharacteristic::PROPERTY_WRITE);
 
     BLEDescriptor *reportReference2 = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
-    const uint8_t reportReference2_val[] = {0x02};
-    reportReference2->setValue((uint8_t *)reportReference2_val, sizeof(reportReference2_val));
+    const uint8_t reportReferenceValue2[] = {0x02, 0};
+    reportReference2->setValue((uint8_t *)reportReferenceValue2, 1);
 
     report2->addDescriptor(reportReference2);
 
@@ -79,8 +79,8 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
             BLECharacteristic::PROPERTY_WRITE_NR);
 
     BLEDescriptor *reportReference3 = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
-    const uint8_t reportReference3_val[] = {0x03};
-    reportReference3->setValue((uint8_t *)reportReference3_val, sizeof(reportReference3_val));
+    const uint8_t reportReferenceValue3[] = {0x03, 0};
+    reportReference3->setValue((uint8_t *)reportReferenceValue3, 1);
 
     report3->addDescriptor(reportReference3);
 
