@@ -7,27 +7,27 @@
 class Hid : public BLECharacteristicCallbacks
 {
 public:
-  static Hid *getSingleTon(BLEService *keyboardService, BLEService *keyboardService1);
-  static void init(BLEService *keyboardService, BLEService *keyboardService1);
+  static Hid *getSingleTon(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceService);
+  static void init(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceService);
   static void setValue(uint8_t *newValue, size_t length);
   static void notify();
 
 private:
-  Hid(BLEService *keyboardService, BLEService *keyboardService1);
+  Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceService);
 
-  BLEService *keyboardService;
-  BLEService *keyboardService1;
+  BLEService *deviceInformationService;
+  BLEService *humanInterfaceDeviceService;
   static Hid *singleTon;
-  static BLECharacteristic *manufacturer;
-  static BLECharacteristic *pnpIDChar;
-  static BLECharacteristic *hidInfoChar;
-  static BLECharacteristic *reportMapChar;
-  static BLECharacteristic *hidControlChar;
-  static BLECharacteristic *reportChar1;
-  static BLECharacteristic *reportChar2;
-  static BLECharacteristic *reportChar3;
-  static BLECharacteristic *protocolModeChar;
-  static BLECharacteristic *bootInputChar;
-  static BLECharacteristic *bootOutputChar;
+  static BLECharacteristic *pnpId;
+  static BLECharacteristic *manufacturerNameString;
+  static BLECharacteristic *hidInformation;
+  static BLECharacteristic *reportMap;
+  static BLECharacteristic *hidControlPoint;
+  static BLECharacteristic *report1;
+  static BLECharacteristic *report2;
+  static BLECharacteristic *report3;
+  static BLECharacteristic *protocolMode;
+  static BLECharacteristic *bootKeyboradInputReport;
+  static BLECharacteristic *bootKeyboardOutputReport;
   static uint8_t *value;
 };

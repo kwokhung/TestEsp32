@@ -3,14 +3,13 @@
 Keyboard::Keyboard(BLEServer *bleServer)
     : bleServer(bleServer)
 {
-    keyboardService = bleServer->createService((uint16_t)0x180a);
-    keyboardService1 = bleServer->createService((uint16_t)0x1812, 30);
+    deviceInformationService = bleServer->createService((uint16_t)0x180a);
+    humanInterfaceDeviceService = bleServer->createService((uint16_t)0x1812, 30);
 
-    Hid::init(keyboardService, keyboardService1);
-    //setupCharacteristics();
+    Hid::init(deviceInformationService, humanInterfaceDeviceService);
 
-    keyboardService->start();
-    keyboardService1->start();
+    deviceInformationService->start();
+    humanInterfaceDeviceService->start();
 }
 
 Keyboard *Keyboard::getSingleTon(BLEServer *bleServer)
@@ -29,5 +28,5 @@ void Keyboard::init(BLEServer *bleServer)
 }
 
 Keyboard *Keyboard::singleTon = NULL;
-BLEService *Keyboard::keyboardService;
-BLEService *Keyboard::keyboardService1;
+BLEService *Keyboard::deviceInformationService;
+BLEService *Keyboard::humanInterfaceDeviceService;

@@ -16,6 +16,6 @@ private:
 
   BLEServer *bleServer;
   static Keyboard *singleTon;
-  static BLEService *keyboardService;
-  static BLEService *keyboardService1;
+  static BLEService *deviceInformationService;
+  static BLEService *humanInterfaceDeviceService;
 };
