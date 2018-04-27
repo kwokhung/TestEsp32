@@ -16,7 +16,7 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         (uint16_t)0x2a29,
         BLECharacteristic::PROPERTY_READ);
 
-    std::string name = "espressif";
+    const std::string name = "espressif";
 
     manufacturerNameString->setValue(name);
 
@@ -56,8 +56,8 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
     report1->addDescriptor(new BLE2902());
 
     BLEDescriptor *reportReference1 = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
-    const uint8_t reportReferenceValue1[] = {0x01, 0};
-    reportReference1->setValue((uint8_t *)reportReferenceValue1, 1);
+    const uint8_t reportReferenceValue1[] = {0x01};
+    reportReference1->setValue((uint8_t *)reportReferenceValue1, sizeof(reportReferenceValue1));
 
     report1->addDescriptor(reportReference1);
 
@@ -67,8 +67,8 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
             BLECharacteristic::PROPERTY_WRITE);
 
     BLEDescriptor *reportReference2 = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
-    const uint8_t reportReferenceValue2[] = {0x02, 0};
-    reportReference2->setValue((uint8_t *)reportReferenceValue2, 1);
+    const uint8_t reportReferenceValue2[] = {0x02};
+    reportReference2->setValue((uint8_t *)reportReferenceValue2, sizeof(reportReferenceValue2));
 
     report2->addDescriptor(reportReference2);
 
@@ -79,8 +79,8 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
             BLECharacteristic::PROPERTY_WRITE_NR);
 
     BLEDescriptor *reportReference3 = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
-    const uint8_t reportReferenceValue3[] = {0x03, 0};
-    reportReference3->setValue((uint8_t *)reportReferenceValue3, 1);
+    const uint8_t reportReferenceValue3[] = {0x03};
+    reportReference3->setValue((uint8_t *)reportReferenceValue3, sizeof(reportReferenceValue3));
 
     report3->addDescriptor(reportReference3);
 
