@@ -11,6 +11,8 @@ public:
   static void init(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceService);
   static void setValue(uint8_t *newValue, size_t length);
   static void notify();
+  static void sendKey(uint8_t modifier, uint8_t key);
+  static void sendKey(uint8_t key);
 
 private:
   Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceService);

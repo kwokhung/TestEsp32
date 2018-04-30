@@ -127,6 +127,27 @@ void Hid::notify()
     report1->notify();
 }
 
+void Hid::sendKey(uint8_t modifier, uint8_t key)
+{
+    Serial.printf("modifier: %d\n", modifier);
+    Serial.printf("key: %d\n", key);
+
+    uint8_t a[] = {modifier, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+    Hid::setValue(a, sizeof(a));
+    Hid::notify();
+
+    uint8_t v[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+    Hid::setValue(v, sizeof(v));
+    Hid::notify();
+}
+
+void Hid::sendKey(uint8_t key)
+{
+    sendKey(0x00, key);
+}
+
 Hid *Hid::singleTon = NULL;
 BLECharacteristic *Hid::pnpId;
 BLECharacteristic *Hid::manufacturerNameString;

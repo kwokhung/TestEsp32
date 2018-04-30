@@ -45,16 +45,12 @@ void SbrXXX08::loop()
 
     if (SbrXXX08::isConnected() && Input < 50)
     {
-        uint8_t v[] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
-        uint8_t a[] = {0x0, 0x0, random(0x04, 0x26), 0x0, 0x0, 0x0, 0x0, 0x0};
-
-        Hid::setValue(a, sizeof(a));
-
-        Hid::notify();
-
-        Hid::setValue(v, sizeof(v));
-
-        Hid::notify();
+        Hid::sendKey(0x02, 0x0b);
+        Hid::sendKey(0x08);
+        Hid::sendKey(0x0f);
+        Hid::sendKey(0x0f);
+        Hid::sendKey(0x12);
+        Hid::sendKey(0x28);
     }
 
     sleepAWhile(1000);
