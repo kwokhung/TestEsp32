@@ -16,7 +16,7 @@ public:
   void onConnect(BLEServer *bleServer);
   void onDisconnect(BLEServer *bleServer);
   static bool isConnected();
-  
+
 private:
   SbrXXX08(std::string name)
       : SbrBase(name)
@@ -25,6 +25,7 @@ private:
   void setup() override;
   void loop() override;
 
+  double Input;
   BLEServer *bleServer;
   static bool connected;
 };

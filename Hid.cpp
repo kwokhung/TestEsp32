@@ -88,11 +88,11 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         (uint16_t)0x2a4e,
         BLECharacteristic::PROPERTY_WRITE_NR);
 
-    bootKeyboradInputReport = humanInterfaceDeviceService->createCharacteristic(
+    bootKeyboardInputReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a22,
         BLECharacteristic::PROPERTY_NOTIFY);
 
-    bootKeyboradInputReport->addDescriptor(new BLE2902());
+    bootKeyboardInputReport->addDescriptor(new BLE2902());
 
     bootKeyboardOutputReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a32,
@@ -137,6 +137,6 @@ BLECharacteristic *Hid::report1;
 BLECharacteristic *Hid::report2;
 BLECharacteristic *Hid::report3;
 BLECharacteristic *Hid::protocolMode;
-BLECharacteristic *Hid::bootKeyboradInputReport;
+BLECharacteristic *Hid::bootKeyboardInputReport;
 BLECharacteristic *Hid::bootKeyboardOutputReport;
 uint8_t *Hid::value = 0;

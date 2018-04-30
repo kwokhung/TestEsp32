@@ -40,7 +40,10 @@ void SbrXXX08::loop()
 {
     Serial.println("SbrXXX08::loop");
 
-    if (SbrXXX08::isConnected())
+    Input = touchRead(15); // Just test touch pin - Touch3 is T3 which is on GPIO 15.
+    Serial.printf("Input: %f\n", Input);
+
+    if (SbrXXX08::isConnected() && Input < 50)
     {
         uint8_t v[] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
         uint8_t a[] = {0x0, 0x0, random(0x04, 0x26), 0x0, 0x0, 0x0, 0x0, 0x0};

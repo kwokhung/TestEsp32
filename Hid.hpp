@@ -27,7 +27,7 @@ private:
   static BLECharacteristic *report2;
   static BLECharacteristic *report3;
   static BLECharacteristic *protocolMode;
-  static BLECharacteristic *bootKeyboradInputReport;
+  static BLECharacteristic *bootKeyboardInputReport;
   static BLECharacteristic *bootKeyboardOutputReport;
   static uint8_t *value;
 };
