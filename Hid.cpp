@@ -82,8 +82,7 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         0x25, 0x7f, //     LOGICAL_MAXIMUM (127)
         0x75, 0x08, //     REPORT_SIZE (8)
         0x95, 0x03, //     REPORT_COUNT (3)
-        //0x81, 0x06, //     INPUT (Data,Var,Rel)
-        0x81, 0x02, //     INPUT (Data,Var,Abs)
+        0x81, 0x06, //     INPUT (Data,Var,Rel)
         0xc0,       //   END_COLLECTION
         0xc0,       // END_COLLECTION
     };
