@@ -40,6 +40,8 @@ void SbrXXX08::loop()
 {
     Serial.println("SbrXXX08::loop");
 
+    sleepAWhileCount++;
+
     Input = touchRead(15); // Just test touch pin - Touch3 is T3 which is on GPIO 15.
     Serial.printf("Input: %f\n", Input);
 
@@ -53,16 +55,38 @@ void SbrXXX08::loop()
             Hid::sendKey(0x0f);
             Hid::sendKey(0x12);
             Hid::sendKey(0x28);*/
-            Hid::sendMouse(0x00, 1, 1, -1);
+
+            if (sleepAWhileCount % 10 == 0)
+            {
+                Hid::sendMouse(0x00, 1, 1, 0);
+            }
+
+            if (sleepAWhileCount % 100 == 0)
+            {
+                Hid::sendMouse(0x00, 0, 0, -1);
+            }
         }
         else
         {
-            Hid::sendMouse(0x00, -1, -1, 1);
+            if (sleepAWhileCount % 10 == 0)
+            {
+                Hid::sendMouse(0x00, -1, -1, 0);
+            }
+
+            if (sleepAWhileCount % 100 == 0)
+            {
+                Hid::sendMouse(0x00, 0, 0, 1);
+            }
         }
     }
 
     //sleepAWhile(1000);
-    sleepAWhile(10);
+    sleepAWhile(1);
+
+    if (sleepAWhileCount == 1000)
+    {
+        sleepAWhileCount = 0;
+    }
 }
 
 bool SbrXXX08::isConnected()
@@ -70,6 +94,7 @@ bool SbrXXX08::isConnected()
     return connected;
 }
 
+uint32_t SbrXXX08::sleepAWhileCount = 0;
 bool SbrXXX08::connected = false;
 int8_t SbrXXX08::x = 0;
 int8_t SbrXXX08::y = 0;

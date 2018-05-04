@@ -27,6 +27,7 @@ private:
 
   double Input;
   BLEServer *bleServer;
+  static uint32_t sleepAWhileCount;
   static bool connected;
   static int8_t x;
   static int8_t y;
