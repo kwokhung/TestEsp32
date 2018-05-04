@@ -43,19 +43,21 @@ void SbrXXX08::loop()
     Input = touchRead(15); // Just test touch pin - Touch3 is T3 which is on GPIO 15.
     Serial.printf("Input: %f\n", Input);
 
-    if (SbrXXX08::isConnected() && Input < 50)
+    if (SbrXXX08::isConnected())
     {
-        /*Hid::sendKey(0x02, 0x0b);
-        Hid::sendKey(0x08);
-        Hid::sendKey(0x0f);
-        Hid::sendKey(0x0f);
-        Hid::sendKey(0x12);
-        Hid::sendKey(0x28);*/
-        Hid::sendMouse(0x00, x++, y, 0x00);
-
-        if (x == 127)
+        if (Input < 50)
         {
-            x = -127;
+            /*Hid::sendKey(0x02, 0x0b);
+            Hid::sendKey(0x08);
+            Hid::sendKey(0x0f);
+            Hid::sendKey(0x0f);
+            Hid::sendKey(0x12);
+            Hid::sendKey(0x28);*/
+            Hid::sendMouse(0x00, 5, y, 0x00);
+        }
+        else
+        {
+            Hid::sendMouse(0x00, -5, y, 0x00);
         }
     }
 
