@@ -53,11 +53,11 @@ void SbrXXX08::loop()
             Hid::sendKey(0x0f);
             Hid::sendKey(0x12);
             Hid::sendKey(0x28);*/
-            Hid::sendMouse(0x00, 1, 1, 1);
+            Hid::sendMouse(0x00, 1, 1, -1);
         }
         else
         {
-            Hid::sendMouse(0x00, -1, -1, -1);
+            Hid::sendMouse(0x00, -1, -1, 1);
         }
     }
 
