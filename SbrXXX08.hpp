@@ -28,4 +28,6 @@ private:
   double Input;
   BLEServer *bleServer;
   static bool connected;
+  static int8_t x;
+  static int8_t y;
 };

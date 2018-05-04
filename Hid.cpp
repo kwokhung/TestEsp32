@@ -33,14 +33,60 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         BLECharacteristic::PROPERTY_READ);
 
     const uint8_t reportMapValue[] = {
-        0x05, 0x01, 0x09, 0x06, 0xA1, 0x01, 0x05, 0x07,
-        0x19, 0xE0, 0x29, 0xE7, 0x15, 0x00, 0x25, 0x01,
-        0x75, 0x01, 0x95, 0x08, 0x81, 0x02, 0x95, 0x01,
-        0x75, 0x08, 0x81, 0x01, 0x95, 0x05, 0x75, 0x01,
-        0x05, 0x08, 0x19, 0x01, 0x29, 0x05, 0x91, 0x02,
-        0x95, 0x01, 0x75, 0x03, 0x91, 0x01, 0x95, 0x06,
-        0x75, 0x08, 0x15, 0x00, 0x25, 0x65, 0x05, 0x07,
-        0x19, 0x00, 0x29, 0x65, 0x81, 0x00, 0xC0};
+        0x05, 0x01, // USAGE_PAGE (Generic Desktop)
+        0x09, 0x06, // USAGE (Keyboard)
+        0xa1, 0x01, // COLLECTION (Application)
+        0x85, 0x01, //   REPORT_ID (1)
+        0x05, 0x07, //   USAGE_PAGE (Keyboard)
+        0x19, 0xe0, //   USAGE_MINIMUM (Keyboard LeftControl)
+        0x29, 0xe7, //   USAGE_MAXIMUM (Keyboard Right GUI)
+        0x15, 0x00, //   LOGICAL_MINIMUM (0)
+        0x25, 0x01, //   LOGICAL_MAXIMUM (1)
+        0x75, 0x01, //   REPORT_SIZE (1)
+        0x95, 0x08, //   REPORT_COUNT (8)
+        0x81, 0x02, //   INPUT (Data,Var,Abs)
+        0x95, 0x01, //   REPORT_COUNT (1)
+        0x75, 0x08, //   REPORT_SIZE (8)
+        0x81, 0x03, //   INPUT (Cnst,Var,Abs)
+        0x95, 0x06, //   REPORT_COUNT (6)
+        0x75, 0x08, //   REPORT_SIZE (8)
+        0x15, 0x00, //   LOGICAL_MINIMUM (0)
+        0x25, 0x65, //   LOGICAL_MAXIMUM (101)
+        0x05, 0x07, //   USAGE_PAGE (Keyboard)
+        0x19, 0x00, //   USAGE_MINIMUM (Reserved (no event indicated))
+        0x29, 0x65, //   USAGE_MAXIMUM (Keyboard Application)
+        0x81, 0x00, //   INPUT (Data,Ary,Abs)
+        0xc0,       // END_COLLECTION
+        0x05, 0x01, // USAGE_PAGE (Generic Desktop)
+        0x09, 0x02, // USAGE (Mouse)
+        0xa1, 0x01, // COLLECTION (Application)
+        0x09, 0x01, //   USAGE (Pointer)
+        0xa1, 0x00, //   COLLECTION (Physical)
+        0x85, 0x02, //     REPORT_ID (2)
+        0x05, 0x09, //     USAGE_PAGE (Button)
+        0x19, 0x01, //     USAGE_MINIMUM (Button 1)
+        0x29, 0x03, //     USAGE_MAXIMUM (Button 3)
+        0x15, 0x00, //     LOGICAL_MINIMUM (0)
+        0x25, 0x01, //     LOGICAL_MAXIMUM (1)
+        0x95, 0x03, //     REPORT_COUNT (3)
+        0x75, 0x01, //     REPORT_SIZE (1)
+        0x81, 0x02, //     INPUT (Data,Var,Abs)
+        0x95, 0x01, //     REPORT_COUNT (1)
+        0x75, 0x05, //     REPORT_SIZE (5)
+        0x81, 0x03, //     INPUT (Cnst,Var,Abs)
+        0x05, 0x01, //     USAGE_PAGE (Generic Desktop)
+        0x09, 0x30, //     USAGE (X)
+        0x09, 0x31, //     USAGE (Y)
+        0x09, 0x38, //     USAGE (Wheel)
+        0x15, 0x81, //     LOGICAL_MINIMUM (-127)
+        0x25, 0x7f, //     LOGICAL_MAXIMUM (127)
+        0x75, 0x08, //     REPORT_SIZE (8)
+        0x95, 0x03, //     REPORT_COUNT (3)
+        //0x81, 0x06, //     INPUT (Data,Var,Rel)
+        0x81, 0x02, //     INPUT (Data,Var,Abs)
+        0xc0,       //   END_COLLECTION
+        0xc0,       // END_COLLECTION
+    };
 
     reportMap->setValue((uint8_t *)reportMapValue, sizeof(reportMapValue));
 
@@ -48,20 +94,20 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         (uint16_t)0x2a4c,
         BLECharacteristic::PROPERTY_WRITE_NR);
 
-    report1 = humanInterfaceDeviceService->createCharacteristic(
+    inputReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4d,
         BLECharacteristic::PROPERTY_READ |
             BLECharacteristic::PROPERTY_NOTIFY);
 
-    report1->addDescriptor(new BLE2902());
+    inputReport->addDescriptor(new BLE2902());
 
     BLEDescriptor *reportReference1 = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
     const uint8_t reportReferenceValue1[] = {0x01};
     reportReference1->setValue((uint8_t *)reportReferenceValue1, sizeof(reportReferenceValue1));
 
-    report1->addDescriptor(reportReference1);
-
-    report2 = humanInterfaceDeviceService->createCharacteristic(
+    inputReport->addDescriptor(reportReference1);
+    /*
+    outputReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4d,
         BLECharacteristic::PROPERTY_READ |
             BLECharacteristic::PROPERTY_WRITE);
@@ -70,9 +116,9 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
     const uint8_t reportReferenceValue2[] = {0x02};
     reportReference2->setValue((uint8_t *)reportReferenceValue2, sizeof(reportReferenceValue2));
 
-    report2->addDescriptor(reportReference2);
+    outputReport->addDescriptor(reportReference2);
 
-    report3 = humanInterfaceDeviceService->createCharacteristic(
+    featureReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4d,
         BLECharacteristic::PROPERTY_READ |
             BLECharacteristic::PROPERTY_WRITE |
@@ -82,8 +128,8 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
     const uint8_t reportReferenceValue3[] = {0x03};
     reportReference3->setValue((uint8_t *)reportReferenceValue3, sizeof(reportReferenceValue3));
 
-    report3->addDescriptor(reportReference3);
-
+    featureReport->addDescriptor(reportReference3);
+*/
     protocolMode = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4e,
         BLECharacteristic::PROPERTY_WRITE_NR);
@@ -99,6 +145,12 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         BLECharacteristic::PROPERTY_READ |
             BLECharacteristic::PROPERTY_WRITE |
             BLECharacteristic::PROPERTY_WRITE_NR);
+
+    bootMouseInputReport = humanInterfaceDeviceService->createCharacteristic(
+        (uint16_t)0x2a33,
+        BLECharacteristic::PROPERTY_NOTIFY);
+
+    bootMouseInputReport->addDescriptor(new BLE2902());
 }
 
 Hid *Hid::getSingleTon(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceService)
@@ -119,12 +171,12 @@ void Hid::init(BLEService *deviceInformationService, BLEService *humanInterfaceD
 void Hid::setValue(uint8_t *newValue, size_t length)
 {
     value = newValue;
-    report1->setValue(value, length);
+    inputReport->setValue(value, length);
 }
 
 void Hid::notify()
 {
-    report1->notify();
+    inputReport->notify();
 }
 
 void Hid::sendKey(uint8_t modifier, uint8_t key)
@@ -132,14 +184,14 @@ void Hid::sendKey(uint8_t modifier, uint8_t key)
     Serial.printf("modifier: %d\n", modifier);
     Serial.printf("key: %d\n", key);
 
-    uint8_t a[] = {modifier, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00};
+    uint8_t keyPressed[] = {0x01, modifier, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-    Hid::setValue(a, sizeof(a));
+    Hid::setValue(keyPressed, sizeof(keyPressed));
     Hid::notify();
 
-    uint8_t v[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    uint8_t keyReleased[] = {0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-    Hid::setValue(v, sizeof(v));
+    Hid::setValue(keyReleased, sizeof(keyReleased));
     Hid::notify();
 }
 
@@ -148,16 +200,30 @@ void Hid::sendKey(uint8_t key)
     sendKey(0x00, key);
 }
 
+void Hid::sendMouse(uint8_t buttons, int8_t x, int8_t y, int8_t wheel)
+{
+    Serial.printf("buttons: %d\n", buttons);
+    Serial.printf("x: %d\n", x);
+    Serial.printf("y: %d\n", y);
+    Serial.printf("wheel: %d\n", wheel);
+
+    uint8_t mouseData[] = {0x02, buttons, x, y, wheel};
+
+    Hid::setValue(mouseData, sizeof(mouseData));
+    Hid::notify();
+}
+
 Hid *Hid::singleTon = NULL;
 BLECharacteristic *Hid::pnpId;
 BLECharacteristic *Hid::manufacturerNameString;
 BLECharacteristic *Hid::hidInformation;
 BLECharacteristic *Hid::reportMap;
 BLECharacteristic *Hid::hidControlPoint;
-BLECharacteristic *Hid::report1;
-BLECharacteristic *Hid::report2;
-BLECharacteristic *Hid::report3;
+BLECharacteristic *Hid::inputReport;
+BLECharacteristic *Hid::outputReport;
+BLECharacteristic *Hid::featureReport;
 BLECharacteristic *Hid::protocolMode;
 BLECharacteristic *Hid::bootKeyboardInputReport;
 BLECharacteristic *Hid::bootKeyboardOutputReport;
+BLECharacteristic *Hid::bootMouseInputReport;
 uint8_t *Hid::value = 0;

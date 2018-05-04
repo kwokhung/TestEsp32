@@ -45,12 +45,18 @@ void SbrXXX08::loop()
 
     if (SbrXXX08::isConnected() && Input < 50)
     {
-        Hid::sendKey(0x02, 0x0b);
+        /*Hid::sendKey(0x02, 0x0b);
         Hid::sendKey(0x08);
         Hid::sendKey(0x0f);
         Hid::sendKey(0x0f);
         Hid::sendKey(0x12);
-        Hid::sendKey(0x28);
+        Hid::sendKey(0x28);*/
+        Hid::sendMouse(0x00, x++, y, 0x00);
+
+        if (x == 127)
+        {
+            x = -127;
+        }
     }
 
     sleepAWhile(1000);
@@ -62,3 +68,5 @@ bool SbrXXX08::isConnected()
 }
 
 bool SbrXXX08::connected = false;
+int8_t SbrXXX08::x = 0;
+int8_t SbrXXX08::y = 0;
