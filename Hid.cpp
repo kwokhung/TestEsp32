@@ -33,6 +33,7 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         BLECharacteristic::PROPERTY_READ);
 
     const uint8_t reportMapValue[] = {
+        /*
         0x05, 0x01, // USAGE_PAGE (Generic Desktop)
         0x09, 0x06, // USAGE (Keyboard)
         0xa1, 0x01, // COLLECTION (Application)
@@ -57,6 +58,7 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         0x29, 0x65, //   USAGE_MAXIMUM (Keyboard Application)
         0x81, 0x00, //   INPUT (Data,Ary,Abs)
         0xc0,       // END_COLLECTION
+        */
         0x05, 0x01, // USAGE_PAGE (Generic Desktop)
         0x09, 0x02, // USAGE (Mouse)
         0xa1, 0x01, // COLLECTION (Application)
@@ -100,22 +102,22 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
 
     inputReport->addDescriptor(new BLE2902());
 
-    BLEDescriptor *reportReference1 = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
+    BLEDescriptor *inputReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
     const uint8_t reportReferenceValue1[] = {0x01};
-    reportReference1->setValue((uint8_t *)reportReferenceValue1, sizeof(reportReferenceValue1));
+    inputReportReference->setValue((uint8_t *)reportReferenceValue1, sizeof(reportReferenceValue1));
 
-    inputReport->addDescriptor(reportReference1);
-    /*
+    inputReport->addDescriptor(inputReportReference);
+    
     outputReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4d,
         BLECharacteristic::PROPERTY_READ |
             BLECharacteristic::PROPERTY_WRITE);
 
-    BLEDescriptor *reportReference2 = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
+    BLEDescriptor *outputReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
     const uint8_t reportReferenceValue2[] = {0x02};
-    reportReference2->setValue((uint8_t *)reportReferenceValue2, sizeof(reportReferenceValue2));
+    outputReportReference->setValue((uint8_t *)reportReferenceValue2, sizeof(reportReferenceValue2));
 
-    outputReport->addDescriptor(reportReference2);
+    outputReport->addDescriptor(outputReportReference);
 
     featureReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4d,
@@ -123,12 +125,12 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
             BLECharacteristic::PROPERTY_WRITE |
             BLECharacteristic::PROPERTY_WRITE_NR);
 
-    BLEDescriptor *reportReference3 = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
+    BLEDescriptor *featureReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
     const uint8_t reportReferenceValue3[] = {0x03};
-    reportReference3->setValue((uint8_t *)reportReferenceValue3, sizeof(reportReferenceValue3));
+    featureReportReference->setValue((uint8_t *)reportReferenceValue3, sizeof(reportReferenceValue3));
 
-    featureReport->addDescriptor(reportReference3);
-*/
+    featureReport->addDescriptor(featureReportReference);
+
     protocolMode = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4e,
         BLECharacteristic::PROPERTY_WRITE_NR);
