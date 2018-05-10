@@ -177,5 +177,5 @@ bool SbrXXX09::isConnected()
     return connected;
 }
 
-uint32_t SbrXXX08::sleepAWhileCount = 0;
+uint32_t SbrXXX09::sleepAWhileCount = 0;
 bool SbrXXX09::connected = false;
