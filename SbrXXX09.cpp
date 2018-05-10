@@ -29,46 +29,68 @@ void SbrXXX09::setup()
 
     hid = new BLEHIDDevice(bleServer);
 
-    input = hid->inputReport(1); // <-- input REPORTID from report map
-    std::string name = "chegewara";                 // <-- OPTIONAL
-    hid->manufacturer()->setValue(name);            // <-- OPTIONAL
+    input = hid->inputReport(2);         // <-- input REPORTID from report map
+    std::string name = "chegewara";      // <-- OPTIONAL
+    hid->manufacturer()->setValue(name); // <-- OPTIONAL
 
     hid->pnp(0x01, 0xe502, 0xa111, 0x0210); // <-- example pnp values
     hid->hidInfo(0x00, 0x01);
 
     const uint8_t report[] = {
-
-        0x05, 0x01,       // Usage Page (Generic Desktop Ctrls)
-        0x09, 0x02,       // Usage (Mouse)
-        0xA1, 0x01,       // Collection (Application)
-        0x85, 0x01,       //   Report ID (1)
-        0x09, 0x01,       //   Usage (Pointer)
-        0xA1, 0x00,       //   Collection (Physical)
-        0x05, 0x09,       //     Usage Page (Button)
-        0x19, 0x01,       //     Usage Minimum (0x01)
-        0x29, 0x03,       //     Usage Maximum (0x03)
-        0x25, 0x01,       //     Logical Maximum (1)
-        0x75, 0x01,       //     Report Size (1)
-        0x95, 0x03,       //     Report Count (3)
-        0x81, 0x02,       //     Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
-        0x75, 0x05,       //     Report Size (5)
-        0x95, 0x01,       //     Report Count (1)
-        0x81, 0x01,       //     Input (Const,Array,Abs,No Wrap,Linear,Preferred State,No Null Position)
-        0x05, 0x01,       //     Usage Page (Generic Desktop Ctrls)
-        0x09, 0x30,       //     Usage (X)
-        0x26, 0x05, 0x56, //     Logical Maximum (127)
-        0x09, 0x31,       //     Usage (Y)
-        0x26, 0x03, 0x00, //     Logical Maximum (127)
-        0x09, 0x38,       //     Usage (Wheel)
-        0x15, 0x00,       //     Logical Minimum (-127)
-        0x25, 0x7f,       //     Logical Maximum (127)
-        0x75, 0x08,       //     Report Size (8)
-        0x95, 0x03,       //     Report Count (3)
-        0x81, 0x02,       //     Input (Data,Var,Rel,No Wrap,Linear,Preferred State,No Null Position)
-        0xC0,             //   End Collection
-        0xC0,             // End Collection
-
-        // 52 bytes
+        /**/
+        0x05, 0x01, // USAGE_PAGE (Generic Desktop)
+        0x09, 0x06, // USAGE (Keyboard)
+        0xa1, 0x01, // COLLECTION (Application)
+        0x85, 0x01, //   REPORT_ID (1)
+        0x05, 0x07, //   USAGE_PAGE (Keyboard)
+        0x19, 0xe0, //   USAGE_MINIMUM (Keyboard LeftControl)
+        0x29, 0xe7, //   USAGE_MAXIMUM (Keyboard Right GUI)
+        0x15, 0x00, //   LOGICAL_MINIMUM (0)
+        0x25, 0x01, //   LOGICAL_MAXIMUM (1)
+        0x75, 0x01, //   REPORT_SIZE (1)
+        0x95, 0x08, //   REPORT_COUNT (8)
+        0x81, 0x02, //   INPUT (Data,Var,Abs)
+        0x95, 0x01, //   REPORT_COUNT (1)
+        0x75, 0x08, //   REPORT_SIZE (8)
+        0x81, 0x03, //   INPUT (Cnst,Var,Abs)
+        0x95, 0x06, //   REPORT_COUNT (6)
+        0x75, 0x08, //   REPORT_SIZE (8)
+        0x15, 0x00, //   LOGICAL_MINIMUM (0)
+        0x25, 0x65, //   LOGICAL_MAXIMUM (101)
+        0x05, 0x07, //   USAGE_PAGE (Keyboard)
+        0x19, 0x00, //   USAGE_MINIMUM (Reserved (no event indicated))
+        0x29, 0x65, //   USAGE_MAXIMUM (Keyboard Application)
+        0x81, 0x00, //   INPUT (Data,Ary,Abs)
+        0xc0,       // END_COLLECTION
+        /**/
+        0x05, 0x01, // USAGE_PAGE (Generic Desktop)
+        0x09, 0x02, // USAGE (Mouse)
+        0xa1, 0x01, // COLLECTION (Application)
+        0x09, 0x01, //   USAGE (Pointer)
+        0xa1, 0x00, //   COLLECTION (Physical)
+        0x85, 0x02, //     REPORT_ID (2)
+        0x05, 0x09, //     USAGE_PAGE (Button)
+        0x19, 0x01, //     USAGE_MINIMUM (Button 1)
+        0x29, 0x03, //     USAGE_MAXIMUM (Button 3)
+        0x15, 0x00, //     LOGICAL_MINIMUM (0)
+        0x25, 0x01, //     LOGICAL_MAXIMUM (1)
+        0x95, 0x03, //     REPORT_COUNT (3)
+        0x75, 0x01, //     REPORT_SIZE (1)
+        0x81, 0x02, //     INPUT (Data,Var,Abs)
+        0x95, 0x01, //     REPORT_COUNT (1)
+        0x75, 0x05, //     REPORT_SIZE (5)
+        0x81, 0x03, //     INPUT (Cnst,Var,Abs)
+        0x05, 0x01, //     USAGE_PAGE (Generic Desktop)
+        0x09, 0x30, //     USAGE (X)
+        0x09, 0x31, //     USAGE (Y)
+        0x09, 0x38, //     USAGE (Wheel)
+        0x15, 0x81, //     LOGICAL_MINIMUM (-127)
+        0x25, 0x7f, //     LOGICAL_MAXIMUM (127)
+        0x75, 0x08, //     REPORT_SIZE (8)
+        0x95, 0x03, //     REPORT_COUNT (3)
+        0x81, 0x06, //     INPUT (Data,Var,Rel)
+        0xc0,       //   END_COLLECTION
+        0xc0,       // END_COLLECTION
     };
 
     hid->reportMap((uint8_t *)report, sizeof(report));
@@ -85,7 +107,69 @@ void SbrXXX09::loop()
 {
     Serial.println("SbrXXX09::loop");
 
-    sleepAWhile(1000);
+    sleepAWhileCount++;
+
+    Input = touchRead(15); // Just test touch pin - Touch3 is T3 which is on GPIO 15.
+    Serial.printf("Input: %f\n", Input);
+
+    if (SbrXXX08::isConnected())
+    {
+        if (Input < 50)
+        {
+            /*Hid::sendKey(0x02, 0x0b);
+            Hid::sendKey(0x08);
+            Hid::sendKey(0x0f);
+            Hid::sendKey(0x0f);
+            Hid::sendKey(0x12);
+            Hid::sendKey(0x28);*/
+
+            if (sleepAWhileCount % 10 == 0)
+            {
+                //Hid::sendMouse(0x00, 1, 1, 0);
+                uint8_t mouseData[] = {0x02, 0x00, 1, 1, 0};
+
+                input->setValue(mouseData, sizeof(mouseData));
+                input->notify();
+            }
+
+            if (sleepAWhileCount % 100 == 0)
+            {
+                //Hid::sendMouse(0x00, 0, 0, -1);
+                uint8_t mouseData[] = {0x02, 0x00, 0, 0, -1};
+
+                input->setValue(mouseData, sizeof(mouseData));
+                input->notify();
+            }
+        }
+        else
+        {
+            if (sleepAWhileCount % 10 == 0)
+            {
+                //Hid::sendMouse(0x00, -1, -1, 0);
+                uint8_t mouseData[] = {0x02, 0x00, -1, -1, 0};
+
+                input->setValue(mouseData, sizeof(mouseData));
+                input->notify();
+            }
+
+            if (sleepAWhileCount % 100 == 0)
+            {
+                //Hid::sendMouse(0x00, 0, 0, 1);
+                uint8_t mouseData[] = {0x02, 0x00, 0, 0, 1};
+
+                input->setValue(mouseData, sizeof(mouseData));
+                input->notify();
+            }
+        }
+    }
+
+    //sleepAWhile(1000);
+    sleepAWhile(1);
+
+    if (sleepAWhileCount == 1000)
+    {
+        sleepAWhileCount = 0;
+    }
 }
 
 bool SbrXXX09::isConnected()

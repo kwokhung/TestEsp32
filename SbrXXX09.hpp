@@ -29,5 +29,6 @@ private:
   BLEServer *bleServer;
   BLEHIDDevice *hid;
   BLECharacteristic *input;
+  static uint32_t sleepAWhileCount;
   static bool connected;
 };
