@@ -27,10 +27,9 @@ void SbrXXX09::setup()
 
     bleServer->setCallbacks(this);
 
-    BLEHIDDevice *hid;
     hid = new BLEHIDDevice(bleServer);
 
-    BLECharacteristic *input = hid->inputReport(1); // <-- input REPORTID from report map
+    input = hid->inputReport(1); // <-- input REPORTID from report map
     std::string name = "chegewara";                 // <-- OPTIONAL
     hid->manufacturer()->setValue(name);            // <-- OPTIONAL
 
@@ -75,7 +74,7 @@ void SbrXXX09::setup()
     hid->reportMap((uint8_t *)report, sizeof(report));
     hid->startServices();
 
-    bleServer->getAdvertising()->setAppearance(961);
+    bleServer->getAdvertising()->setAppearance(HID_KEYBOARD);
     bleServer->getAdvertising()->addServiceUUID((uint16_t)0x1812);
     bleServer->getAdvertising()->start();
 

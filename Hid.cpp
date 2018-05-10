@@ -33,6 +33,7 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         BLECharacteristic::PROPERTY_READ);
 
     const uint8_t reportMapValue[] = {
+        /*
         0x05, 0x01, // USAGE_PAGE (Generic Desktop)
         0x09, 0x06, // USAGE (Keyboard)
         0xa1, 0x01, // COLLECTION (Application)
@@ -57,6 +58,7 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         0x29, 0x65, //   USAGE_MAXIMUM (Keyboard Application)
         0x81, 0x00, //   INPUT (Data,Ary,Abs)
         0xc0,       // END_COLLECTION
+        */
         0x05, 0x01, // USAGE_PAGE (Generic Desktop)
         0x09, 0x02, // USAGE (Mouse)
         0xa1, 0x01, // COLLECTION (Application)

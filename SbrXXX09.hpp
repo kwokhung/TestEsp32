@@ -27,5 +27,7 @@ private:
   void loop() override;
 
   BLEServer *bleServer;
+  BLEHIDDevice *hid;
+  BLECharacteristic *input;
   static bool connected;
 };
