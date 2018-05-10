@@ -112,7 +112,7 @@ void SbrXXX09::loop()
     Input = touchRead(15); // Just test touch pin - Touch3 is T3 which is on GPIO 15.
     Serial.printf("Input: %f\n", Input);
 
-    if (SbrXXX08::isConnected())
+    if (SbrXXX09::isConnected())
     {
         if (Input < 50)
         {
@@ -177,4 +177,5 @@ bool SbrXXX09::isConnected()
     return connected;
 }
 
+uint32_t SbrXXX08::sleepAWhileCount = 0;
 bool SbrXXX09::connected = false;

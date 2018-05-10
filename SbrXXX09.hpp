@@ -26,6 +26,7 @@ private:
   void setup() override;
   void loop() override;
 
+  double Input;
   BLEServer *bleServer;
   BLEHIDDevice *hid;
   BLECharacteristic *input;
