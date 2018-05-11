@@ -29,7 +29,7 @@ void SbrXXX08::setup()
 
     Keyboard::init(bleServer);
 
-    bleServer->getAdvertising()->setAppearance(961);
+    bleServer->getAdvertising()->setAppearance(HID_KEYBOARD);
     bleServer->getAdvertising()->addServiceUUID((uint16_t)0x1812);
     bleServer->getAdvertising()->start();
 

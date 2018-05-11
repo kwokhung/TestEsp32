@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <HardwareSerial.h>
 #include <BLEDevice.h>
+#include <BLEHidDevice.h>
 
 #include "SbrBase.hpp"
 #include "Keyboard.hpp"
