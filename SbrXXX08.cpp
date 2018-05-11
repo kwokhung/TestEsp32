@@ -49,33 +49,36 @@ void SbrXXX08::loop()
     {
         if (Input < 50)
         {
-            /*Hid::sendKey(0x02, 0x0b);
-            Hid::sendKey(0x08);
-            Hid::sendKey(0x0f);
-            Hid::sendKey(0x0f);
-            Hid::sendKey(0x12);
-            Hid::sendKey(0x28);*/
-
             if (sleepAWhileCount % 10 == 0)
             {
-                Hid::sendMouse(0x00, 1, 1, 0);
+                //Hid::sendMouse(0x00, 1, 1, 0);
             }
 
             if (sleepAWhileCount % 100 == 0)
             {
-                Hid::sendMouse(0x00, 0, 0, -1);
+                //Hid::sendMouse(0x00, 0, 0, -1);
+            }
+
+            if (sleepAWhileCount % 1000 == 0)
+            {
+                Hid::sendKey(0x02, 0x0b);
+                Hid::sendKey(0x08);
+                Hid::sendKey(0x0f);
+                Hid::sendKey(0x0f);
+                Hid::sendKey(0x12);
+                Hid::sendKey(0x28);
             }
         }
         else
         {
             if (sleepAWhileCount % 10 == 0)
             {
-                Hid::sendMouse(0x00, -1, -1, 0);
+                //Hid::sendMouse(0x00, -1, -1, 0);
             }
 
             if (sleepAWhileCount % 100 == 0)
             {
-                Hid::sendMouse(0x00, 0, 0, 1);
+                //Hid::sendMouse(0x00, 0, 0, 1);
             }
         }
     }
