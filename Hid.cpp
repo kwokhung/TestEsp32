@@ -99,19 +99,6 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         (uint16_t)0x2a4c,
         BLECharacteristic::PROPERTY_WRITE_NR);
 
-    mouseInputReport = humanInterfaceDeviceService->createCharacteristic(
-        (uint16_t)0x2a4d,
-        BLECharacteristic::PROPERTY_READ |
-            BLECharacteristic::PROPERTY_NOTIFY);
-
-    mouseInputReport->addDescriptor(new BLE2902());
-
-    BLEDescriptor *mouseInputReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
-    const uint8_t mouseInputReportReferenceValue[] = {0x02, 0x01};
-    mouseInputReportReference->setValue((uint8_t *)mouseInputReportReferenceValue, sizeof(mouseInputReportReferenceValue));
-
-    mouseInputReport->addDescriptor(mouseInputReportReference);
-
     keyboardInputReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4d,
         BLECharacteristic::PROPERTY_READ |
@@ -124,11 +111,25 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
     keyboardInputReportReference->setValue((uint8_t *)keyboardInputReportReferenceValue, sizeof(keyboardInputReportReferenceValue));
 
     keyboardInputReport->addDescriptor(keyboardInputReportReference);
+
+    mouseInputReport = humanInterfaceDeviceService->createCharacteristic(
+        (uint16_t)0x2a4d,
+        BLECharacteristic::PROPERTY_READ |
+            BLECharacteristic::PROPERTY_NOTIFY);
+
+    mouseInputReport->addDescriptor(new BLE2902());
+
+    BLEDescriptor *mouseInputReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
+    const uint8_t mouseInputReportReferenceValue[] = {0x02, 0x01};
+    mouseInputReportReference->setValue((uint8_t *)mouseInputReportReferenceValue, sizeof(mouseInputReportReferenceValue));
+
+    mouseInputReport->addDescriptor(mouseInputReportReference);
 /*
     outputReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4d,
         BLECharacteristic::PROPERTY_READ |
-            BLECharacteristic::PROPERTY_WRITE);
+            BLECharacteristic::PROPERTY_WRITE |
+            BLECharacteristic::PROPERTY_WRITE_NR);
 
     BLEDescriptor *outputReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
     const uint8_t outputReportReferenceValue[] = {0x02};
@@ -139,8 +140,7 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
     featureReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4d,
         BLECharacteristic::PROPERTY_READ |
-            BLECharacteristic::PROPERTY_WRITE |
-            BLECharacteristic::PROPERTY_WRITE_NR);
+            BLECharacteristic::PROPERTY_WRITE);
 
     BLEDescriptor *featureReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
     const uint8_t featureReportReferenceValue[] = {0x03};
@@ -148,6 +148,29 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
 
     featureReport->addDescriptor(featureReportReference);
 */
+    keyboardOutputReport = humanInterfaceDeviceService->createCharacteristic(
+        (uint16_t)0x2a4d,
+        BLECharacteristic::PROPERTY_READ |
+            BLECharacteristic::PROPERTY_WRITE |
+            BLECharacteristic::PROPERTY_WRITE_NR);
+
+    BLEDescriptor *keyboardOutputReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
+    const uint8_t keyboardOutputReportReferenceValue[] = {0x01, 0x02};
+    keyboardOutputReportReference->setValue((uint8_t *)keyboardOutputReportReferenceValue, sizeof(keyboardOutputReportReferenceValue));
+
+    keyboardOutputReport->addDescriptor(keyboardOutputReportReference);
+
+    keyboardFeatureReport = humanInterfaceDeviceService->createCharacteristic(
+        (uint16_t)0x2a4d,
+        BLECharacteristic::PROPERTY_READ |
+            BLECharacteristic::PROPERTY_WRITE);
+
+    BLEDescriptor *keyboardFeatureReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
+    const uint8_t keyboardFeatureReportReferenceValue[] = {0x01, 0x03};
+    keyboardFeatureReportReference->setValue((uint8_t *)keyboardFeatureReportReferenceValue, sizeof(keyboardFeatureReportReferenceValue));
+
+    keyboardFeatureReport->addDescriptor(keyboardFeatureReportReference);
+
     protocolMode = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4e,
         BLECharacteristic::PROPERTY_READ |
@@ -156,7 +179,7 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
     const uint8_t protocolModeValue[] = {0x01};
 
     protocolMode->setValue((uint8_t *)protocolModeValue, sizeof(hidInformationValue));
-/*
+
     bootKeyboardInputReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a22,
         BLECharacteristic::PROPERTY_NOTIFY);
@@ -174,7 +197,7 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         BLECharacteristic::PROPERTY_NOTIFY);
 
     bootMouseInputReport->addDescriptor(new BLE2902());
-*/
+
     batteryLevel = batteryService->createCharacteristic(
         (uint16_t)0x2a19,
         BLECharacteristic::PROPERTY_READ |
@@ -255,9 +278,11 @@ BLECharacteristic *Hid::manufacturerNameString;
 BLECharacteristic *Hid::hidInformation;
 BLECharacteristic *Hid::reportMap;
 BLECharacteristic *Hid::hidControlPoint;
-BLECharacteristic *Hid::mouseInputReport;
 BLECharacteristic *Hid::keyboardInputReport;
+BLECharacteristic *Hid::mouseInputReport;
+BLECharacteristic *Hid::keyboardOutputReport;
 BLECharacteristic *Hid::outputReport;
+BLECharacteristic *Hid::keyboardFeatureReport;
 BLECharacteristic *Hid::featureReport;
 BLECharacteristic *Hid::protocolMode;
 BLECharacteristic *Hid::bootKeyboardInputReport;

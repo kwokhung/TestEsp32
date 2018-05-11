@@ -28,9 +28,11 @@ private:
   static BLECharacteristic *hidInformation;
   static BLECharacteristic *reportMap;
   static BLECharacteristic *hidControlPoint;
-  static BLECharacteristic *mouseInputReport;
   static BLECharacteristic *keyboardInputReport;
+  static BLECharacteristic *mouseInputReport;
+  static BLECharacteristic *keyboardOutputReport;
   static BLECharacteristic *outputReport;
+  static BLECharacteristic *keyboardFeatureReport;
   static BLECharacteristic *featureReport;
   static BLECharacteristic *protocolMode;
   static BLECharacteristic *bootKeyboardInputReport;
