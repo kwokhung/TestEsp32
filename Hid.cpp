@@ -99,18 +99,18 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         (uint16_t)0x2a4c,
         BLECharacteristic::PROPERTY_WRITE_NR);
 
-    inputReport = humanInterfaceDeviceService->createCharacteristic(
+    mouseInputReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4d,
         BLECharacteristic::PROPERTY_READ |
             BLECharacteristic::PROPERTY_NOTIFY);
 
-    inputReport->addDescriptor(new BLE2902());
+    mouseInputReport->addDescriptor(new BLE2902());
 
-    BLEDescriptor *inputReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
-    const uint8_t inputReportReferenceValue[] = {0x02, 0x01};
-    inputReportReference->setValue((uint8_t *)inputReportReferenceValue, sizeof(inputReportReferenceValue));
+    BLEDescriptor *mouseInputReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
+    const uint8_t mouseInputReportReferenceValue[] = {0x02, 0x01};
+    mouseInputReportReference->setValue((uint8_t *)mouseInputReportReferenceValue, sizeof(mouseInputReportReferenceValue));
 
-    inputReport->addDescriptor(inputReportReference);
+    mouseInputReport->addDescriptor(mouseInputReportReference);
 
     keyboardInputReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4d,
@@ -205,9 +205,8 @@ void Hid::init(BLEService *deviceInformationService, BLEService *humanInterfaceD
     getSingleTon(deviceInformationService, humanInterfaceDeviceService, batteryService);
 }
 
-void Hid::setValue(BLECharacteristic *inputReport, uint8_t *newValue, size_t length)
+void Hid::setValue(BLECharacteristic *inputReport, uint8_t *value, size_t length)
 {
-    value = newValue;
     inputReport->setValue(value, length);
 }
 
@@ -246,8 +245,8 @@ void Hid::sendMouse(uint8_t buttons, int8_t x, int8_t y, int8_t wheel)
 
     uint8_t mouseData[] = {/*0x02, */buttons, x, y, wheel};
 
-    Hid::setValue(inputReport, mouseData, sizeof(mouseData));
-    Hid::notify(inputReport);
+    Hid::setValue(mouseInputReport, mouseData, sizeof(mouseData));
+    Hid::notify(mouseInputReport);
 }
 
 Hid *Hid::singleTon = NULL;
@@ -256,7 +255,7 @@ BLECharacteristic *Hid::manufacturerNameString;
 BLECharacteristic *Hid::hidInformation;
 BLECharacteristic *Hid::reportMap;
 BLECharacteristic *Hid::hidControlPoint;
-BLECharacteristic *Hid::inputReport;
+BLECharacteristic *Hid::mouseInputReport;
 BLECharacteristic *Hid::keyboardInputReport;
 BLECharacteristic *Hid::outputReport;
 BLECharacteristic *Hid::featureReport;
@@ -265,4 +264,3 @@ BLECharacteristic *Hid::bootKeyboardInputReport;
 BLECharacteristic *Hid::bootKeyboardOutputReport;
 BLECharacteristic *Hid::bootMouseInputReport;
 BLECharacteristic *Hid::batteryLevel;
-uint8_t *Hid::value = 0;
