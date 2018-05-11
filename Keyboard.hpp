@@ -18,4 +18,5 @@ private:
   static Keyboard *singleTon;
   static BLEService *deviceInformationService;
   static BLEService *humanInterfaceDeviceService;
+  static BLEService *batteryService;
 };

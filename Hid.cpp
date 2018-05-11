@@ -1,14 +1,16 @@
 #include "Hid.hpp"
 
-Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceService)
+Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceService, BLEService *batteryService)
     : deviceInformationService(deviceInformationService),
-      humanInterfaceDeviceService(humanInterfaceDeviceService)
+      humanInterfaceDeviceService(humanInterfaceDeviceService),
+      batteryService(batteryService)
 {
     pnpId = deviceInformationService->createCharacteristic(
         (uint16_t)0x2a50,
         BLECharacteristic::PROPERTY_READ);
 
-    const uint8_t pnpIdValue[] = {0x01, 0xe5, 0x02, 0xcd, 0xab, 0x01, 0x00};
+    //const uint8_t pnpIdValue[] = {0x01, 0xe5, 0x02, 0xcd, 0xab, 0x01, 0x00};
+    const uint8_t pnpIdValue[] = {0x01, (uint8_t)(0xe502 >> 8), (uint8_t)0xe502, (uint8_t)(0xa111 >> 8), (uint8_t)0xa111, (uint8_t)(0x0210 >> 8), (uint8_t)0x0210};
 
     pnpId->setValue((uint8_t *)pnpIdValue, sizeof(pnpIdValue));
 
@@ -16,7 +18,8 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         (uint16_t)0x2a29,
         BLECharacteristic::PROPERTY_READ);
 
-    const std::string name = "espressif";
+    //const std::string name = "espressif";
+    const std::string name = "chegewara";
 
     manufacturerNameString->setValue(name);
 
@@ -24,7 +27,8 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         (uint16_t)0x2a4a,
         BLECharacteristic::PROPERTY_READ);
 
-    const uint8_t hidInformationValue[] = {0x00, 0x01, 0x00, 0x02};
+    //const uint8_t hidInformationValue[] = {0x00, 0x01, 0x00, 0x02};
+    const uint8_t hidInformationValue[] = {0x11, 0x01, 0x00, 0x01};
 
     hidInformation->setValue((uint8_t *)hidInformationValue, sizeof(hidInformationValue));
 
@@ -33,7 +37,7 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         BLECharacteristic::PROPERTY_READ);
 
     const uint8_t reportMapValue[] = {
-        /*
+        /**/
         0x05, 0x01, // USAGE_PAGE (Generic Desktop)
         0x09, 0x06, // USAGE (Keyboard)
         0xa1, 0x01, // COLLECTION (Application)
@@ -58,7 +62,7 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         0x29, 0x65, //   USAGE_MAXIMUM (Keyboard Application)
         0x81, 0x00, //   INPUT (Data,Ary,Abs)
         0xc0,       // END_COLLECTION
-        */
+        /**/
         0x05, 0x01, // USAGE_PAGE (Generic Desktop)
         0x09, 0x02, // USAGE (Mouse)
         0xa1, 0x01, // COLLECTION (Application)
@@ -103,11 +107,11 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
     inputReport->addDescriptor(new BLE2902());
 
     BLEDescriptor *inputReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
-    const uint8_t reportReferenceValue1[] = {0x01};
+    const uint8_t reportReferenceValue1[] = {0x02, 0x01};
     inputReportReference->setValue((uint8_t *)reportReferenceValue1, sizeof(reportReferenceValue1));
 
     inputReport->addDescriptor(inputReportReference);
-
+/*
     outputReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4d,
         BLECharacteristic::PROPERTY_READ |
@@ -130,11 +134,16 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
     featureReportReference->setValue((uint8_t *)reportReferenceValue3, sizeof(reportReferenceValue3));
 
     featureReport->addDescriptor(featureReportReference);
-
+*/
     protocolMode = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4e,
-        BLECharacteristic::PROPERTY_WRITE_NR);
+        BLECharacteristic::PROPERTY_READ |
+            BLECharacteristic::PROPERTY_WRITE_NR);
 
+    const uint8_t protocolModeValue[] = {0x01};
+
+    protocolMode->setValue((uint8_t *)protocolModeValue, sizeof(hidInformationValue));
+/*
     bootKeyboardInputReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a22,
         BLECharacteristic::PROPERTY_NOTIFY);
@@ -152,21 +161,35 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
         BLECharacteristic::PROPERTY_NOTIFY);
 
     bootMouseInputReport->addDescriptor(new BLE2902());
+*/
+    batteryLevel = batteryService->createCharacteristic(
+        (uint16_t)0x2a19,
+        BLECharacteristic::PROPERTY_READ |
+            BLECharacteristic::PROPERTY_NOTIFY);
+
+    batteryLevel->addDescriptor(new BLE2902());
+
+    BLE2904 *batteryLevelDescriptor = new BLE2904();
+    batteryLevelDescriptor->setFormat(BLE2904::FORMAT_UINT8);
+    batteryLevelDescriptor->setNamespace(1);
+    batteryLevelDescriptor->setUnit(0x27ad);
+
+    batteryLevel->addDescriptor(batteryLevelDescriptor);
 }
 
-Hid *Hid::getSingleTon(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceService)
+Hid *Hid::getSingleTon(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceService, BLEService *batteryService)
 {
     if (singleTon == NULL)
     {
-        singleTon = new Hid(deviceInformationService, humanInterfaceDeviceService);
+        singleTon = new Hid(deviceInformationService, humanInterfaceDeviceService, batteryService);
     }
 
     return (singleTon);
 }
 
-void Hid::init(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceService)
+void Hid::init(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceService, BLEService *batteryService)
 {
-    getSingleTon(deviceInformationService, humanInterfaceDeviceService);
+    getSingleTon(deviceInformationService, humanInterfaceDeviceService, batteryService);
 }
 
 void Hid::setValue(uint8_t *newValue, size_t length)
@@ -208,7 +231,7 @@ void Hid::sendMouse(uint8_t buttons, int8_t x, int8_t y, int8_t wheel)
     Serial.printf("y: %d\n", y);
     Serial.printf("wheel: %d\n", wheel);
 
-    uint8_t mouseData[] = {0x02, buttons, x, y, wheel};
+    uint8_t mouseData[] = {/*0x02, */buttons, x, y, wheel};
 
     Hid::setValue(mouseData, sizeof(mouseData));
     Hid::notify();
@@ -227,4 +250,5 @@ BLECharacteristic *Hid::protocolMode;
 BLECharacteristic *Hid::bootKeyboardInputReport;
 BLECharacteristic *Hid::bootKeyboardOutputReport;
 BLECharacteristic *Hid::bootMouseInputReport;
+BLECharacteristic *Hid::batteryLevel;
 uint8_t *Hid::value = 0;
