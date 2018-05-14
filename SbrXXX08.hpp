@@ -4,6 +4,7 @@
 #include <HardwareSerial.h>
 #include <BLEDevice.h>
 #include <BLEHidDevice.h>
+#include <HIDKeyboardTypes.h>
 
 #include "SbrBase.hpp"
 #include "Keyboard.hpp"

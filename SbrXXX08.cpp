@@ -61,11 +61,21 @@ void SbrXXX08::loop()
 
             if (sleepAWhileCount % 1000 == 0)
             {
-                Hid::sendKey(0x02, 0x0b);
-                Hid::sendKey(0x08);
-                Hid::sendKey(0x0f);
-                Hid::sendKey(0x0f);
+                //Hid::sendKey((uint8_t)KEY_SHIFT, 0x0b);
+                //Hid::sendKey(0x08);
+                //Hid::sendKey(0x0f);
+                //Hid::sendKey(0x0f);
+                //Hid::sendKey(0x12);
+                Hid::sendKey(0x11);
+                Hid::sendKey(0x0c);
+                Hid::sendKey(0x2c);
+                Hid::sendKey(0x0b);
+                Hid::sendKey(0x04);
                 Hid::sendKey(0x12);
+                Hid::sendKey(0x2c);
+                Hid::sendKey(0x10);
+                Hid::sendKey(0x04);
+                Hid::sendKey(0x2c);
                 Hid::sendKey(0x28);
             }
         }
