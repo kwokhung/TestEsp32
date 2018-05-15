@@ -124,30 +124,7 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
     mouseInputReportReference->setValue((uint8_t *)mouseInputReportReferenceValue, sizeof(mouseInputReportReferenceValue));
 
     mouseInputReport->addDescriptor(mouseInputReportReference);
-/*
-    outputReport = humanInterfaceDeviceService->createCharacteristic(
-        (uint16_t)0x2a4d,
-        BLECharacteristic::PROPERTY_READ |
-            BLECharacteristic::PROPERTY_WRITE |
-            BLECharacteristic::PROPERTY_WRITE_NR);
 
-    BLEDescriptor *outputReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
-    const uint8_t outputReportReferenceValue[] = {0x02};
-    outputReportReference->setValue((uint8_t *)outputReportReferenceValue, sizeof(outputReportReferenceValue));
-
-    outputReport->addDescriptor(outputReportReference);
-
-    featureReport = humanInterfaceDeviceService->createCharacteristic(
-        (uint16_t)0x2a4d,
-        BLECharacteristic::PROPERTY_READ |
-            BLECharacteristic::PROPERTY_WRITE);
-
-    BLEDescriptor *featureReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
-    const uint8_t featureReportReferenceValue[] = {0x03};
-    featureReportReference->setValue((uint8_t *)featureReportReferenceValue, sizeof(featureReportReferenceValue));
-
-    featureReport->addDescriptor(featureReportReference);
-*/
     keyboardOutputReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4d,
         BLECharacteristic::PROPERTY_READ |
@@ -160,6 +137,18 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
 
     keyboardOutputReport->addDescriptor(keyboardOutputReportReference);
 
+    mouseOutputReport = humanInterfaceDeviceService->createCharacteristic(
+        (uint16_t)0x2a4d,
+        BLECharacteristic::PROPERTY_READ |
+            BLECharacteristic::PROPERTY_WRITE |
+            BLECharacteristic::PROPERTY_WRITE_NR);
+
+    BLEDescriptor *mouseOutputReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
+    const uint8_t mouseOutputReportReferenceValue[] = {0x02, 0x02};
+    mouseOutputReportReference->setValue((uint8_t *)mouseOutputReportReferenceValue, sizeof(mouseOutputReportReferenceValue));
+
+    mouseOutputReport->addDescriptor(mouseOutputReportReference);
+
     keyboardFeatureReport = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4d,
         BLECharacteristic::PROPERTY_READ |
@@ -170,6 +159,17 @@ Hid::Hid(BLEService *deviceInformationService, BLEService *humanInterfaceDeviceS
     keyboardFeatureReportReference->setValue((uint8_t *)keyboardFeatureReportReferenceValue, sizeof(keyboardFeatureReportReferenceValue));
 
     keyboardFeatureReport->addDescriptor(keyboardFeatureReportReference);
+
+    mouseFeatureReport = humanInterfaceDeviceService->createCharacteristic(
+        (uint16_t)0x2a4d,
+        BLECharacteristic::PROPERTY_READ |
+            BLECharacteristic::PROPERTY_WRITE);
+
+    BLEDescriptor *mouseFeatureReportReference = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
+    const uint8_t mouseFeatureReportReferenceValue[] = {0x02, 0x03};
+    mouseFeatureReportReference->setValue((uint8_t *)mouseFeatureReportReferenceValue, sizeof(mouseFeatureReportReferenceValue));
+
+    mouseFeatureReport->addDescriptor(mouseFeatureReportReference);
 
     protocolMode = humanInterfaceDeviceService->createCharacteristic(
         (uint16_t)0x2a4e,
@@ -243,12 +243,12 @@ void Hid::sendKey(uint8_t modifier, uint8_t key)
     Serial.printf("modifier: %d\n", modifier);
     Serial.printf("key: %d\n", key);
 
-    uint8_t keyPressed[] = {/*0x01, */modifier, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00};
+    uint8_t keyPressed[] = {modifier, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00};
 
     Hid::setValue(keyboardInputReport, keyPressed, sizeof(keyPressed));
     Hid::notify(keyboardInputReport);
 
-    uint8_t keyReleased[] = {/*0x01, */0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    uint8_t keyReleased[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
     Hid::setValue(keyboardInputReport, keyReleased, sizeof(keyReleased));
     Hid::notify(keyboardInputReport);
@@ -266,7 +266,7 @@ void Hid::sendMouse(uint8_t buttons, int8_t x, int8_t y, int8_t wheel)
     Serial.printf("y: %d\n", y);
     Serial.printf("wheel: %d\n", wheel);
 
-    uint8_t mouseData[] = {/*0x02, */buttons, x, y, wheel};
+    uint8_t mouseData[] = {buttons, x, y, wheel};
 
     Hid::setValue(mouseInputReport, mouseData, sizeof(mouseData));
     Hid::notify(mouseInputReport);
@@ -281,9 +281,9 @@ BLECharacteristic *Hid::hidControlPoint;
 BLECharacteristic *Hid::keyboardInputReport;
 BLECharacteristic *Hid::mouseInputReport;
 BLECharacteristic *Hid::keyboardOutputReport;
-BLECharacteristic *Hid::outputReport;
+BLECharacteristic *Hid::mouseOutputReport;
 BLECharacteristic *Hid::keyboardFeatureReport;
-BLECharacteristic *Hid::featureReport;
+BLECharacteristic *Hid::mouseFeatureReport;
 BLECharacteristic *Hid::protocolMode;
 BLECharacteristic *Hid::bootKeyboardInputReport;
 BLECharacteristic *Hid::bootKeyboardOutputReport;

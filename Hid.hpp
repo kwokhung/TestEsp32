@@ -31,9 +31,9 @@ private:
   static BLECharacteristic *keyboardInputReport;
   static BLECharacteristic *mouseInputReport;
   static BLECharacteristic *keyboardOutputReport;
-  static BLECharacteristic *outputReport;
+  static BLECharacteristic *mouseOutputReport;
   static BLECharacteristic *keyboardFeatureReport;
-  static BLECharacteristic *featureReport;
+  static BLECharacteristic *mouseFeatureReport;
   static BLECharacteristic *protocolMode;
   static BLECharacteristic *bootKeyboardInputReport;
   static BLECharacteristic *bootKeyboardOutputReport;
