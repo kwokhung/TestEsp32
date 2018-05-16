@@ -13,6 +13,7 @@ class SbrBase
     static void startUp(void *parameter);
     static void sleepAWhile(uint32_t aWhile);
     static void sleepAShortWhile(uint32_t aWhile);
+    static void displayBuffer(uint8_t *buffer, int length);
     template <typename T1>
     static T1 constraint(T1 value, T1 minValue, T1 maxValue);
 
@@ -80,6 +81,24 @@ void SbrBase<T>::sleepAShortWhile(uint32_t aWhile)
 
         delayMicroseconds(1);
     }
+}
+
+template <typename T>
+void SbrBase<T>::displayBuffer(uint8_t *buffer, int length)
+{
+    int i;
+
+    for (i = 0; i < length; i++)
+    {
+        printf("%02x ", buffer[i]);
+
+        if ((i + 1) % 16 == 0)
+        {
+            printf("\n");
+        }
+    }
+
+    printf("\n");
 }
 
 template <typename T>
