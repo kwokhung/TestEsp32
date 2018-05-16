@@ -38,12 +38,12 @@ void SbrXXX11::setup()
 
 void SbrXXX11::loop()
 {
-    Serial.println("SbrXXX11::loop");
+    //Serial.println("SbrXXX11::loop");
 
     if (xQueueReceive(queue, data, 0))
     {
-        Serial.printf("----Queue input: [%d] bytes ----\n", RW_TEST_LENGTH);
-        displayBuffer(data, RW_TEST_LENGTH);
+        //Serial.printf("----Queue input: [%d] bytes ----\n", RW_TEST_LENGTH);
+        //displayBuffer(data, RW_TEST_LENGTH);
 
         if (SbrXXX11::isConnected())
         {
