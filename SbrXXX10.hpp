@@ -6,8 +6,8 @@
 #include "SbrXXX11.hpp"
 #include "SbrBase.hpp"
 
-#define DATA_LENGTH 512   /*!<Data buffer length for test buffer*/
-#define RW_TEST_LENGTH 10 /*!<Data length for r/w test, any value from 0-DATA_LENGTH*/
+#define DATA_LENGTH 512  /*!<Data buffer length for test buffer*/
+#define RW_TEST_LENGTH 4 /*!<Data length for r/w test, any value from 0-DATA_LENGTH*/
 
 #define I2C_EXAMPLE_SLAVE_SCL_IO GPIO_NUM_22           /*!<gpio number for i2c slave clock  */
 #define I2C_EXAMPLE_SLAVE_SDA_IO GPIO_NUM_21           /*!<gpio number for i2c slave data */

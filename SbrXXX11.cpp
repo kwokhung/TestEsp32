@@ -40,18 +40,18 @@ void SbrXXX11::loop()
 {
     Serial.println("SbrXXX11::loop");
 
-    xQueueReceive(queue, data, portMAX_DELAY);
-
-    Serial.printf("----Queue input: [%d] bytes ----\n", RW_TEST_LENGTH);
-    displayBuffer(data, RW_TEST_LENGTH);
-
-    if (SbrXXX11::isConnected())
+    if (xQueueReceive(queue, data, 0))
     {
-        Hid::sendMouse(0x00, 1, 1, 0);
+        Serial.printf("----Queue input: [%d] bytes ----\n", RW_TEST_LENGTH);
+        displayBuffer(data, RW_TEST_LENGTH);
+
+        if (SbrXXX11::isConnected())
+        {
+            Hid::sendMouse(data[0], data[1], data[2], data[3]);
+        }
     }
 
-    //sleepAWhile(1000);
-    sleepAShortWhile(0);
+    sleepAWhile(1000);
 }
 
 bool SbrXXX11::isConnected()
