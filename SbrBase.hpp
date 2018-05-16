@@ -64,22 +64,36 @@ void SbrBase<T>::startUp(void *parameter)
 template <typename T>
 void SbrBase<T>::sleepAWhile(uint32_t aWhile)
 {
-    for (int i = 0; i < aWhile; i++)
+    if (aWhile == 0)
     {
         esp_task_wdt_reset();
+    }
+    else
+    {
+        for (int i = 0; i < aWhile; i++)
+        {
+            esp_task_wdt_reset();
 
-        delay(1);
+            delay(1);
+        }
     }
 }
 
 template <typename T>
-void SbrBase<T>::sleepAShortWhile(uint32_t aWhile)
+void SbrBase<T>::sleepAShortWhile(uint32_t aShortWhile)
 {
-    for (int i = 0; i < aWhile; i++)
+    if (aShortWhile == 0)
     {
         esp_task_wdt_reset();
+    }
+    else
+    {
+        for (int i = 0; i < aShortWhile; i++)
+        {
+            esp_task_wdt_reset();
 
-        delayMicroseconds(1);
+            delayMicroseconds(1);
+        }
     }
 }
 

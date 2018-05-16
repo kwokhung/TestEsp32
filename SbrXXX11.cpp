@@ -51,7 +51,7 @@ void SbrXXX11::loop()
     }
 
     //sleepAWhile(1000);
-    esp_task_wdt_reset();
+    sleepAShortWhile(0);
 }
 
 bool SbrXXX11::isConnected()

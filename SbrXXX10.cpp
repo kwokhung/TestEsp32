@@ -30,21 +30,17 @@ void SbrXXX10::loop()
     Serial.println("SbrXXX10::loop");
 
     int size;
-    uint8_t *data = (uint8_t *)malloc(DATA_LENGTH);
 
-    while (true)
+    size = i2c_slave_read_buffer(I2C_EXAMPLE_SLAVE_NUM, data, RW_TEST_LENGTH, 1000 / portTICK_RATE_MS);
+
+    if (size > 0)
     {
-        size = i2c_slave_read_buffer(I2C_EXAMPLE_SLAVE_NUM, data, RW_TEST_LENGTH, 1000 / portTICK_RATE_MS);
-
-        if (size > 0)
-        {
-            xQueueSend(sbrXXX11->queue, data, portMAX_DELAY);
-        }
-
-        sleepAShortWhile(1);
+        xQueueSend(sbrXXX11->queue, data, portMAX_DELAY);
     }
 
     //sleepAWhile(1000);
+    sleepAShortWhile(0);
 }
 
 SbrXXX11 *SbrXXX10::sbrXXX11;
+uint8_t *SbrXXX10::data = (uint8_t *)malloc(DATA_LENGTH);

@@ -31,4 +31,6 @@ private:
   }
   void setup() override;
   void loop() override;
+
+  static uint8_t *data;
 };
