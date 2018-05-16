@@ -40,13 +40,6 @@ void SbrXXX11::loop()
 {
     Serial.println("SbrXXX11::loop");
 
-    sleepAWhileCount++;
-
-    Input = touchRead(15); // Just test touch pin - Touch3 is T3 which is on GPIO 15.
-    Serial.printf("Input: %f\n", Input);
-
-    uint8_t *data = (uint8_t *)malloc(DATA_LENGTH);
-
     xQueueReceive(queue, data, portMAX_DELAY);
 
     Serial.printf("----Queue input: [%d] bytes ----\n", RW_TEST_LENGTH);
@@ -54,59 +47,11 @@ void SbrXXX11::loop()
 
     if (SbrXXX11::isConnected())
     {
-        if (Input < 50)
-        {
-            if (sleepAWhileCount % 10 == 0)
-            {
-                Hid::sendMouse(0x00, 1, 1, 0);
-            }
-
-            if (sleepAWhileCount % 100 == 0)
-            {
-                Hid::sendMouse(0x00, 0, 0, -1);
-            }
-
-            if (sleepAWhileCount % 1000 == 0)
-            {
-                //Hid::sendKey((uint8_t)KEY_SHIFT, 0x0b);
-                //Hid::sendKey(0x08);
-                //Hid::sendKey(0x0f);
-                //Hid::sendKey(0x0f);
-                //Hid::sendKey(0x12);
-                Hid::sendKey(0x11);
-                Hid::sendKey(0x0c);
-                Hid::sendKey(0x2c);
-                Hid::sendKey(0x0b);
-                Hid::sendKey(0x04);
-                Hid::sendKey(0x12);
-                Hid::sendKey(0x2c);
-                Hid::sendKey(0x10);
-                Hid::sendKey(0x04);
-                Hid::sendKey(0x2c);
-                Hid::sendKey(0x28);
-            }
-        }
-        else
-        {
-            if (sleepAWhileCount % 10 == 0)
-            {
-                Hid::sendMouse(0x00, -1, -1, 0);
-            }
-
-            if (sleepAWhileCount % 100 == 0)
-            {
-                Hid::sendMouse(0x00, 0, 0, 1);
-            }
-        }
+        Hid::sendMouse(0x00, 1, 1, 0);
     }
 
     //sleepAWhile(1000);
-    sleepAWhile(1);
-
-    if (sleepAWhileCount == 1000)
-    {
-        sleepAWhileCount = 0;
-    }
+    esp_task_wdt_reset();
 }
 
 bool SbrXXX11::isConnected()
@@ -114,7 +59,5 @@ bool SbrXXX11::isConnected()
     return connected;
 }
 
-uint32_t SbrXXX11::sleepAWhileCount = 0;
 bool SbrXXX11::connected = false;
-int8_t SbrXXX11::x = 0;
-int8_t SbrXXX11::y = 0;
+uint8_t *SbrXXX11::data = (uint8_t *)malloc(DATA_LENGTH);
