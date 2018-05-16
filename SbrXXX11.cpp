@@ -1,25 +1,25 @@
-#include "SbrXXX08.hpp"
+#include "SbrXXX11.hpp"
 
-void SbrXXX08::onDisconnect(BLEServer *bleServer)
+void SbrXXX11::onDisconnect(BLEServer *bleServer)
 {
-    Serial.println("SbrXXX08::onDisconnect...");
+    Serial.println("SbrXXX11::onDisconnect...");
 
     connected = false;
 }
 
-void SbrXXX08::onConnect(BLEServer *bleServer)
+void SbrXXX11::onConnect(BLEServer *bleServer)
 {
-    Serial.println("SbrXXX08::onConnect...");
+    Serial.println("SbrXXX11::onConnect...");
 
     connected = true;
 }
 
-void SbrXXX08::setup()
+void SbrXXX11::setup()
 {
-    Serial.println("SbrXXX08::setup");
+    Serial.println("SbrXXX11::setup");
 
     queueSize = 10;
-    queue = xQueueCreate(queueSize, sizeof(int));
+    queue = xQueueCreate(queueSize, DATA_LENGTH);
 
     BLEDevice::init(name);
 
@@ -33,19 +33,26 @@ void SbrXXX08::setup()
     bleServer->getAdvertising()->addServiceUUID((uint16_t)0x1812);
     bleServer->getAdvertising()->start();
 
-    Serial.println("SbrXXX08::Characteristic defined! Now you can read it in your phone!");
+    Serial.println("SbrXXX11::Characteristic defined! Now you can read it in your phone!");
 }
 
-void SbrXXX08::loop()
+void SbrXXX11::loop()
 {
-    Serial.println("SbrXXX08::loop");
+    Serial.println("SbrXXX11::loop");
 
     sleepAWhileCount++;
 
     Input = touchRead(15); // Just test touch pin - Touch3 is T3 which is on GPIO 15.
     Serial.printf("Input: %f\n", Input);
 
-    if (SbrXXX08::isConnected())
+    uint8_t *data = (uint8_t *)malloc(DATA_LENGTH);
+
+    xQueueReceive(queue, data, portMAX_DELAY);
+
+    Serial.printf("----Queue input: [%d] bytes ----\n", RW_TEST_LENGTH);
+    displayBuffer(data, RW_TEST_LENGTH);
+
+    if (SbrXXX11::isConnected())
     {
         if (Input < 50)
         {
@@ -102,12 +109,12 @@ void SbrXXX08::loop()
     }
 }
 
-bool SbrXXX08::isConnected()
+bool SbrXXX11::isConnected()
 {
     return connected;
 }
 
-uint32_t SbrXXX08::sleepAWhileCount = 0;
-bool SbrXXX08::connected = false;
-int8_t SbrXXX08::x = 0;
-int8_t SbrXXX08::y = 0;
+uint32_t SbrXXX11::sleepAWhileCount = 0;
+bool SbrXXX11::connected = false;
+int8_t SbrXXX11::x = 0;
+int8_t SbrXXX11::y = 0;

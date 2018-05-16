@@ -38,7 +38,7 @@ void SbrXXX10::loop()
 
         if (size > 0)
         {
-            xQueueSend(sbrXXX08->queue, data, portMAX_DELAY);
+            xQueueSend(sbrXXX11->queue, data, portMAX_DELAY);
         }
 
         sleepAShortWhile(1);
@@ -47,4 +47,4 @@ void SbrXXX10::loop()
     //sleepAWhile(1000);
 }
 
-SbrXXX08 *SbrXXX10::sbrXXX08;
+SbrXXX11 *SbrXXX10::sbrXXX11;

@@ -10,7 +10,10 @@
 #include "Keyboard.hpp"
 #include "Hid.hpp"
 
-class SbrXXX08 : public SbrBase<SbrXXX08>, public BLEServerCallbacks
+#define DATA_LENGTH 512 /*!<Data buffer length for test buffer*/
+#define RW_TEST_LENGTH 10 /*!<Data length for r/w test, any value from 0-DATA_LENGTH*/
+
+class SbrXXX11 : public SbrBase<SbrXXX11>, public BLEServerCallbacks
 {
 public:
   friend class SbrBase;
@@ -20,7 +23,7 @@ public:
   static bool isConnected();
 
 private:
-  SbrXXX08(std::string name)
+  SbrXXX11(std::string name)
       : SbrBase(name)
   {
   }
