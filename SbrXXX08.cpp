@@ -19,7 +19,7 @@ void SbrXXX08::setup()
     Serial.println("SbrXXX08::setup");
 
     queueSize = 10;
-    queue = xQueueCreate(queueSize, sizeof(int));
+    queue = xQueueCreate(queueSize, DATA_LENGTH);
 
     BLEDevice::init(name);
 
@@ -44,6 +44,13 @@ void SbrXXX08::loop()
 
     Input = touchRead(15); // Just test touch pin - Touch3 is T3 which is on GPIO 15.
     Serial.printf("Input: %f\n", Input);
+
+    uint8_t *data = (uint8_t *)malloc(DATA_LENGTH);
+
+    xQueueReceive(queue, data, portMAX_DELAY);
+
+    Serial.printf("----Queue input: [%d] bytes ----\n", RW_TEST_LENGTH);
+    displayBuffer(data, RW_TEST_LENGTH);
 
     if (SbrXXX08::isConnected())
     {

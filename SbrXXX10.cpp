@@ -38,10 +38,13 @@ void SbrXXX10::loop()
 
         if (size > 0)
         {
-            Serial.printf("----Slave read: [%d] bytes ----\n", size);
-            displayBuffer(data, size);
+            xQueueSend(sbrXXX08->queue, data, portMAX_DELAY);
         }
+
+        sleepAShortWhile(1);
     }
 
     //sleepAWhile(1000);
 }
+
+SbrXXX08 *SbrXXX10::sbrXXX08;

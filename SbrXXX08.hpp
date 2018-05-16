@@ -10,6 +10,9 @@
 #include "Keyboard.hpp"
 #include "Hid.hpp"
 
+#define DATA_LENGTH 512 /*!<Data buffer length for test buffer*/
+#define RW_TEST_LENGTH 10 /*!<Data length for r/w test, any value from 0-DATA_LENGTH*/
+
 class SbrXXX08 : public SbrBase<SbrXXX08>, public BLEServerCallbacks
 {
 public:

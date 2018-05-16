@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <driver/i2c.h>
 
+#include "SbrXXX08.hpp"
 #include "SbrBase.hpp"
 
 #define DATA_LENGTH 512   /*!<Data buffer length for test buffer*/
@@ -20,6 +21,8 @@ class SbrXXX10 : public SbrBase<SbrXXX10>
 {
 public:
   friend class SbrBase;
+
+  static SbrXXX08 *sbrXXX08;
 
 private:
   SbrXXX10(std::string name)
