@@ -19,7 +19,7 @@ void SbrXXX11::setup()
     Serial.println("SbrXXX11::setup");
 
     queueSize = 10;
-    queue = xQueueCreate(queueSize, DATA_LENGTH);
+    queue = xQueueCreate(queueSize, RW_TEST_LENGTH);
 
     BLEDevice::init(name);
 
@@ -51,7 +51,7 @@ void SbrXXX11::loop()
         }
     }
 
-    sleepAWhile(1000);
+    sleepAWhile(1);
 }
 
 bool SbrXXX11::isConnected()

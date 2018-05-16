@@ -63,7 +63,7 @@ void setup()
   //xTaskCreate(SbrXXX08::startUp, sbrXXX08->name.c_str(), 10000, sbrXXX08, 1, &sbrXXX08->task);
   //xTaskCreate(SbrXXX09::startUp, sbrXXX09->name.c_str(), 10000, sbrXXX09, 1, &sbrXXX09->task);
   xTaskCreate(SbrXXX10::startUp, sbrXXX10->name.c_str(), 10000, sbrXXX10, 1, &sbrXXX10->task);
-  xTaskCreate(SbrXXX11::startUp, sbrXXX11->name.c_str(), 10000, sbrXXX11, 1, &sbrXXX11->task);
+  xTaskCreate(SbrXXX11::startUp, sbrXXX11->name.c_str(), 10000, sbrXXX11, 2, &sbrXXX11->task);
   //xTaskCreate(SbrYYY::startUp, sbrYYY->name.c_str(), 10000, sbrYYY, 1, &sbrYYY->task);
   //xTaskCreate(SbrZZZ::startUp, sbrZZZ->name.c_str(), 10000, sbrZZZ, 1, &sbrZZZ->task);
   //xTaskCreate(SbrMpu::startUp, sbrMpu->name.c_str(), 10000, sbrMpu, 1, &sbrMpu->task);
