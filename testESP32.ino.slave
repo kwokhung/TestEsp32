@@ -1,0 +1,4 @@
+    printf("*******************\n");
+    printf("----Slave read: [%d] bytes ----\n", size);
+
+    disp_buf(data, size);
