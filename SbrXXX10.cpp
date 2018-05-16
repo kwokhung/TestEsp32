@@ -38,7 +38,7 @@ void SbrXXX10::loop()
 
         if (size > 0)
         {
-            printf("----Slave read: [%d] bytes ----\n", size);
+            Serial.printf("----Slave read: [%d] bytes ----\n", size);
             displayBuffer(data, size);
         }
     }

@@ -90,15 +90,15 @@ void SbrBase<T>::displayBuffer(uint8_t *buffer, int length)
 
     for (i = 0; i < length; i++)
     {
-        printf("%02x ", buffer[i]);
+        Serial.printf("%02x ", buffer[i]);
 
         if ((i + 1) % 16 == 0)
         {
-            printf("\n");
+            Serial.printf("\n");
         }
     }
 
-    printf("\n");
+    Serial.printf("\n");
 }
 
 template <typename T>
