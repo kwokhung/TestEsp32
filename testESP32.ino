@@ -1,81 +1,120 @@
-//#include "SbrXXX.h"
-//#include "SbrXXX01.h"
-//#include "SbrXXX02.h"
-//#include "SbrXXX03.h"
-//#include "SbrXXX04.h"
-//#include "SbrXXX05.h"
-//#include "SbrXXX06.h"
-//#include "SbrXXX07.hpp"
-//#include "SbrXXX08.hpp"
-//#include "SbrXXX09.hpp"
-//#include "SbrXXX10.hpp"
-//#include "SbrXXX11.hpp"
-#include "SbrXXX12.hpp"
-//#include "SbrYYY.h"
-//#include "SbrZZZ.h"
-//#include "SbrMpu.h"
-//#include "SbrMotor.h"
-//#include "SbrControl.h"
-//#include "SbrPid.h"
-//#include "SbrConfig.h"
+#include <stdio.h>
+#include <FreeRTOS.h>
+#include <esp_task_wdt.h>
+#include <driver/i2c.h>
+
+#define DATA_LENGTH 512   /*!<Data buffer length for test buffer*/
+#define RW_TEST_LENGTH 4 /*!<Data length for r/w test, any value from 0-DATA_LENGTH*/
+
+#define I2C_EXAMPLE_MASTER_SCL_IO GPIO_NUM_22 /*!< gpio number for I2C master clock */
+#define I2C_EXAMPLE_MASTER_SDA_IO GPIO_NUM_21 /*!< gpio number for I2C master data  */
+#define I2C_EXAMPLE_MASTER_NUM I2C_NUM_1      /*!< I2C port number for master dev */
+#define I2C_EXAMPLE_MASTER_TX_BUF_DISABLE 0   /*!< I2C master do not need buffer */
+#define I2C_EXAMPLE_MASTER_RX_BUF_DISABLE 0   /*!< I2C master do not need buffer */
+#define I2C_EXAMPLE_MASTER_FREQ_HZ 100000     /*!< I2C master clock frequency */
+
+#define ESP_SLAVE_ADDR 0x28        /*!< ESP32 slave address, you can set any 7bit value */
+#define WRITE_BIT I2C_MASTER_WRITE /*!< I2C master write */
+#define ACK_CHECK_EN 0x1           /*!< I2C master will check ack from slave*/
+
+static void i2c_example_master_init()
+{
+  i2c_port_t i2c_master_port = I2C_EXAMPLE_MASTER_NUM;
+  i2c_config_t conf;
+
+  conf.mode = I2C_MODE_MASTER;
+  conf.sda_io_num = I2C_EXAMPLE_MASTER_SDA_IO;
+  conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
+  conf.scl_io_num = I2C_EXAMPLE_MASTER_SCL_IO;
+  conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
+  conf.master.clk_speed = I2C_EXAMPLE_MASTER_FREQ_HZ;
+
+  i2c_param_config(i2c_master_port, &conf);
+
+  i2c_driver_install(i2c_master_port, conf.mode,
+                     I2C_EXAMPLE_MASTER_RX_BUF_DISABLE,
+                     I2C_EXAMPLE_MASTER_TX_BUF_DISABLE, 0);
+}
+
+static esp_err_t i2c_example_master_write_slave(i2c_port_t i2c_num, uint8_t *data_wr, size_t size)
+{
+  i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+
+  i2c_master_start(cmd);
+  i2c_master_write_byte(cmd, (ESP_SLAVE_ADDR << 1) | WRITE_BIT, ACK_CHECK_EN);
+  i2c_master_write(cmd, data_wr, size, ACK_CHECK_EN);
+  i2c_master_stop(cmd);
+
+  esp_err_t ret = i2c_master_cmd_begin(i2c_num, cmd, 1000 / portTICK_RATE_MS);
+
+  i2c_cmd_link_delete(cmd);
+
+  return ret;
+}
+
+static void disp_buf(uint8_t *buf, int len)
+{
+  int i;
+
+  for (i = 0; i < len; i++)
+  {
+    printf("%02x ", buf[i]);
+
+    if ((i + 1) % 16 == 0)
+    {
+      printf("\n");
+    }
+  }
+
+  printf("\n");
+}
 
 void setup()
 {
   Serial.begin(115200);
 
-  //SbrXXX *sbrXXX = SbrXXX::getSingleTon("SBR - XXX");
-  //SbrXXX01 *sbrXXX01 = SbrXXX01::getSingleTon("SBR - XXX01");
-  //SbrXXX02 *sbrXXX02 = SbrXXX02::getSingleTon("SBR - XXX02");
-  //SbrXXX03 *sbrXXX03 = SbrXXX03::getSingleTon("SBR - XXX03");
-  //SbrXXX04 *sbrXXX04 = SbrXXX04::getSingleTon("SBR - XXX04");
-  //SbrXXX05 *sbrXXX05 = SbrXXX05::getSingleTon("SBR - XXX05");
-  //SbrXXX06 *sbrXXX06 = SbrXXX06::getSingleTon("SBR - XXX06");
-  //SbrXXX07 *sbrXXX07 = SbrXXX07::getSingleTon("SBR - XXX07");
-  //SbrXXX08 *sbrXXX08 = SbrXXX08::getSingleTon("SBR - XXX08");
-  //SbrXXX09 *sbrXXX09 = SbrXXX09::getSingleTon("SBR - XXX09");
-  //SbrXXX10 *sbrXXX10 = SbrXXX10::getSingleTon("SBR - XXX10");
-  //SbrXXX11 *sbrXXX11 = SbrXXX11::getSingleTon("SBR - XXX11");
-  SbrXXX12 *sbrXXX12 = SbrXXX12::getSingleTon("SBR - XXX12");
-  //SbrYYY *sbrYYY = SbrYYY::getSingleTon("SBR - YYY");
-  //SbrZZZ *sbrZZZ = SbrZZZ::getSingleTon("SBR - ZZZ");
-  //SbrMpu *sbrMpu = SbrMpu::getSingleTon("SBR - MPU");
-  //SbrMotor *sbrMotor = SbrMotor::getSingleTon("SBR - Motor");
-  //SbrControl *sbrControl = SbrControl::getSingleTon("SBR - Control");
-  //SbrPid *sbrPid = SbrPid::getSingleTon("SBR - PID");
-  //SbrConfig *sbrConfig = SbrConfig::getSingleTon("SBR - Config");
+  i2c_example_master_init();
 
-  //SbrZZZ::sbrXXX = sbrXXX;
-
-  //SbrPid::sbrMpu = sbrMpu;
-  //SbrPid::sbrMotor = sbrMotor;
-
-  //SbrConfig::sbrMotor = sbrMotor;
-  //SbrConfig::sbrPid = sbrPid;
-
-  //SbrXXX10::sbrXXX11 = sbrXXX11;
-
-  //xTaskCreate(SbrXXX::startUp, sbrXXX->name.c_str(), 10000, sbrXXX, 1, &sbrXXX->task);
-  //xTaskCreate(SbrXXX01::startUp, sbrXXX01->name.c_str(), 10000, sbrXXX01, 1, &sbrXXX01->task);
-  //xTaskCreate(SbrXXX02::startUp, sbrXXX02->name.c_str(), 10000, sbrXXX02, 1, &sbrXXX02->task);
-  //xTaskCreate(SbrXXX03::startUp, sbrXXX03->name.c_str(), 10000, sbrXXX03, 1, &sbrXXX03->task);
-  //xTaskCreate(SbrXXX04::startUp, sbrXXX04->name.c_str(), 10000, sbrXXX04, 1, &sbrXXX04->task);
-  //xTaskCreate(SbrXXX05::startUp, sbrXXX05->name.c_str(), 10000, sbrXXX05, 1, &sbrXXX05->task);
-  //xTaskCreate(SbrXXX06::startUp, sbrXXX06->name.c_str(), 10000, sbrXXX06, 1, &sbrXXX06->task);
-  //xTaskCreate(SbrXXX07::startUp, sbrXXX07->name.c_str(), 10000, sbrXXX07, 1, &sbrXXX07->task);
-  //xTaskCreate(SbrXXX08::startUp, sbrXXX08->name.c_str(), 10000, sbrXXX08, 1, &sbrXXX08->task);
-  //xTaskCreate(SbrXXX09::startUp, sbrXXX09->name.c_str(), 10000, sbrXXX09, 1, &sbrXXX09->task);
-  //xTaskCreate(SbrXXX10::startUp, sbrXXX10->name.c_str(), 10000, sbrXXX10, 1, &sbrXXX10->task);
-  //xTaskCreate(SbrXXX11::startUp, sbrXXX11->name.c_str(), 10000, sbrXXX11, 2, &sbrXXX11->task);
-  xTaskCreate(SbrXXX12::startUp, sbrXXX12->name.c_str(), 10000, sbrXXX12, 2, &sbrXXX12->task);
-  //xTaskCreate(SbrYYY::startUp, sbrYYY->name.c_str(), 10000, sbrYYY, 1, &sbrYYY->task);
-  //xTaskCreate(SbrZZZ::startUp, sbrZZZ->name.c_str(), 10000, sbrZZZ, 1, &sbrZZZ->task);
-  //xTaskCreate(SbrMpu::startUp, sbrMpu->name.c_str(), 10000, sbrMpu, 1, &sbrMpu->task);
-  //xTaskCreate(SbrMotor::startUp, sbrMotor->name.c_str(), 10000, sbrMotor, 1, &sbrMotor->task);
-  //xTaskCreate(SbrControl::startUp, sbrControl->name.c_str(), 10000, sbrControl, 2, &sbrControl->task);
-  //xTaskCreate(SbrPid::startUp, sbrPid->name.c_str(), 10000, sbrPid, 2, &sbrPid->task);
-  //xTaskCreate(SbrConfig::startUp, sbrConfig->name.c_str(), 10000, sbrConfig, 2, &sbrConfig->task);
+  Serial.println("i2c_example_master_init");
 }
 
 void loop()
 {
+  int ret;
+  uint8_t *data_wr = (uint8_t *)malloc(DATA_LENGTH);
+
+  data_wr[0] = 0x00;
+  data_wr[1] = 0x01;
+  data_wr[2] = 0x01;
+  data_wr[3] = 0x00;
+
+  while (true)
+  {
+    ret = i2c_example_master_write_slave(I2C_EXAMPLE_MASTER_NUM, data_wr, RW_TEST_LENGTH);
+
+    if (ret == ESP_ERR_TIMEOUT)
+    {
+      printf("I2C timeout\n");
+    }
+    else if (ret == ESP_OK)
+    {
+      printf("*******************\n");
+      printf("MASTER WRITE TO SLAVE\n");
+      printf("*******************\n");
+      printf("----Master write ----\n");
+
+      disp_buf(data_wr, RW_TEST_LENGTH);
+    }
+    else
+    {
+      printf("Master write slave error, IO not connected....\n");
+    }
+
+    for (int i = 0; i < 1; i++)
+    {
+      esp_task_wdt_reset();
+
+      delay(1);
+    }
+  }
 }

@@ -61,9 +61,10 @@ void SbrXXX12::loop()
 
     size = i2c_slave_read_buffer(I2C_EXAMPLE_SLAVE_NUM, data, RW_TEST_LENGTH, 1000 / portTICK_RATE_MS);
 
+    Serial.printf("----I2C input: [%d] bytes ----\n", size);
+
     if (size > 0)
     {
-        Serial.printf("----I2C input: [%d] bytes ----\n", RW_TEST_LENGTH);
         displayBuffer(data, RW_TEST_LENGTH);
 
         if (SbrXXX12::isConnected())
@@ -72,7 +73,7 @@ void SbrXXX12::loop()
         }
     }
 
-    sleepAWhile(1000);
+    sleepAWhile(1);
 }
 
 bool SbrXXX12::isConnected()

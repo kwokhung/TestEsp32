@@ -4,7 +4,7 @@
 #include <driver/i2c.h>
 
 #define DATA_LENGTH 512   /*!<Data buffer length for test buffer*/
-#define RW_TEST_LENGTH 10 /*!<Data length for r/w test, any value from 0-DATA_LENGTH*/
+#define RW_TEST_LENGTH 4 /*!<Data length for r/w test, any value from 0-DATA_LENGTH*/
 
 #define I2C_EXAMPLE_MASTER_SCL_IO GPIO_NUM_22 /*!< gpio number for I2C master clock */
 #define I2C_EXAMPLE_MASTER_SDA_IO GPIO_NUM_21 /*!< gpio number for I2C master data  */
@@ -83,9 +83,10 @@ void loop()
   int ret;
   uint8_t *data_wr = (uint8_t *)malloc(DATA_LENGTH);
 
-  data_wr[0] = 0x01;
-  data_wr[1] = 0x02;
-  data_wr[2] = 0x03;
+  data_wr[0] = 0x00;
+  data_wr[1] = 0x01;
+  data_wr[2] = 0x01;
+  data_wr[3] = 0x00;
 
   while (true)
   {
@@ -109,7 +110,7 @@ void loop()
       printf("Master write slave error, IO not connected....\n");
     }
 
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 1; i++)
     {
       esp_task_wdt_reset();
 
