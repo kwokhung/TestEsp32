@@ -38,7 +38,7 @@ void SbrXXX10::loop()
         xQueueSend(sbrXXX11->queue, data, portMAX_DELAY);
     }
 
-    sleepAWhile(1);
+    sleepAWhile(1000);
 }
 
 SbrXXX11 *SbrXXX10::sbrXXX11;

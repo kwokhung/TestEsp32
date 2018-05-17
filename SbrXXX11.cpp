@@ -43,7 +43,7 @@ void SbrXXX11::loop()
     if (xQueueReceive(queue, data, 0))
     {
         //Serial.printf("----Queue input: [%d] bytes ----\n", RW_TEST_LENGTH);
-        //displayBuffer(data, RW_TEST_LENGTH);
+        displayBuffer(data, RW_TEST_LENGTH);
 
         if (SbrXXX11::isConnected())
         {
@@ -51,7 +51,7 @@ void SbrXXX11::loop()
         }
     }
 
-    sleepAWhile(1);
+    sleepAWhile(1000);
 }
 
 bool SbrXXX11::isConnected()
