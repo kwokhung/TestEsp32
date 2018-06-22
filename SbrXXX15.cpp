@@ -1,30 +1,27 @@
-#include "SbrXXX13.hpp"
+#include "SbrXXX15.hpp"
 
-void SbrXXX13::onDisconnect(BLEServer *bleServer)
+void SbrXXX15::onDisconnect(BLEServer *bleServer)
 {
-    Serial.println("SbrXXX13::onDisconnect...");
+    Serial.println("SbrXXX15::onDisconnect...");
 
     connected = false;
 }
 
-void SbrXXX13::onConnect(BLEServer *bleServer)
+void SbrXXX15::onConnect(BLEServer *bleServer)
 {
-    Serial.println("SbrXXX13::onConnect...");
+    Serial.println("SbrXXX15::onConnect...");
 
     connected = true;
 }
 
-void SbrXXX13::setup()
+void SbrXXX15::setup()
 {
-    Serial.println("SbrXXX13::setup");
+    Serial.println("SbrXXX15::setup");
 
     queueSize = 10;
     queue = xQueueCreate(queueSize, sizeof(int));
 
     BLEDevice::init(name);
-
-    serialBT = new BluetoothSerial();
-    serialBT->begin(name.c_str());
 
     bleServer = BLEDevice::createServer();
 
@@ -39,45 +36,15 @@ void SbrXXX13::setup()
     Serial.println(name.c_str());
 }
 
-void SbrXXX13::loop()
+void SbrXXX15::loop()
 {
-    //Serial.println("SbrXXX13::loop");
+    //Serial.println("SbrXXX15::loop");
 
     sleepAWhileCount++;
 
-    if (SbrXXX13::isConnected())
+    if (SbrXXX15::isConnected())
     {
-        byte inputAvailable = serialBT->available();
-
-        if (inputAvailable > 0)
-        {
-            char input[64];
-
-            for (int i = 0; i < inputAvailable; i++)
-            {
-                input[i] = serialBT->read();
-            }
-
-            input[inputAvailable] = '\0';
-
-            Serial.print("Message Received: ");
-            Serial.println(input);
-
-            switch (input[0])
-            {
-            case 'a':
-                Hid::sendMouse(0x00, -1, -1, 0);
-
-                break;
-
-            case 'd':
-                Hid::sendMouse(0x00, 1, 1, 0);
-
-                break;
-            }
-        }
-
-        /*Input = touchRead(15); // Just test touch pin - Touch3 is T3 which is on GPIO 15.
+        Input = touchRead(15); // Just test touch pin - Touch3 is T3 which is on GPIO 15.
         Serial.printf("Input: %f\n", Input);
 
         if (Input < 50)
@@ -123,7 +90,7 @@ void SbrXXX13::loop()
             {
                 Hid::sendMouse(0x00, 0, 0, 1);
             }
-        }*/
+        }
     }
 
     //sleepAWhile(1000);
@@ -135,12 +102,12 @@ void SbrXXX13::loop()
     }
 }
 
-bool SbrXXX13::isConnected()
+bool SbrXXX15::isConnected()
 {
     return connected;
 }
 
-uint32_t SbrXXX13::sleepAWhileCount = 0;
-bool SbrXXX13::connected = false;
-int8_t SbrXXX13::x = 0;
-int8_t SbrXXX13::y = 0;
+uint32_t SbrXXX15::sleepAWhileCount = 0;
+bool SbrXXX15::connected = false;
+int8_t SbrXXX15::x = 0;
+int8_t SbrXXX15::y = 0;
