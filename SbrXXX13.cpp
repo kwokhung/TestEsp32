@@ -23,6 +23,9 @@ void SbrXXX13::setup()
 
     BLEDevice::init(name);
 
+    serialBT = new BluetoothSerial();
+    serialBT->begin(name.c_str());
+
     bleServer = BLEDevice::createServer();
 
     bleServer->setCallbacks(this);
@@ -33,31 +36,7 @@ void SbrXXX13::setup()
     bleServer->getAdvertising()->addServiceUUID((uint16_t)0x1812);
     bleServer->getAdvertising()->start();
 
-    Serial.println("SBR - XXX13");
-
-    WiFi.persistent(false);
-
-    if (!WifiEspNowBroadcast.begin("ESPNOW", 3))
-    {
-        Serial.println("WifiEspNowBroadcast.begin() failed.");
-
-        ESP.restart();
-    }
-
-    WifiEspNowBroadcast.onReceive(
-        [&](const uint8_t mac[6], const uint8_t *buf, size_t count, void *cbarg) {
-            Serial.printf("Message from %02X:%02X:%02X:%02X:%02X:%02X\n", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-
-            for (int i = 0; i < count; ++i)
-            {
-                Serial.print(static_cast<char>(buf[i]));
-            }
-
-            Serial.println();
-        },
-        nullptr);
-
-    Serial.println("ESPNOW");
+    Serial.println(name.c_str());
 }
 
 void SbrXXX13::loop()
@@ -68,6 +47,36 @@ void SbrXXX13::loop()
 
     if (SbrXXX13::isConnected())
     {
+        byte inputAvailable = serialBT->available();
+
+        if (inputAvailable > 0)
+        {
+            char input[64];
+
+            for (int i = 0; i < inputAvailable; i++)
+            {
+                input[i] = serialBT->read();
+            }
+
+            input[inputAvailable] = '\0';
+
+            Serial.print("Message Received: ");
+            Serial.println(input);
+
+            switch (input[0])
+            {
+            case 'a':
+                Hid::sendMouse(0x00, -1, -1, 0);
+
+                break;
+
+            case 'd':
+                Hid::sendMouse(0x00, 1, 1, 0);
+
+                break;
+            }
+        }
+
         Input = touchRead(15); // Just test touch pin - Touch3 is T3 which is on GPIO 15.
         Serial.printf("Input: %f\n", Input);
 
@@ -124,8 +133,6 @@ void SbrXXX13::loop()
     {
         sleepAWhileCount = 0;
     }
-
-    WifiEspNowBroadcast.loop();
 }
 
 bool SbrXXX13::isConnected()

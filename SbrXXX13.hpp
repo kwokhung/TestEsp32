@@ -5,8 +5,7 @@
 #include <BLEDevice.h>
 #include <BLEHidDevice.h>
 #include <HIDKeyboardTypes.h>
-#include <WiFi.h>
-#include <WifiEspNowBroadcast.h>
+#include <BluetoothSerial.h>
 
 #include "SbrBase.hpp"
 #include "Keyboard.hpp"
@@ -31,6 +30,7 @@ private:
 
   double Input;
   BLEServer *bleServer;
+  BluetoothSerial *serialBT;
   static uint32_t sleepAWhileCount;
   static bool connected;
   static int8_t x;
