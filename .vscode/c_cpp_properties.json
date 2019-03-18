@@ -3,33 +3,28 @@
         {
             "name": "Win32",
             "includePath": [
-                "C:\\Users\\brianchu\\Documents\\Arduino\\hardware\\espressif\\esp32\\cores\\esp32",
-                "C:\\Users\\chu_k_000\\Documents\\Arduino\\hardware\\espressif\\esp32\\cores\\esp32",
-                "C:\\Users\\brianchu\\Documents\\Arduino\\hardware\\espressif\\esp32\\libraries",
-                "C:\\Users\\chu_k_000\\Documents\\Arduino\\hardware\\espressif\\esp32\\libraries",
-                "C:\\Users\\brianchu\\Documents\\Arduino\\hardware\\espressif\\esp32\\tools",
-                "C:\\Users\\chu_k_000\\Documents\\Arduino\\hardware\\espressif\\esp32\\tools",
-                "C:\\Users\\brianchu\\Documents\\Arduino\\libraries",
-                "C:\\Users\\chu_k_000\\Documents\\Arduino\\libraries",
+                "C:\\Users\\user\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\**",
+                "C:\\Users\\user\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.1\\**",
+                "C:\\Program Files (x86)\\Arduino\\tools\\**",
+                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
+                "C:\\Users\\user\\Documents\\Arduino\\libraries",
                 "${workspaceRoot}"
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": false,
                 "path": [
-                    "C:\\Users\\brianchu\\Documents\\Arduino\\hardware\\espressif\\esp32\\cores\\esp32",
-                    "C:\\Users\\chu_k_000\\Documents\\Arduino\\hardware\\espressif\\esp32\\cores\\esp32",
-                    "C:\\Users\\brianchu\\Documents\\Arduino\\hardware\\espressif\\esp32\\libraries",
-                    "C:\\Users\\chu_k_000\\Documents\\Arduino\\hardware\\espressif\\esp32\\libraries",
-                    "C:\\Users\\brianchu\\Documents\\Arduino\\hardware\\espressif\\esp32\\tools",
-                    "C:\\Users\\chu_k_000\\Documents\\Arduino\\hardware\\espressif\\esp32\\tools",
-                    "C:\\Users\\brianchu\\Documents\\Arduino\\libraries",
-                    "C:\\Users\\chu_k_000\\Documents\\Arduino\\libraries",
+                    "C:\\Users\\user\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\**",
+                    "C:\\Users\\user\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.1\\**",
+                    "C:\\Program Files (x86)\\Arduino\\tools\\**",
+                    "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
+                    "C:\\Users\\user\\Documents\\Arduino\\libraries",
                     "${workspaceRoot}"
                 ]
             },
             "intelliSenseMode": "msvc-x64",
             "cStandard": "c11",
-            "cppStandard": "c++17"
+            "cppStandard": "c++17",
+            "forcedInclude": []
         }
     ],
     "version": 4

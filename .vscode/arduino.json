@@ -1,6 +1,6 @@
 {
     "sketch": "testESP32.ino",
-    "board": "espressif:esp32:nodemcu-32s",
+    "board": "esp32:esp32:nodemcu-32s",
     "configuration": "FlashFreq=80,UploadSpeed=921600",
     "port": "COM5"
 }
